@@ -38,7 +38,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#000000] text-white flex flex-col selection:bg-[#E11D2E]/30 selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#000000] text-[#09090B] dark:text-white flex flex-col selection:bg-[#E11D2E]/30 selection:text-white transition-colors duration-300">
       {/* Sticky Header Navigation */}
       <Navbar activeSection={activeSection} />
 

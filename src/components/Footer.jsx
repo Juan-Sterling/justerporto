@@ -27,21 +27,21 @@ export default function Footer() {
   };
 
   return (
-    <footer className="border-t border-[#2A2A2A] bg-[#000000] py-10 px-4 sm:px-6 lg:px-8">
+    <footer className="border-t border-[#E4E4E7] dark:border-[#2A2A2A] bg-white dark:bg-[#000000] py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Identity & Note */}
         <div className="space-y-1 text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-2">
-            <span className="font-['Space_Grotesk',sans-serif] text-sm font-bold text-white">
+            <span className="font-['Space_Grotesk',sans-serif] text-sm font-bold text-[#09090B] dark:text-white">
               Juan Sterling
             </span>
-            <span className="text-[#52525B]">•</span>
+            <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
             <div className="inline-flex items-center overflow-hidden">
               <span
-                className={`font-mono text-xs text-[#A1A1AA] transition-all duration-300 transform ${
+                className={`font-mono text-xs transition-all duration-300 transform ${
                   isFading
                     ? 'opacity-0 -translate-y-2'
-                    : 'opacity-100 translate-y-0 text-[#D4D4D8]'
+                    : 'opacity-100 translate-y-0 text-[#E11D2E]'
                 }`}
               >
                 {ROLES[roleIndex]}
@@ -55,13 +55,13 @@ export default function Footer() {
 
         {/* Status code & Back to Top */}
         <div className="flex items-center gap-4">
-          <span className="font-mono text-xs text-[#52525B] select-none">
+          <span className="font-mono text-xs text-[#71717A] dark:text-[#52525B] select-none">
             process.exit(0)
           </span>
           <button
             type="button"
             onClick={scrollToTop}
-            className="group p-2.5 rounded-md bg-[#141414] border border-[#2A2A2A] text-[#A1A1AA] hover:text-white hover:border-[#E11D2E]/60 hover:bg-[#181818] active:scale-95 transition-all duration-200 cursor-pointer shadow-sm shadow-black/40"
+            className="group p-2.5 rounded-md bg-[#F4F4F5] dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/60 hover:bg-white dark:hover:bg-[#181818] active:scale-95 transition-all duration-200 cursor-pointer shadow-xs"
             aria-label="Back to top of page"
           >
             <ArrowUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />

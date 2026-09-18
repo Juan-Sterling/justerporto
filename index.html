@@ -25,9 +25,26 @@
     <!-- Google Fonts: Inter, Space Grotesk, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <!-- Initial Theme Detection (Prevents FOUC) -->
+    <script>
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+            document.documentElement.style.colorScheme = 'dark';
+          } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body class="bg-[#000000] text-white font-sans antialiased selection:bg-[#E11D2E]/25 selection:text-white">
+  <body class="bg-[#FAFAFA] dark:bg-[#000000] text-[#09090B] dark:text-white font-sans antialiased selection:bg-[#E11D2E]/25 selection:text-white transition-colors duration-300">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

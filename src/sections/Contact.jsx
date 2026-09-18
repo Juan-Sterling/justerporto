@@ -33,7 +33,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#2A2A2A]/60">
+    <section id="contact" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60">
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
           <SectionTitle
@@ -47,17 +47,17 @@ export default function Contact() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-6">
           {/* Email Card */}
           <AnimatedSection delay={100}>
-            <div className="group relative flex flex-col justify-between p-5 rounded-lg bg-[#141414] border border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 hover:shadow-lg hover:shadow-black/50">
+            <div className="group relative flex flex-col justify-between p-5 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 rounded-md bg-[#090909] border border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
+                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
                     <Mail className="w-5 h-5" />
                   </div>
                   <button
                     type="button"
                     onClick={handleCopyEmail}
                     title="Copy email address"
-                    className="p-1.5 rounded-md text-[#71717A] hover:text-white hover:bg-[#090909] border border-transparent hover:border-[#2A2A2A] transition-all cursor-pointer"
+                    className="p-1.5 rounded-md text-[#71717A] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#090909] border border-transparent hover:border-[#E4E4E7] dark:hover:border-[#2A2A2A] transition-all cursor-pointer"
                     aria-label="Copy email address"
                   >
                     {copied ? (
@@ -75,15 +75,15 @@ export default function Contact() {
                 </span>
                 <a
                   href={`mailto:${contact.email}`}
-                  className="font-mono text-xs sm:text-sm font-medium text-white hover:text-[#E11D2E] transition-colors break-all block"
+                  className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white hover:text-[#E11D2E] dark:hover:text-[#E11D2E] transition-colors break-all block"
                 >
                   {contact.email}
                 </a>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#A1A1AA]">
+              <div className="pt-4 mt-4 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA]">
                 <span>send_mail</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#E11D2E] dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </div>
             </div>
           </AnimatedSection>
@@ -94,28 +94,28 @@ export default function Contact() {
               href={contact.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex flex-col justify-between p-5 rounded-lg bg-[#141414] border border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 hover:shadow-lg hover:shadow-black/50 block"
+              className="group relative flex flex-col justify-between p-5 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50 block"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 rounded-md bg-[#090909] border border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
+                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
                     <LinkedinIcon className="w-5 h-5" />
                   </div>
                 </div>
                 <span className="text-[11px] font-mono text-[#71717A] block mb-1">
                   // PROFESSIONAL NETWORK
                 </span>
-                <span className="font-['Space_Grotesk',sans-serif] text-base font-bold text-white group-hover:text-white block">
+                <span className="font-['Space_Grotesk',sans-serif] text-base font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] dark:group-hover:text-white block transition-colors">
                   LinkedIn Profile
                 </span>
-                <span className="text-xs text-[#A1A1AA] font-mono mt-0.5 block">
+                <span className="text-xs text-[#52525B] dark:text-[#A1A1AA] font-mono mt-0.5 block">
                   Connect &amp; Message
                 </span>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#A1A1AA]">
+              <div className="pt-4 mt-4 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA]">
                 <span>view_profile</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#E11D2E] dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </div>
             </a>
           </AnimatedSection>
@@ -126,28 +126,28 @@ export default function Contact() {
               href={contact.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex flex-col justify-between p-5 rounded-lg bg-[#141414] border border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 hover:shadow-lg hover:shadow-black/50 block"
+              className="group relative flex flex-col justify-between p-5 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50 block"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 rounded-md bg-[#090909] border border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
+                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
                     <GithubIcon className="w-5 h-5" />
                   </div>
                 </div>
                 <span className="text-[11px] font-mono text-[#71717A] block mb-1">
                   // SOURCE CODE
                 </span>
-                <span className="font-['Space_Grotesk',sans-serif] text-base font-bold text-white group-hover:text-white block">
+                <span className="font-['Space_Grotesk',sans-serif] text-base font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] dark:group-hover:text-white block transition-colors">
                   GitHub Repositories
                 </span>
-                <span className="text-xs text-[#A1A1AA] font-mono mt-0.5 block">
+                <span className="text-xs text-[#52525B] dark:text-[#A1A1AA] font-mono mt-0.5 block">
                   github.com/Juan-Sterling
                 </span>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#A1A1AA]">
+              <div className="pt-4 mt-4 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA]">
                 <span>view_repos</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#E11D2E] dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </div>
             </a>
           </AnimatedSection>
@@ -155,13 +155,13 @@ export default function Contact() {
 
         {/* Bottom Banner: Location, Availability & Direct Action */}
         <AnimatedSection delay={340}>
-          <div className="p-5 sm:p-6 rounded-lg bg-[#141414] border border-[#2A2A2A] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="p-5 sm:p-6 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
             <div className="space-y-1.5 text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-xs sm:text-sm font-mono text-[#D4D4D8]">
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-xs sm:text-sm font-mono text-[#09090B] dark:text-[#D4D4D8]">
                 <MapPin className="w-4 h-4 text-[#E11D2E]" />
                 <span>{contact.location} (Remote / On-site)</span>
               </div>
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-xs font-mono text-[#A1A1AA]">
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-xs font-mono text-[#52525B] dark:text-[#A1A1AA]">
                 <Clock className="w-3.5 h-3.5 text-[#E11D2E]" />
                 <span>{contact.responseCommitment}</span>
               </div>

@@ -10,7 +10,7 @@ export default function Experience() {
   const { experience, personalProjects = [] } = portfolioData;
 
   return (
-    <section id="experience" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#2A2A2A]/60">
+    <section id="experience" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60">
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
           <SectionTitle
@@ -34,19 +34,19 @@ export default function Experience() {
 
         {/* Sub-section: Personal Projects */}
         {personalProjects && personalProjects.length > 0 && (
-          <div className="mt-16 pt-12 border-t border-[#2A2A2A]/80">
+          <div className="mt-16 pt-12 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/80">
             <AnimatedSection>
               <div className="space-y-3 mb-8">
                 <div>
                   <TerminalPrompt command="ls -la ./personal-projects" />
                 </div>
                 <div className="flex items-center gap-3">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white font-['Space_Grotesk',sans-serif]">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif]">
                     Personal Projects
                   </h3>
                   <span className="h-2 w-2 rounded-full bg-[#E11D2E] inline-block" aria-hidden="true" />
                 </div>
-                <p className="text-xs sm:text-sm text-[#A1A1AA] max-w-2xl leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#52525B] dark:text-[#A1A1AA] max-w-2xl leading-relaxed">
                   Independent applications and web platforms built to solve real-world problems, explore architectures, and deploy live solutions.
                 </p>
               </div>

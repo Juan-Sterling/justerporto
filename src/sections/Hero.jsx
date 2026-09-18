@@ -95,7 +95,7 @@ export default function Hero() {
     >
       {/* 1. Subtle Developer Canvas Grid & Ambient Glow Animation */}
       <div 
-        className="absolute inset-0 bg-[linear-gradient(to_right,#2A2A2A20_1px,transparent_1px),linear-gradient(to_bottom,#2A2A2A20_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] pointer-events-none" 
+        className="absolute inset-0 bg-[linear-gradient(to_right,#0000000d_1px,transparent_1px),linear-gradient(to_bottom,#0000000d_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#2A2A2A20_1px,transparent_1px),linear-gradient(to_bottom,#2A2A2A20_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] pointer-events-none" 
         aria-hidden="true"
       />
       <div 
@@ -109,14 +109,14 @@ export default function Hero() {
         <AnimatedSection delay={0}>
           <div className="flex flex-wrap items-center gap-3">
             {/* Terminal Prompt with authentic blinking cursor */}
-            <div className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm px-3.5 py-1.5 rounded-md bg-[#141414] border border-[#2A2A2A] shadow-sm hover:border-[#3A3A3A] transition-colors">
-              <span className="text-[#A1A1AA]">{personal.terminalUser}</span>
-              <span className="text-white font-medium">{typedPrompt}</span>
+            <div className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm px-3.5 py-1.5 rounded-md bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs hover:border-[#CBD5E1] dark:hover:border-[#3A3A3A] transition-colors">
+              <span className="text-[#71717A] dark:text-[#A1A1AA]">{personal.terminalUser}</span>
+              <span className="text-[#09090B] dark:text-white font-medium">{typedPrompt}</span>
               <span className="inline-block w-2 h-4 bg-[#E11D2E] animate-pulse rounded-xs" aria-hidden="true" />
             </div>
 
             {/* Pulsing Live Availability Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141414] border border-[#2A2A2A] text-xs font-mono text-[#D4D4D8]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] text-xs font-mono text-[#52525B] dark:text-[#D4D4D8] shadow-xs">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -129,7 +129,7 @@ export default function Hero() {
         {/* 3. Primary Identity with Dynamic Typewriter Role */}
         <AnimatedSection delay={120}>
           <div className="space-y-3">
-            <h1 className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white leading-none tracking-tighter">
+            <h1 className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-[#09090B] dark:text-white leading-none tracking-tighter">
               {personal.name}
             </h1>
 
@@ -143,7 +143,7 @@ export default function Hero() {
 
         {/* 4. Concise Professional Introduction */}
         <AnimatedSection delay={200}>
-          <p className="text-base sm:text-lg md:text-xl text-[#A1A1AA] leading-relaxed max-w-2xl font-sans font-normal">
+          <p className="text-base sm:text-lg md:text-xl text-[#52525B] dark:text-[#A1A1AA] leading-relaxed max-w-2xl font-sans font-normal">
             {personal.tagline}
           </p>
         </AnimatedSection>
@@ -165,10 +165,10 @@ export default function Hero() {
             <button
               type="button"
               onClick={() => scrollToSection('contact')}
-              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-md bg-[#141414] hover:bg-[#1c1c1c] active:scale-95 text-white border border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-sm transition-all duration-200 cursor-pointer"
+              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-sm transition-all duration-200 cursor-pointer shadow-xs"
             >
               <span>Contact Me</span>
-              <Mail className="w-4 h-4 text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors" />
+              <Mail className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors" />
             </button>
           </div>
         </AnimatedSection>

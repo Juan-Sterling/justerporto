@@ -129,11 +129,11 @@ export const portfolioData = {
     },
     {
       name: "Next.js",
-      icon: "https://cdn.simpleicons.org/nextdotjs/white",
+      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
     },
     {
       name: "Github",
-      icon: "https://cdn.simpleicons.org/github/white",
+      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg",
     },
     {
       name: "Firebase",

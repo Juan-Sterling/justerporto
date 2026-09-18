@@ -8,7 +8,7 @@ export default function Skills() {
   const { skills } = portfolioData;
 
   return (
-    <section id="skills" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#2A2A2A]/60">
+    <section id="skills" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60">
       <div className="max-w-6xl mx-auto">
         <AnimatedSection>
           <SectionTitle
