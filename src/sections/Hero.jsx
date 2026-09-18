@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowDown, Mail } from 'lucide-react';
+import { ArrowDown, FileDown } from 'lucide-react';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
 
@@ -162,14 +162,17 @@ export default function Hero() {
               <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
             </button>
 
-            <button
-              type="button"
-              onClick={() => scrollToSection('contact')}
+            <a
+              href={personal.resumeUrl || "/CV_Juan_Sterling_Martua.pdf"}
+              download="CV_Juan_Sterling_Martua.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-sm transition-all duration-200 cursor-pointer shadow-xs"
+              aria-label="Download CV Juan Sterling"
             >
-              <span>Contact Me</span>
-              <Mail className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors" />
-            </button>
+              <FileDown className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200" />
+              <span>Download CV</span>
+            </a>
           </div>
         </AnimatedSection>
       </div>
