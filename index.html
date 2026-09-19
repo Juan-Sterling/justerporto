@@ -22,6 +22,8 @@
     <meta name="twitter:title" content="Juan Sterling — Software Developer" />
     <meta name="twitter:description" content="Personal developer portfolio for Juan Sterling showcasing education, skills, work experience, and contact." />
     
+    <meta name="color-scheme" content="light dark" />
+    
     <!-- Google Fonts: Inter, Space Grotesk, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,8 +32,23 @@
       (function () {
         try {
           const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (stored === 'dark' || (!stored && prefersDark)) {
+          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+          
+          let isDark = true;
+          if (stored === 'dark') {
+            isDark = true;
+          } else if (stored === 'light') {
+            isDark = false;
+          } else if (prefersDark) {
+            isDark = true;
+          } else if (prefersLight) {
+            isDark = false;
+          } else {
+            isDark = true; // Default fallback to dark for portfolio
+          }
+
+          if (isDark) {
             document.documentElement.classList.add('dark');
             document.documentElement.classList.remove('light');
             document.documentElement.style.colorScheme = 'dark';

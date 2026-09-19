@@ -9,7 +9,13 @@ export function ThemeProvider({ children }) {
       if (savedTheme === 'dark' || savedTheme === 'light') {
         return savedTheme;
       }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
+      }
+      return 'dark';
     }
     return 'dark';
   });
@@ -37,6 +43,8 @@ export function ThemeProvider({ children }) {
 
   // Listen to system preference changes if user hasn't explicitly set a preference
   useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleSystemChange = (e) => {
       const savedTheme = localStorage.getItem('theme');
@@ -45,8 +53,13 @@ export function ThemeProvider({ children }) {
       }
     };
 
-    mediaQuery.addEventListener('change', handleSystemChange);
-    return () => mediaQuery.removeEventListener('change', handleSystemChange);
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleSystemChange);
+      return () => mediaQuery.removeEventListener('change', handleSystemChange);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handleSystemChange);
+      return () => mediaQuery.removeListener(handleSystemChange);
+    }
   }, []);
 
   const toggleTheme = () => {
@@ -59,8 +72,25 @@ export function ThemeProvider({ children }) {
   const resetToSystem = () => {
     localStorage.removeItem('theme');
     setIsSystem(true);
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(systemPrefersDark ? 'dark' : 'light');
+    const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (systemPrefersDark) {
+      setTheme('dark');
+    } else if (systemPrefersLight) {
+      setTheme('light');
+    } else {
+      setTheme('dark');
+    }
+  };
+
+  const setThemeExplicit = (mode) => {
+    if (mode === 'system') {
+      resetToSystem();
+    } else {
+      setTheme(mode);
+      setIsSystem(false);
+      localStorage.setItem('theme', mode);
+    }
   };
 
   return (
@@ -70,6 +100,7 @@ export function ThemeProvider({ children }) {
         isDark: theme === 'dark',
         toggleTheme,
         resetToSystem,
+        setThemeExplicit,
         isSystem,
       }}
     >

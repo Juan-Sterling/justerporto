@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
 import ExperienceItem from '../components/ExperienceItem';
 import ProjectCard from '../components/ProjectCard';
 import TerminalPrompt from '../components/TerminalPrompt';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
+import { ChevronDown } from 'lucide-react';
+
+const INITIAL_EXPERIENCE_COUNT = 2;
 
 export default function Experience() {
   const { experience, personalProjects = [] } = portfolioData;
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const initialExperience = experience.slice(0, INITIAL_EXPERIENCE_COUNT);
+  const remainingExperience = experience.slice(INITIAL_EXPERIENCE_COUNT);
 
   return (
     <section id="experience" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60">
@@ -22,15 +29,90 @@ export default function Experience() {
 
         {/* Work Experience Timeline */}
         <div className="mt-8">
-          {experience.map((item, index) => (
-            <AnimatedSection key={index} delay={index * 120}>
+          {initialExperience.map((item, index) => (
+            <AnimatedSection key={item.organization + item.period} delay={index * 120}>
               <ExperienceItem
                 experience={item}
-                isLast={index === experience.length - 1}
+                isLast={
+                  !isExpanded && remainingExperience.length > 0
+                    ? index === initialExperience.length - 1
+                    : remainingExperience.length === 0 && index === initialExperience.length - 1
+                }
               />
             </AnimatedSection>
           ))}
+
+          {/* Smooth Expandable Section for Remaining Experience */}
+          <div
+            className="transition-all duration-500 ease-in-out"
+            style={{
+              display: 'grid',
+              gridTemplateRows: isExpanded ? '1fr' : '0fr',
+              opacity: isExpanded ? 1 : 0,
+            }}
+          >
+            <div className="overflow-hidden min-h-0">
+              {remainingExperience.map((item, index) => (
+                <ExperienceItem
+                  key={item.organization + item.period}
+                  experience={item}
+                  isLast={index === remainingExperience.length - 1}
+                />
+              ))}
+            </div>
+          </div>
         </div>
+
+        {/* Dynamic Non-Box Show More / Show Less Toggle */}
+        {remainingExperience.length > 0 && (
+          <div className="relative mt-2 mb-6 flex flex-col items-center justify-center">
+            {/* Subtle gradient veil when collapsed */}
+            <div
+              className={`absolute -top-16 inset-x-0 h-16 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 dark:from-[#000000] dark:via-[#000000]/80 to-transparent pointer-events-none transition-opacity duration-500 ${
+                isExpanded ? 'opacity-0' : 'opacity-100'
+              }`}
+              aria-hidden="true"
+            />
+
+            {/* Subtle divider line with centered interactive trigger */}
+            <div className="w-full flex items-center justify-center relative">
+              <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-[#E4E4E7] dark:via-[#2A2A2A] to-transparent" />
+              </div>
+
+              {/* Minimalist, non-boxy button */}
+              <button
+                type="button"
+                onClick={() => setIsExpanded((prev) => !prev)}
+                className="relative z-10 inline-flex items-center gap-2.5 px-6 py-2 bg-[#FAFAFA] dark:bg-[#000000] text-xs font-mono text-[#71717A] dark:text-[#A1A1AA] hover:text-[#E11D2E] dark:hover:text-[#E11D2E] transition-all duration-300 cursor-pointer group select-none"
+                aria-expanded={isExpanded}
+              >
+                <span className="relative flex h-1.5 w-1.5">
+                  <span
+                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                      isExpanded ? 'bg-transparent' : 'bg-[#E11D2E]'
+                    }`}
+                  />
+                  <span
+                    className={`relative inline-flex rounded-full h-1.5 w-1.5 ${
+                      isExpanded ? 'bg-[#71717A]' : 'bg-[#E11D2E]'
+                    }`}
+                  />
+                </span>
+
+                <span className="tracking-widest uppercase text-[11px] font-semibold group-hover:tracking-wider transition-all duration-300">
+                  {isExpanded ? 'Show Less' : 'Show More'}
+                </span>
+
+                <ChevronDown
+                  className={`w-4 h-4 text-[#E11D2E] transition-transform duration-300 ${
+                    isExpanded ? 'rotate-180' : 'group-hover:translate-y-0.5'
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Sub-section: Personal Projects */}
         {personalProjects && personalProjects.length > 0 && (

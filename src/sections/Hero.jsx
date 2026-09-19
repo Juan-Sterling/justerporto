@@ -150,16 +150,16 @@ export default function Hero() {
 
         {/* 5. CTAs with Micro-Animations */}
         <AnimatedSection delay={280}>
-          <div className="pt-2 flex flex-wrap items-center gap-4">
+          <div className="pt-2 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center sm:gap-4">
             <button
               type="button"
               onClick={() => scrollToSection('experience')}
-              className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] active:scale-95 text-white font-medium text-sm transition-all duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer overflow-hidden"
+              className="group relative inline-flex items-center justify-center gap-2 sm:gap-2.5 w-full sm:w-auto px-3 sm:px-6 py-2.5 sm:py-3 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] active:scale-95 text-white font-medium text-xs sm:text-sm transition-all duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer overflow-hidden whitespace-nowrap"
             >
               {/* Shimmer sweep effect */}
               <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
               <span>View Experience</span>
-              <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+              <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-y-0.5 transition-transform shrink-0" />
             </button>
 
             <a
@@ -167,24 +167,24 @@ export default function Hero() {
               download="CV_Juan_Sterling_Martua.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-sm transition-all duration-200 cursor-pointer shadow-xs"
+              className="group inline-flex items-center justify-center gap-2 sm:gap-2.5 w-full sm:w-auto px-3 sm:px-6 py-2.5 sm:py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-xs whitespace-nowrap"
               aria-label="Download CV Juan Sterling"
             >
-              <FileDown className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200" />
+              <FileDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
               <span>Download CV</span>
             </a>
           </div>
 
           {/* Contact Button below View Experience & Download CV */}
-          <div className="pt-3">
+          <div className="pt-2.5 sm:pt-3">
             <button
               type="button"
               onClick={() => scrollToSection('contact')}
-              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-sm transition-all duration-200 cursor-pointer shadow-xs"
+              className="group inline-flex items-center justify-center gap-2 sm:gap-2.5 w-full sm:w-auto px-3 sm:px-6 py-2.5 sm:py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-xs whitespace-nowrap"
             >
-              <Mail className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors" />
+              <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
               <span>Contact Me</span>
-              <ArrowDown className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200" />
+              <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
             </button>
           </div>
         </AnimatedSection>
