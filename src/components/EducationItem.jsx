@@ -51,7 +51,7 @@ export default function EducationItem({ edu }) {
       {achievements && achievements.length > 0 && (
         <div className="space-y-2 mb-5">
           <h4 className="text-xs font-mono uppercase tracking-wider text-[#71717A]">
-            Academic Achievements &amp; Milestones
+            Experience &amp; Achievements
           </h4>
           <ul className="space-y-2">
             {achievements.map((item, idx) => (

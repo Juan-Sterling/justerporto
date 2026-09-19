@@ -27,11 +27,14 @@ export default function Skills() {
 
         {/* Initial Skills Grid (12 items) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
-          {initialSkills.map((skill, index) => (
-            <AnimatedSection key={skill.name} delay={(index % 6) * 50}>
-              <SkillCard skill={skill} />
-            </AnimatedSection>
-          ))}
+          {initialSkills.map((skill, index) => {
+            const skillName = typeof skill === 'string' ? skill : skill.name;
+            return (
+              <AnimatedSection key={skillName} delay={(index % 6) * 50}>
+                <SkillCard skill={skill} />
+              </AnimatedSection>
+            );
+          })}
         </div>
 
         {/* Smooth Expandable Section for Remaining Skills */}
@@ -46,9 +49,12 @@ export default function Skills() {
         >
           <div className="overflow-hidden min-h-0">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 pt-1">
-              {remainingSkills.map((skill) => (
-                <SkillCard key={skill.name} skill={skill} />
-              ))}
+              {remainingSkills.map((skill) => {
+                const skillName = typeof skill === 'string' ? skill : skill.name;
+                return (
+                  <SkillCard key={skillName} skill={skill} />
+                );
+              })}
             </div>
           </div>
         </div>

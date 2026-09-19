@@ -18,136 +18,60 @@ export const portfolioData = {
       institution: "Universitas Kristen Maranatha",
       period: "2020 — 2024",
       gpa: "3.82 / 4.00",
+      achievements: [
+        "6x Dean's List recipient for outstanding academic performance",
+        "Participated in the MBKM program",
+        "Participated in academic and non-academic competitions",
+        "Participated in various workshops and seminars",
+      ],
       relevantCourses: [
+        "Frontend Development",
+        "Backend Development",
+        "Database Systems",
         "Software Engineering",
-        "Web Application Architecture",
-        "Database Management Systems",
+        "Computer Networks",
+        "Machine Learning",
         "Algorithms & Data Structures",
+        "Multiplatform Programming",
+        "Internet of Things (IoT)",
       ],
     },
   ],
 
   skills: [
-    {
-      name: "React.js",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
-    },
-    {
-      name: "JavaScript",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
-    },
-    {
-      name: "HTML5",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",
-    },
-    {
-      name: "CSS3",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg",
-    },
-    {
-      name: "Tailwind CSS",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
-    },
-    {
-      name: "jQuery",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jquery/jquery-original.svg",
-    },
-    {
-      name: "Bootstrap",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg",
-    },
-    {
-      name: "Laravel",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg",
-    },
-    {
-      name: "PHP",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg",
-    },
-    {
-      name: "Symfony",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/symfony/symfony-original.svg",
-    },
-    {
-      name: "Python",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
-    },
-    {
-      name: "Odoo",
-      icon: "https://cdn.simpleicons.org/odoo",
-    },
-    {
-      name: "REST API",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg",
-    },
-    {
-      name: "SQL Server",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/microsoftsqlserver/microsoftsqlserver-plain.svg",
-    },
-    {
-      name: "PostgreSQL",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
-    },
-    {
-      name: "MySQL",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
-    },
-    {
-      name: "Git",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",
-    },
-    {
-      name: "Node.js",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
-    },
-    {
-      name: "Docker",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
-    },
-    {
-      name: "Postman",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg",
-    },
-    {
-      name: "VS Code",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg",
-    },
-    {
-      name: "Figma",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
-    },
-    {
-      name: "Jira",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jira/jira-original.svg",
-    },
-    {
-      name: "Kotlin",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg",
-    },
-    {
-      name: "Flutter",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg",
-    },
-    {
-      name: "Java",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg",
-    },
-    {
-      name: "Next.js",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
-    },
-    {
-      name: "Github",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg",
-    },
-    {
-      name: "Firebase",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg",
-    },
-    {
-      name: "AWS",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg",
-    },
+    "Laravel",
+    "PHP",
+    "JavaScript",
+    "HTML5",
+    "CSS3",
+    "Tailwind CSS",
+    "Bootstrap",
+    "Python",
+    "Odoo",
+    "REST API",
+    "SQL Server",
+    "PostgreSQL",
+    "MySQL",
+    "Git",
+    "React.js",
+    "Node.js",
+    "Next.js",
+    "Supabase",
+    "Vercel",
+    "jQuery",
+    "Symfony",
+    "Docker",
+    "Postman",
+    "VS Code",
+    "Figma",
+    "Jira",
+    "Kotlin",
+    "Flutter",
+    "Java",
+    "Github",
+    "Cloudinary",
+    "Firebase",
+    "AWS",
   ],
 
   experience: [
@@ -191,7 +115,7 @@ export const portfolioData = {
       title: "LOUIFOOTBALL CATALOG",
       period: "2026",
       description: "Built a web-based catalog website for LOUIFOOTBALL",
-      technologies: ["Next.js", "Tailwind CSS", "JavaScript"],
+      technologies: ["Next.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary"],
       liveUrl: "https://louifootball.vercel.app/",
     },
   ],

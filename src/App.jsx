@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import WelcomeScreen from './components/WelcomeScreen';
 import Navbar from './components/Navbar';
 import Hero from './sections/Hero';
 import Education from './sections/Education';
@@ -8,6 +9,7 @@ import Contact from './sections/Contact';
 import Footer from './components/Footer';
 
 export default function App() {
+  const [showWelcome, setShowWelcome] = useState(true);
   const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
@@ -39,6 +41,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#000000] text-[#09090B] dark:text-white flex flex-col selection:bg-[#E11D2E]/30 selection:text-white transition-colors duration-300">
+      {/* Opening Welcome Screen Animation */}
+      {showWelcome && <WelcomeScreen onComplete={() => setShowWelcome(false)} />}
+
       {/* Sticky Header Navigation */}
       <Navbar activeSection={activeSection} />
 

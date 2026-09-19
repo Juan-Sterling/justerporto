@@ -49,7 +49,7 @@ export default function Footer() {
             </div>
           </div>
           <p className="text-xs text-[#71717A]">
-            Built with React.js &amp; Tailwind CSS.
+            Crafted with Monster energy • &ldquo;Baby, I&rsquo;m a Developer&rdquo; // BAEMON 07
           </p>
         </div>
 

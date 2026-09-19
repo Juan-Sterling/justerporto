@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Terminal } from 'lucide-react';
+import { getTechIconUrl } from '../utils/techIcons';
 
 export default function SkillCard({ skill }) {
   const [imgError, setImgError] = useState(false);
-  const { name, icon } = skill;
-  const isGithub = name.toLowerCase() === 'github';
+  const name = typeof skill === 'string' ? skill : skill.name;
+  const icon = (typeof skill === 'object' && skill.icon) ? skill.icon : getTechIconUrl(name);
+  const isGithub = name?.toLowerCase() === 'github';
 
   return (
     <div className="group relative flex flex-col items-center justify-center text-center p-3.5 sm:p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/50 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] transition-all duration-200 hover:-translate-y-0.5 shadow-xs hover:shadow-md dark:hover:shadow-black/40 select-none">

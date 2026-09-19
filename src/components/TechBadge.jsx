@@ -1,52 +1,7 @@
 import React, { useState } from 'react';
-import { portfolioData } from '../data/portfolioData';
+import { getTechIconUrl } from '../utils/techIcons';
 
-// Fallback dictionary for common technologies that might not be in portfolioData.skills directly
-const FALLBACK_ICONS = {
-  linux: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg',
-  'cloud computing': 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/googlecloud/googlecloud-original.svg',
-  cloud: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/googlecloud/googlecloud-original.svg',
-  odbc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg',
-  'open database connectivity (odbc)': 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg',
-  'rest api': 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg',
-  api: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastapi/fastapi-original.svg',
-  nextjs: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
-  'next.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
-  github: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg',
-  'node.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
-  nodejs: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
-  node: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
-};
-
-export function getTechIconUrl(name) {
-  if (!name) return null;
-  const normalized = name.trim().toLowerCase();
-
-  // 1. Search in portfolioData.skills
-  const foundSkill = portfolioData.skills?.find(
-    (s) => s.name.trim().toLowerCase() === normalized
-  );
-  if (foundSkill?.icon) {
-    return foundSkill.icon;
-  }
-
-  // 2. Check fallback map
-  if (FALLBACK_ICONS[normalized]) {
-    return FALLBACK_ICONS[normalized];
-  }
-
-  // 3. Normalized matching (e.g. 'react' matches 'react.js')
-  const partialSkill = portfolioData.skills?.find(
-    (s) =>
-      s.name.toLowerCase().includes(normalized) ||
-      normalized.includes(s.name.toLowerCase())
-  );
-  if (partialSkill?.icon) {
-    return partialSkill.icon;
-  }
-
-  return null;
-}
+export { getTechIconUrl };
 
 export default function TechBadge({ name, size = 'default' }) {
   const [imgError, setImgError] = useState(false);
