@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import SectionTitle from '../components/SectionTitle';
 import ExperienceItem from '../components/ExperienceItem';
 import ProjectCard from '../components/ProjectCard';
-import TerminalPrompt from '../components/TerminalPrompt';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
 import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -112,7 +111,6 @@ export default function Experience() {
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
           <SectionTitle
-            promptCommand="git log --experience"
             title="Work History & Experience"
             subtitle="Chronological breakdown of engineering roles, software projects, and core contributions."
           />
@@ -211,9 +209,6 @@ export default function Experience() {
             <AnimatedSection>
               <div className="flex items-end justify-between gap-4 mb-6">
                 <div className="space-y-3">
-                  <div>
-                    <TerminalPrompt command="ls -la ./other-projects" />
-                  </div>
                   <div className="flex items-center gap-3">
                     <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif]">
                       Other Projects &amp; Collaborations

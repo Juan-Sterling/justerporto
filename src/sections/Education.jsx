@@ -21,7 +21,6 @@ export default function Education() {
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
           <SectionTitle
-            promptCommand="cat education.txt"
             title="Academic Background"
             subtitle="Formal foundation in Information Technology, academic coursework, and degree credentials."
           />

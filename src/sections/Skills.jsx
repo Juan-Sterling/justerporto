@@ -19,7 +19,6 @@ export default function Skills() {
       <div className="max-w-6xl mx-auto">
         <AnimatedSection>
           <SectionTitle
-            promptCommand="npm list --skills"
             title="Technical Capabilities"
             subtitle="A unified collection of languages, frameworks, databases, and engineering tools used across modern software development."
           />

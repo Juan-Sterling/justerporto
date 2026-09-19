@@ -2,7 +2,6 @@ export const portfolioData = {
   personal: {
     name: "Juan Sterling",
     role: "Software Developer",
-    terminalUser: "juan@portfolio:~$",
     tagline: "Interest in IT, especially in Web and Android development. With a strong expertise in Web development and Android, I am ready to contribute to projects requiring deep technical understanding and the ability to deliver innovative solutions.",
     email: "juansterling1409@gmail.com",
     github: "https://github.com/Juan-Sterling",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight, Code2 } from 'lucide-react';
+import { Menu, X, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const NAV_ITEMS = [
@@ -108,22 +108,9 @@ export default function Navbar({ activeSection = '' }) {
             })}
           </nav>
 
-          <div className="flex items-center gap-3 pl-2 border-l border-[#E4E4E7] dark:border-[#2A2A2A]">
+          <div className="flex items-center pl-2 border-l border-[#E4E4E7] dark:border-[#2A2A2A]">
             {/* Theme Toggle Button */}
             <ThemeToggle />
-
-            {/* Get in touch direct link */}
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick('contact');
-              }}
-              className="hidden lg:inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-md border border-[#E4E4E7] dark:border-[#2A2A2A] bg-[#F4F4F5] dark:bg-[#141414] text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/50 transition-all shadow-xs"
-            >
-              <span>get_in_touch</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#E11D2E]" />
-            </a>
           </div>
         </div>
 

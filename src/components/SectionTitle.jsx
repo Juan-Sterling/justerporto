@@ -1,14 +1,8 @@
 import React from 'react';
-import TerminalPrompt from './TerminalPrompt';
 
-export default function SectionTitle({ promptCommand, title, subtitle, className = "" }) {
+export default function SectionTitle({ title, subtitle, className = "" }) {
   return (
     <div className={`space-y-3 mb-10 sm:mb-14 ${className}`}>
-      {promptCommand && (
-        <div>
-          <TerminalPrompt command={promptCommand} />
-        </div>
-      )}
       <div className="flex items-center gap-3">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif]">
           {title}

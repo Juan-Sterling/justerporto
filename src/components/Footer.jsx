@@ -86,11 +86,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Status code & Back to Top */}
-        <div className="flex items-center gap-4">
-          <span className="font-mono text-xs text-[#71717A] dark:text-[#52525B] select-none">
-            process.exit(0)
-          </span>
+        {/* Back to Top */}
+        <div className="flex items-center">
           <button
             type="button"
             onClick={scrollToTop}

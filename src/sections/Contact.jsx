@@ -37,7 +37,6 @@ export default function Contact() {
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
           <SectionTitle
-            promptCommand="./contact.sh"
             title="Direct Contact & Inquiries"
             subtitle="Interested in discussing a software role, collaboration, or technical project? Reach out directly via email or connect through professional networks."
           />

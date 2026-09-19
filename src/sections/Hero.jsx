@@ -11,25 +11,6 @@ const ROLES = [
 export default function Hero() {
   const { personal } = portfolioData;
 
-  // Typewriter effect for terminal command whoami
-  const [promptCharIndex, setPromptCharIndex] = useState(0);
-  const targetPrompt = 'whoami';
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setPromptCharIndex((prev) => {
-        if (prev >= targetPrompt.length) {
-          clearInterval(timer);
-          return targetPrompt.length;
-        }
-        return prev + 1;
-      });
-    }, 120);
-    return () => clearInterval(timer);
-  }, []);
-
-  const typedPrompt = targetPrompt.slice(0, promptCharIndex);
-
   // Dynamic role typewriter cycle (typing 1-by-1, pause, deleting 1-by-1, pause)
   const [roleIndex, setRoleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -101,16 +82,9 @@ export default function Hero() {
       />
 
       <div className="max-w-4xl mx-auto w-full space-y-7 relative z-10">
-        {/* 2. Top Row: Terminal Prompt + Live Availability Beacon */}
+        {/* 2. Top Row: Live Availability Beacon + Location Badge */}
         <AnimatedSection delay={0}>
           <div className="flex flex-wrap items-center gap-3">
-            {/* Terminal Prompt with authentic blinking cursor */}
-            <div className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm px-3.5 py-1.5 rounded-md bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs hover:border-[#CBD5E1] dark:hover:border-[#3A3A3A] transition-colors">
-              <span className="text-[#71717A] dark:text-[#A1A1AA]">{personal.terminalUser}</span>
-              <span className="text-[#09090B] dark:text-white font-medium">{typedPrompt}</span>
-              <span className="inline-block w-2 h-4 bg-[#E11D2E] animate-pulse rounded-xs" aria-hidden="true" />
-            </div>
-
             {/* Pulsing Live Availability Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] text-xs font-mono text-[#52525B] dark:text-[#D4D4D8] shadow-xs">
               <span className="relative flex h-2 w-2">
