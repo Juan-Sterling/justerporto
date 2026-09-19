@@ -26,8 +26,7 @@ export const portfolioData = {
         "Participated in various workshops and seminars",
       ],
       relevantCourses: [
-        "Frontend Development",
-        "Backend Development",
+        "Full Stack Development",
         "Database Systems",
         "Software Engineering",
         "Computer Networks",
