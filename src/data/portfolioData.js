@@ -122,6 +122,34 @@ export const portfolioData = {
       technologies: ["Next.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary"],
       liveUrl: "https://louifootball.vercel.app/",
     },
+    {
+      title: "GAME PENALTY FOOTBALL",
+      period: "2022-2023",
+      description: "Developed a football penalty shootout game as a final course project in collaboration with a teammate, using Three.js to create an interactive 3D gaming experience.",
+      technologies: ["HTML", "JavaScript", "Three.js", "JSON"],
+      liveUrl: "https://github.com/kevinlau2102/tubes-grafkom",
+    },
+    {
+      title: "UrGalon",
+      period: "2022-2023",
+      description: "Developed an Android application called UrGalon as a final course project in collaboration with a teammate, using Kotlin. The application allows users to find nearby water refill depots and place orders for purchasing or refilling water gallons.",
+      technologies: ["Kotlin", "Firebase", "Figma"],
+      liveUrl: "https://github.com/MichaelMathew/UAS_Mobile",
+    },
+    {
+      title: "Movie Ticket Ticketing Apps",
+      period: "2022-2023",
+      description: "Developed a mobile ticketing application as a final course project using Dart and Flutter. The application enables users to explore currently showing and upcoming movies, check available showtimes and cinemas, and purchase tickets for their preferred movie, schedule, and cinema.",
+      technologies: ["Dart", "Flutter", "Firebase", "Figma"],
+      liveUrl: "",
+    },
+    {
+      title: "Berita Acara IT Maranatha",
+      period: "2022-2023",
+      description: "Developed a web-based teaching activity reporting system for Maranatha University as a final course project, in collaboration with a teammate. The system enables lecturers to report teaching sessions by recording meeting dates and times, student attendance, session notes, and supporting documentation.",
+      technologies: ["PHP", "Laravel", "PostgreSQL", "Bootstrap"],
+      liveUrl: "https://github.com/MartinWidarmadi/BeritaAcara",
+    },
   ],
 
   contact: {

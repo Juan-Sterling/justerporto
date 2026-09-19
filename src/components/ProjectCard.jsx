@@ -14,7 +14,7 @@ export default function ProjectCard({ project }) {
   const { title, description, technologies = [], liveUrl, githubUrl, period } = project;
 
   return (
-    <div className="group relative rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] p-5 sm:p-6 transition-all duration-300 hover:border-[#E11D2E]/60 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50 flex flex-col justify-between">
+    <div className="group relative rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] p-5 sm:p-6 transition-all duration-300 hover:border-[#E11D2E]/60 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50 flex flex-col justify-between h-full">
       <div>
         {/* Top bar: metadata and action links */}
         <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-[#E4E4E7] dark:border-[#2A2A2A]">
@@ -27,28 +27,29 @@ export default function ProjectCard({ project }) {
           </div>
 
           <div className="flex items-center gap-2">
-            {githubUrl && (
+            {Boolean(githubUrl && githubUrl.trim()) && (
               <a
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 title="View GitHub Repository"
-                className="p-1.5 rounded-md text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#090909] border border-transparent hover:border-[#E4E4E7] dark:hover:border-[#2A2A2A] transition-all"
+                className="p-1.5 rounded-md text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#090909] border border-transparent hover:border-[#E4E4E7] dark:border-[#2A2A2A] transition-all"
                 aria-label={`View GitHub repository for ${title}`}
               >
                 <GithubIcon className="w-4 h-4" />
               </a>
             )}
 
-            {liveUrl && (
+            {Boolean(liveUrl && liveUrl.trim()) && (
               <a
                 href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E11D2E]/50 hover:border-[#E11D2E] hover:bg-[#E11D2E]/10 text-xs font-mono text-[#09090B] dark:text-white transition-all group/btn shadow-xs"
+                title={liveUrl}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E11D2E]/50 hover:border-[#E11D2E] hover:bg-[#E11D2E]/10 text-xs font-mono text-[#09090B] dark:text-white transition-all group/btn shadow-xs max-w-[170px] sm:max-w-[260px] md:max-w-[320px]"
               >
-                <span>Visit</span>
-                <ExternalLink className="w-3 h-3 text-[#E11D2E] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                <span className="truncate">{liveUrl}</span>
+                <ExternalLink className="w-3 h-3 text-[#E11D2E] shrink-0 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
               </a>
             )}
           </div>
