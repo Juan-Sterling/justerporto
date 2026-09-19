@@ -5,6 +5,7 @@ export const portfolioData = {
     tagline: "Interested in IT, especially in Web and Android development. With strong experience in both fields, I am ready to contribute to projects that require technical expertise, problem-solving skills, and innovative solutions.",
     email: "[EMAIL_ADDRESS]",
     github: "https://github.com/Juan-Sterling",
+    github2: "https://github.com/juansterling",
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
     location: "North Jakarta, Indonesia",
     availability: "Available for opportunities",
@@ -153,7 +154,10 @@ export const portfolioData = {
 
   contact: {
     email: "juansterling1409@gmail.com",
+    whatsapp: "081809835640",
+    whatsappUrl: "https://wa.me/6281809835640",
     github: "https://github.com/Juan-Sterling",
+    github2: "https://github.com/juansterling",
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
     location: "North Jakarta, Indonesia",
     responseCommitment: "Typically responds within 24 hours",
