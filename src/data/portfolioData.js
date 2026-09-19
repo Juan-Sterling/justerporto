@@ -53,6 +53,7 @@ export const portfolioData = {
     "PostgreSQL",
     "MySQL",
     "Git",
+    "GitLab",
     "React.js",
     "Node.js",
     "Next.js",
@@ -85,7 +86,7 @@ export const portfolioData = {
       responsibilities: [
         "Work with the Foxion team on a project for their client, using HTML, Laravel, and PHP programming languages",
       ],
-      technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "Git"],
+      technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "GitLab"],
     },
     {
       period: "Jul 2024 — Nov 2024",
@@ -96,7 +97,7 @@ export const portfolioData = {
       responsibilities: [
         "Work with the StafBook team on a project for their client, PT. Biro Klasifikasi Indonesia (BUMN), involving document digitization using HTML, Laravel, and PHP programming languages, as well as assisting in the development and enhancement of StafBook's products.",
       ],
-      technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "Git"],
+      technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "GitLab"],
     },
     {
       period: "Feb 2023 — Jul 2024",
