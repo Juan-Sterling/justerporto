@@ -2,8 +2,8 @@ export const portfolioData = {
   personal: {
     name: "Juan Sterling",
     role: "Software Developer",
-    tagline: "Interest in IT, especially in Web and Android development. With a strong expertise in Web development and Android, I am ready to contribute to projects requiring deep technical understanding and the ability to deliver innovative solutions.",
-    email: "juansterling1409@gmail.com",
+    tagline: "Interested in IT, especially in Web and Android development. With strong experience in both fields, I am ready to contribute to projects that require technical expertise, problem-solving skills, and innovative solutions.",
+    email: "[EMAIL_ADDRESS]",
     github: "https://github.com/Juan-Sterling",
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
     location: "North Jakarta, Indonesia",
