@@ -180,11 +180,11 @@ export default function Hero() {
             <button
               type="button"
               onClick={() => scrollToSection('contact')}
-              className="group inline-flex items-center justify-center gap-2 sm:gap-2.5 w-full sm:w-auto px-3 sm:px-6 py-2.5 sm:py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-xs whitespace-nowrap"
+              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-sm transition-all duration-200 cursor-pointer shadow-xs"
             >
-              <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
+              <Mail className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
               <span>Contact Me</span>
-              <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
+              <ArrowDown className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
             </button>
           </div>
         </AnimatedSection>

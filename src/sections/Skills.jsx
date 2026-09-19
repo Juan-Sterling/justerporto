@@ -70,27 +70,27 @@ export default function Skills() {
                 <div className="w-full h-px bg-gradient-to-r from-transparent via-[#E4E4E7] dark:via-[#2A2A2A] to-transparent" />
               </div>
 
-              {/* Minimalist, non-boxy button */}
+              {/* Interactive Pill Button */}
               <button
                 type="button"
                 onClick={() => setIsExpanded((prev) => !prev)}
-                className="relative z-10 inline-flex items-center gap-2.5 px-6 py-2 bg-white dark:bg-[#000000] text-xs font-mono text-[#71717A] dark:text-[#A1A1AA] hover:text-[#E11D2E] dark:hover:text-[#E11D2E] transition-all duration-300 cursor-pointer group select-none"
+                className="relative z-10 inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#333333] hover:border-[#E11D2E] dark:hover:border-[#E11D2E] text-[#09090B] dark:text-[#F4F4F5] text-xs font-mono shadow-xs hover:shadow-md hover:shadow-[#E11D2E]/10 active:scale-95 transition-all duration-200 cursor-pointer group select-none"
                 aria-expanded={isExpanded}
               >
-                <span className="relative flex h-1.5 w-1.5">
+                <span className="relative flex h-2 w-2">
                   <span
                     className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
                       isExpanded ? 'bg-transparent' : 'bg-[#E11D2E]'
                     }`}
                   />
                   <span
-                    className={`relative inline-flex rounded-full h-1.5 w-1.5 ${
+                    className={`relative inline-flex rounded-full h-2 w-2 ${
                       isExpanded ? 'bg-[#71717A]' : 'bg-[#E11D2E]'
                     }`}
                   />
                 </span>
 
-                <span className="tracking-widest uppercase text-[11px] font-semibold group-hover:tracking-wider transition-all duration-300">
+                <span className="tracking-wider uppercase text-xs font-semibold group-hover:text-[#E11D2E] transition-colors">
                   {isExpanded ? 'Show Less' : 'Show More'}
                 </span>
 

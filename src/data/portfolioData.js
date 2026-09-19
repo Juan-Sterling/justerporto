@@ -188,10 +188,10 @@ export const portfolioData = {
 
   personalProjects: [
     {
-      title: "Loui Football",
+      title: "LOUIFOOTBALL CATALOG",
       period: "2026",
       description: "Built a web-based catalog website for LOUIFOOTBALL",
-      technologies: ["Next.js", "Tailwind CSS", "JavaScript", "REST API"],
+      technologies: ["Next.js", "Tailwind CSS", "JavaScript"],
       liveUrl: "https://louifootball.vercel.app/",
     },
   ],
