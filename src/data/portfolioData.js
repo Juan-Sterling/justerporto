@@ -7,7 +7,7 @@ export const portfolioData = {
     email: "juansterling1409@gmail.com",
     github: "https://github.com/Juan-Sterling",
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
-    location: "Indonesia",
+    location: "North Jakarta, Indonesia",
     availability: "Available for opportunities",
     resumeUrl: "/CV_Juan_Sterling_Martua.pdf",
   },
@@ -16,6 +16,7 @@ export const portfolioData = {
     {
       degree: "Bachelor of Information Technology (S.Kom.)",
       institution: "Universitas Kristen Maranatha",
+      location: "Bandung, Indonesia",
       period: "2020 — 2024",
       gpa: "3.82 / 4.00",
       achievements: [
@@ -65,9 +66,10 @@ export const portfolioData = {
     "VS Code",
     "Figma",
     "Jira",
-    "Kotlin",
-    "Flutter",
     "Java",
+    "Kotlin",
+    "Dart",
+    "Flutter",
     "Github",
     "Cloudinary",
     "Firebase",
@@ -79,6 +81,7 @@ export const portfolioData = {
       period: "Jul 2025 — Present",
       position: "Full Stack Developer",
       organization: "Foxion Technologies",
+      location: "North Jakarta, Indonesia",
       type: "Full-time",
       responsibilities: [
         "Work with the Foxion team on a project for their client, using HTML, Laravel, and PHP programming languages",
@@ -89,6 +92,7 @@ export const portfolioData = {
       period: "Jul 2024 — Nov 2024",
       position: "Full Stack Developer",
       organization: "Stafbook (YCW22)",
+      location: "North Jakarta, Indonesia",
       type: "Contract",
       responsibilities: [
         "Work with the StafBook team on a project for their client, PT. Biro Klasifikasi Indonesia (BUMN), involving document digitization using HTML, Laravel, and PHP programming languages, as well as assisting in the development and enhancement of StafBook's products.",
@@ -99,6 +103,7 @@ export const portfolioData = {
       period: "Feb 2023 — Jul 2024",
       position: "Software Programmer",
       organization: "i2c Studio",
+      location: "Bandung, Indonesia",
       type: "Internship",
       responsibilities: [
         "Being an intern and part-time software programmer who assists i2c Studio in creating a project for LPPM Maranatha called SIPPM.",
@@ -114,7 +119,7 @@ export const portfolioData = {
     {
       title: "LOUIFOOTBALL CATALOG",
       period: "2026",
-      description: "Built a web-based catalog website for LOUIFOOTBALL",
+      description: "Developed a web-based product catalog for LOUIFOOTBALL. The website is designed to showcase available products and editions, providing visitors with an easy way to browse and explore LOUIFOOTBALL's merchandise collection.",
       technologies: ["Next.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary"],
       liveUrl: "https://louifootball.vercel.app/",
     },
@@ -124,7 +129,7 @@ export const portfolioData = {
     email: "juansterling1409@gmail.com",
     github: "https://github.com/Juan-Sterling",
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
-    location: "Indonesia",
+    location: "North Jakarta, Indonesia",
     responseCommitment: "Typically responds within 24 hours",
   },
 };

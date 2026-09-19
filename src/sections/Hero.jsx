@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowDown, FileDown, Mail, Code2 } from 'lucide-react';
+import { ArrowDown, FileDown, Mail, Code2, MapPin } from 'lucide-react';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
 
@@ -118,6 +118,12 @@ export default function Hero() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
               <span>{personal.availability}</span>
+            </div>
+
+            {/* Current Location Badge */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] text-xs font-mono text-[#52525B] dark:text-[#D4D4D8] shadow-xs">
+              <MapPin className="w-3.5 h-3.5 text-[#E11D2E]" />
+              <span>{personal.location || "North Jakarta, Indonesia"}</span>
             </div>
           </div>
         </AnimatedSection>

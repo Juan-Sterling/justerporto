@@ -1,8 +1,8 @@
 import React from 'react';
-import { GraduationCap, Award, CheckCircle2, BookOpen } from 'lucide-react';
+import { GraduationCap, Award, CheckCircle2, BookOpen, MapPin } from 'lucide-react';
 
 export default function EducationItem({ edu }) {
-  const { degree, institution, period, gpa, mbkm, achievements, relevantCourses } = edu;
+  const { degree, institution, location, period, gpa, mbkm, achievements, relevantCourses } = edu;
 
   return (
     <div className="rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] p-5 sm:p-7 transition-all duration-200 hover:border-[#CBD5E1] dark:hover:border-[#3A3A3A] hover:bg-[#FAFAFA] dark:hover:bg-[#181818] shadow-xs">
@@ -17,9 +17,18 @@ export default function EducationItem({ edu }) {
               {degree}
             </h3>
           </div>
-          <p className="text-sm font-medium text-[#52525B] dark:text-[#D4D4D8] mt-1.5">
-            {institution}
-          </p>
+          <div className="flex items-center gap-2 text-sm font-medium text-[#52525B] dark:text-[#D4D4D8] mt-1.5 flex-wrap">
+            <span>{institution}</span>
+            {location && (
+              <>
+                <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
+                <span className="text-xs text-[#71717A] dark:text-[#A1A1AA] flex items-center gap-1 font-mono">
+                  <MapPin className="w-3 h-3 text-[#E11D2E]" />
+                  {location}
+                </span>
+              </>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">

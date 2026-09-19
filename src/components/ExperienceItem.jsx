@@ -1,5 +1,5 @@
 import React from 'react';
-import { GitCommit, Calendar, Building2 } from 'lucide-react';
+import { GitCommit, Calendar, Building2, MapPin } from 'lucide-react';
 import TechBadge from './TechBadge';
 
 export default function ExperienceItem({ experience, isLast = false }) {
@@ -7,6 +7,7 @@ export default function ExperienceItem({ experience, isLast = false }) {
     period,
     position,
     organization,
+    location,
     type,
     responsibilities,
     technologies,
@@ -38,9 +39,18 @@ export default function ExperienceItem({ experience, isLast = false }) {
             <h3 className="font-['Space_Grotesk',sans-serif] text-lg font-bold text-[#09090B] dark:text-white tracking-tight">
               {position}
             </h3>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-[#71717A] dark:text-[#A1A1AA] mt-0.5">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-[#71717A] dark:text-[#A1A1AA] mt-0.5 flex-wrap">
               <Building2 className="w-3.5 h-3.5 text-[#E11D2E]" />
               <span className="font-medium text-[#52525B] dark:text-[#D4D4D8]">{organization}</span>
+              {location && (
+                <>
+                  <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
+                  <span className="text-xs text-[#71717A] dark:text-[#A1A1AA] flex items-center gap-1 font-mono">
+                    <MapPin className="w-3 h-3 text-[#E11D2E]" />
+                    {location}
+                  </span>
+                </>
+              )}
               {type && (
                 <>
                   <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
