@@ -64,7 +64,7 @@ export default function Skills() {
           <div className="relative mt-10 flex flex-col items-center justify-center">
             {/* Subtle gradient veil when collapsed */}
             <div
-              className={`absolute -top-16 inset-x-0 h-16 bg-gradient-to-t from-white via-white/80 dark:from-[#000000] dark:via-[#000000]/80 to-transparent pointer-events-none transition-opacity duration-500 ${
+              className={`absolute -top-16 inset-x-0 h-16 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 dark:from-[#000000] dark:via-[#000000]/80 to-transparent pointer-events-none transition-opacity duration-500 ${
                 isExpanded ? 'opacity-0' : 'opacity-100'
               }`}
               aria-hidden="true"

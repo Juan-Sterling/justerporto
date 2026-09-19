@@ -47,8 +47,13 @@ export default function App() {
       {/* Sticky Header Navigation */}
       <Navbar activeSection={activeSection} />
 
-      {/* Main Content Sections */}
-      <main className="flex-1 w-full">
+      {/* Main Content Sections with Unified Canvas Grid Motif */}
+      <main className="flex-1 w-full relative">
+        {/* Developer Canvas Grid across all sections */}
+        <div 
+          className="absolute inset-0 bg-[linear-gradient(to_right,#0000000d_1px,transparent_1px),linear-gradient(to_bottom,#0000000d_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#2A2A2A20_1px,transparent_1px),linear-gradient(to_bottom,#2A2A2A20_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none" 
+          aria-hidden="true"
+        />
         <Hero />
         <Education />
         <Skills />

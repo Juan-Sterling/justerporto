@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const NAV_ITEMS = [
@@ -33,28 +33,48 @@ export default function Navbar({ activeSection = '' }) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/90 dark:bg-[#000000]/90 backdrop-blur-md border-b border-[#E4E4E7] dark:border-[#2A2A2A] shadow-sm dark:shadow-lg dark:shadow-black/40 py-3.5'
-          : 'bg-white/70 dark:bg-[#000000]/60 backdrop-blur-sm border-b border-[#E4E4E7]/60 dark:border-[#2A2A2A]/40 py-5'
+          ? 'bg-white/90 dark:bg-[#000000]/90 backdrop-blur-md border-b border-[#E4E4E7] dark:border-[#2A2A2A] shadow-sm dark:shadow-lg dark:shadow-black/40 py-3'
+          : 'bg-white/70 dark:bg-[#000000]/60 backdrop-blur-sm border-b border-[#E4E4E7]/60 dark:border-[#2A2A2A]/40 py-4 sm:py-5'
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Brand Name / Wordmark (No JUAN.SYS) */}
+        {/* Brand Name / Wordmark with BABYMONSTER Devil Horns & Code Badge */}
         <a
           href="#hero"
           onClick={(e) => {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="group flex items-center gap-2 text-[#09090B] dark:text-white font-semibold tracking-tight text-base sm:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] rounded-md px-1"
+          className="group flex items-center gap-2.5 text-[#09090B] dark:text-white font-semibold tracking-tight text-base sm:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] rounded-md py-0.5 px-1"
           aria-label="Juan Sterling Home"
         >
-          <span className="font-mono text-[#E11D2E] text-sm group-hover:scale-110 transition-transform">
-            &gt;
-          </span>
-          <span className="font-['Space_Grotesk',sans-serif] group-hover:text-[#E11D2E] dark:group-hover:text-white transition-colors">
-            Juan Sterling
-          </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E11D2E]" />
+          {/* Devil Horns + Code Badge Motif */}
+          <div className="relative flex flex-col items-center justify-center shrink-0 pt-1">
+            {/* Stylized Devil Horns */}
+            <div className="flex items-center justify-between w-7 -mb-0.5 px-0.5 text-[#E11D2E] filter drop-shadow-[0_0_4px_rgba(225,29,46,0.7)] group-hover:scale-110 transition-transform duration-200">
+              {/* Left Horn */}
+              <svg className="w-2.5 h-2.5 -rotate-12 transform" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C9 7 4 14 3 22C7 19 11 15 12 2Z" />
+              </svg>
+              {/* Right Horn */}
+              <svg className="w-2.5 h-2.5 rotate-12 transform scale-x-[-1]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C9 7 4 14 3 22C7 19 11 15 12 2Z" />
+              </svg>
+            </div>
+
+            {/* Code Badge Container */}
+            <div className="p-1.5 rounded-lg bg-white dark:bg-[#090909] border border-[#E11D2E]/40 dark:border-[#E11D2E]/50 shadow-xs shadow-[#E11D2E]/20 group-hover:border-[#E11D2E] group-hover:shadow-md group-hover:shadow-[#E11D2E]/30 relative transition-all duration-200">
+              <div className="absolute inset-0 rounded-lg bg-[#E11D2E]/10 dark:bg-[#E11D2E]/20 blur-xs pointer-events-none" />
+              <Code2 className="w-3.5 h-3.5 text-[#E11D2E] relative z-10" />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="font-['Space_Grotesk',sans-serif] group-hover:text-[#E11D2E] dark:group-hover:text-white transition-colors font-bold">
+              Juan Sterling
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E11D2E] animate-pulse" />
+          </div>
         </a>
 
         {/* Desktop Navigation & Actions */}

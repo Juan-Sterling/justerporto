@@ -6,10 +6,24 @@ const ROLES = [
   "Software Developer",
 ];
 
+const TAGLINES = [
+  '“Baby, I’m a Developer”',
+  '"We Code Up"',
+  '“Keep the code DRIPPIN”',
+  '“Code by day, BAEMON on repeat”',
+  '“Drip, Debug, Deploy”',
+  '“Passion, Ambition, and a Little Bit of Code”',
+  '“I Like It When the Code Just Works.”',
+];
+
 export default function Footer() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
 
+  const [taglineIndex, setTaglineIndex] = useState(0);
+  const [isTaglineFading, setIsTaglineFading] = useState(false);
+
+  // Role rotator
   useEffect(() => {
     const interval = setInterval(() => {
       setIsFading(true);
@@ -18,6 +32,19 @@ export default function Footer() {
         setIsFading(false);
       }, 300);
     }, 2800);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // BABYMONSTER tagline rotator
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTaglineFading(true);
+      setTimeout(() => {
+        setTaglineIndex((prev) => (prev + 1) % TAGLINES.length);
+        setIsTaglineFading(false);
+      }, 300);
+    }, 3600);
 
     return () => clearInterval(interval);
   }, []);
@@ -38,19 +65,25 @@ export default function Footer() {
             <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
             <div className="inline-flex items-center overflow-hidden">
               <span
-                className={`font-mono text-xs transition-all duration-300 transform ${
-                  isFading
-                    ? 'opacity-0 -translate-y-2'
-                    : 'opacity-100 translate-y-0 text-[#E11D2E]'
-                }`}
+                className={`font-mono text-xs transition-all duration-300 transform ${isFading
+                  ? 'opacity-0 -translate-y-2'
+                  : 'opacity-100 translate-y-0 text-[#E11D2E]'
+                  }`}
               >
                 {ROLES[roleIndex]}
               </span>
             </div>
           </div>
-          <p className="text-xs text-[#71717A]">
-            Crafted with Monster energy • &ldquo;Baby, I&rsquo;m a Developer&rdquo; // BAEMON 07
-          </p>
+          <div className="min-h-[1.5rem] flex items-center justify-center sm:justify-start overflow-hidden">
+            <p
+              className={`text-xs text-[#71717A] transition-all duration-300 transform ${isTaglineFading
+                ? 'opacity-0 -translate-y-2'
+                : 'opacity-100 translate-y-0'
+                }`}
+            >
+              {TAGLINES[taglineIndex]}
+            </p>
+          </div>
         </div>
 
         {/* Status code & Back to Top */}

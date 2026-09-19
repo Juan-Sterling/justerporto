@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowDown, FileDown, Mail } from 'lucide-react';
+import { ArrowDown, FileDown, Mail, Code2 } from 'lucide-react';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
 
@@ -93,11 +93,7 @@ export default function Hero() {
       id="hero"
       className="min-h-[92vh] flex flex-col justify-center pt-28 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden select-none"
     >
-      {/* 1. Subtle Developer Canvas Grid & Ambient Glow Animation */}
-      <div 
-        className="absolute inset-0 bg-[linear-gradient(to_right,#0000000d_1px,transparent_1px),linear-gradient(to_bottom,#0000000d_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#2A2A2A20_1px,transparent_1px),linear-gradient(to_bottom,#2A2A2A20_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] pointer-events-none" 
-        aria-hidden="true"
-      />
+      {/* Ambient Red Glow Animation */}
       <div 
         className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[32rem] h-80 sm:h-[32rem] bg-[#E11D2E]/10 rounded-full blur-[100px] pointer-events-none animate-pulse"
         style={{ animationDuration: '6s' }}
@@ -129,9 +125,33 @@ export default function Hero() {
         {/* 3. Primary Identity with Dynamic Typewriter Role */}
         <AnimatedSection delay={120}>
           <div className="space-y-3">
-            <h1 className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-[#09090B] dark:text-white leading-none tracking-tighter">
-              {personal.name}
-            </h1>
+            <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+              <h1 className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-[#09090B] dark:text-white leading-none tracking-tighter">
+                {personal.name}
+              </h1>
+
+              {/* BABYMONSTER Devil Emblem */}
+              <div 
+                className="relative inline-flex flex-col items-center justify-center shrink-0 -mt-1 sm:-mt-2 select-none group cursor-default"
+                title="BAEMON // 07"
+              >
+                {/* Stylized Devil Horns */}
+                <div className="flex items-center justify-between w-9 sm:w-11 -mb-1 px-0.5 text-[#E11D2E] filter drop-shadow-[0_0_8px_rgba(225,29,46,0.8)] group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 -rotate-12 transform" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C9 7 4 14 3 22C7 19 11 15 12 2Z" />
+                  </svg>
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 rotate-12 transform scale-x-[-1]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C9 7 4 14 3 22C7 19 11 15 12 2Z" />
+                  </svg>
+                </div>
+
+                {/* Badge Container */}
+                <div className="p-2 sm:p-2.5 rounded-xl bg-white dark:bg-[#090909] border border-[#E11D2E]/40 dark:border-[#E11D2E]/50 shadow-md shadow-[#E11D2E]/20 group-hover:shadow-lg group-hover:shadow-[#E11D2E]/35 group-hover:border-[#E11D2E] transition-all duration-300 relative">
+                  <div className="absolute inset-0 rounded-xl bg-[#E11D2E]/10 dark:bg-[#E11D2E]/20 blur-xs pointer-events-none animate-pulse" />
+                  <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#E11D2E] relative z-10" />
+                </div>
+              </div>
+            </div>
 
             {/* Dynamic Role with Typewriter & Blinking Caret */}
             <div className="flex items-center gap-1 font-mono text-lg sm:text-xl md:text-2xl text-[#E11D2E] font-medium tracking-tight min-h-[2rem]">
@@ -150,11 +170,11 @@ export default function Hero() {
 
         {/* 5. CTAs with Micro-Animations */}
         <AnimatedSection delay={280}>
-          <div className="pt-2 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:items-center sm:gap-4">
+          <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => scrollToSection('experience')}
-              className="group relative inline-flex items-center justify-center gap-2 sm:gap-2.5 w-full sm:w-auto px-3 sm:px-6 py-2.5 sm:py-3 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] active:scale-95 text-white font-medium text-xs sm:text-sm transition-all duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer overflow-hidden whitespace-nowrap"
+              className="group relative inline-flex items-center justify-center gap-2 w-44 sm:w-48 h-11 sm:h-12 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] active:scale-95 text-white font-medium text-xs sm:text-sm transition-all duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer overflow-hidden whitespace-nowrap"
             >
               {/* Shimmer sweep effect */}
               <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
@@ -167,24 +187,20 @@ export default function Hero() {
               download="CV_Juan_Sterling_Martua.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-2 sm:gap-2.5 w-full sm:w-auto px-3 sm:px-6 py-2.5 sm:py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-xs whitespace-nowrap"
+              className="group inline-flex items-center justify-center gap-2 w-44 sm:w-48 h-11 sm:h-12 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-xs whitespace-nowrap"
               aria-label="Download CV Juan Sterling"
             >
               <FileDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
               <span>Download CV</span>
             </a>
-          </div>
 
-          {/* Contact Button below View Experience & Download CV */}
-          <div className="pt-2.5 sm:pt-3">
             <button
               type="button"
               onClick={() => scrollToSection('contact')}
-              className="group inline-flex items-center gap-2.5 px-6 py-3 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-sm transition-all duration-200 cursor-pointer shadow-xs"
+              className="group inline-flex items-center justify-center gap-2 w-44 sm:w-48 h-11 sm:h-12 rounded-md bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-95 text-[#09090B] dark:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-xs whitespace-nowrap"
             >
-              <Mail className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
+              <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
               <span>Contact Me</span>
-              <ArrowDown className="w-4 h-4 text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
             </button>
           </div>
         </AnimatedSection>
