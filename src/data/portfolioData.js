@@ -155,7 +155,7 @@ export const portfolioData = {
       responsibilities: [
         "Work with the Foxion team on a project for their client, using HTML, Laravel, and PHP programming languages",
       ],
-      technologies: ["Laravel", "PHP", "MySQL", "JavaScript", "Postman", "Bootstrap"],
+      technologies: ["Laravel", "PHP", "MySQL", "JavaScript", "REST API", "Bootstrap", "Git"],
     },
     {
       period: "Jul 2024 — Nov 2024",
@@ -165,7 +165,7 @@ export const portfolioData = {
       responsibilities: [
         "Work with the StafBook team on a project for their client, PT. Biro Klasifikasi Indonesia (BUMN), involving document digitization using HTML, Laravel, and PHP programming languages, as well as assisting in the development and enhancement of StafBook's products.",
       ],
-      technologies: ["Laravel", "PHP", "MySQL", "JavaScript", "Postman", "Bootstrap"],
+      technologies: ["Laravel", "PHP", "MySQL", "JavaScript", "REST API", "Bootstrap", "Git"],
     },
     {
       period: "Feb 2023 — Jul 2024",
@@ -186,7 +186,7 @@ export const portfolioData = {
     {
       title: "Loui Football",
       period: "2026",
-      description: "Interactive football analytics and match tracking platform built with modern web architecture, featuring clean visual stats, schedule updates, and responsive navigation.",
+      description: "Built a web-based catalog website for LOUIFOOTBALL",
       technologies: ["Next.js", "Tailwind CSS", "JavaScript", "REST API"],
       liveUrl: "https://louifootball.vercel.app/",
     },

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SectionTitle from '../components/SectionTitle';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
-import { Mail, MapPin, ArrowUpRight, Clock, Copy, Check } from 'lucide-react';
+import { Mail, ArrowUpRight, Copy, Check } from 'lucide-react';
 
 function GithubIcon({ className = "w-5 h-5" }) {
   return (
@@ -43,48 +43,41 @@ export default function Contact() {
           />
         </AnimatedSection>
 
-        {/* 3 Main Contact Channel Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-6">
+        {/* Simplified Contact Channels */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Email Card */}
           <AnimatedSection delay={100}>
-            <div className="group relative flex flex-col justify-between p-5 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleCopyEmail}
-                    title="Copy email address"
-                    className="p-1.5 rounded-md text-[#71717A] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#090909] border border-transparent hover:border-[#E4E4E7] dark:hover:border-[#2A2A2A] transition-all cursor-pointer"
-                    aria-label="Copy email address"
-                  >
-                    {copied ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono text-[#E11D2E] animate-in fade-in">
-                        <Check className="w-3.5 h-3.5" />
-                        <span>Copied</span>
-                      </span>
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </button>
+            <div className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-200 shadow-xs">
+              <a
+                href={`mailto:${contact.email}`}
+                className="flex items-center gap-3 min-w-0 flex-1"
+                title={`Send email to ${contact.email}`}
+              >
+                <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
+                  <Mail className="w-5 h-5" />
                 </div>
-                <span className="text-[11px] font-mono text-[#71717A] block mb-1">
-                  // DIRECT EMAIL
-                </span>
-                <a
-                  href={`mailto:${contact.email}`}
-                  className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white hover:text-[#E11D2E] dark:hover:text-[#E11D2E] transition-colors break-all block"
-                >
-                  {contact.email}
-                </a>
-              </div>
-
-              <div className="pt-4 mt-4 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA]">
-                <span>send_mail</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#E11D2E] dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </div>
+                <div className="min-w-0">
+                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
+                    Email
+                  </span>
+                  <span className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
+                    {contact.email}
+                  </span>
+                </div>
+              </a>
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                title="Copy email address"
+                className="p-1.5 ml-2 rounded-md text-[#71717A] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#090909] border border-transparent hover:border-[#E4E4E7] dark:hover:border-[#2A2A2A] transition-all cursor-pointer shrink-0"
+                aria-label="Copy email address"
+              >
+                {copied ? (
+                  <Check className="w-4 h-4 text-[#E11D2E] animate-in fade-in" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+              </button>
             </div>
           </AnimatedSection>
 
@@ -94,29 +87,22 @@ export default function Contact() {
               href={contact.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex flex-col justify-between p-5 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50 block"
+              className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-200 shadow-xs"
             >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
-                    <LinkedinIcon className="w-5 h-5" />
-                  </div>
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
+                  <LinkedinIcon className="w-5 h-5" />
                 </div>
-                <span className="text-[11px] font-mono text-[#71717A] block mb-1">
-                  // PROFESSIONAL NETWORK
-                </span>
-                <span className="font-['Space_Grotesk',sans-serif] text-base font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] dark:group-hover:text-white block transition-colors">
-                  LinkedIn Profile
-                </span>
-                <span className="text-xs text-[#52525B] dark:text-[#A1A1AA] font-mono mt-0.5 block">
-                  Connect &amp; Message
-                </span>
+                <div className="min-w-0">
+                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
+                    LinkedIn
+                  </span>
+                  <span className="font-['Space_Grotesk',sans-serif] text-xs sm:text-sm font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
+                    Juan Sterling Martua
+                  </span>
+                </div>
               </div>
-
-              <div className="pt-4 mt-4 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA]">
-                <span>view_profile</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#E11D2E] dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </div>
+              <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-2" />
             </a>
           </AnimatedSection>
 
@@ -126,56 +112,25 @@ export default function Contact() {
               href={contact.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative flex flex-col justify-between p-5 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] transition-all duration-200 h-full hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50 block"
+              className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-200 shadow-xs"
             >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 group-hover:scale-105 transition-all">
-                    <GithubIcon className="w-5 h-5" />
-                  </div>
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
+                  <GithubIcon className="w-5 h-5" />
                 </div>
-                <span className="text-[11px] font-mono text-[#71717A] block mb-1">
-                  // SOURCE CODE
-                </span>
-                <span className="font-['Space_Grotesk',sans-serif] text-base font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] dark:group-hover:text-white block transition-colors">
-                  GitHub Repositories
-                </span>
-                <span className="text-xs text-[#52525B] dark:text-[#A1A1AA] font-mono mt-0.5 block">
-                  github.com/Juan-Sterling
-                </span>
+                <div className="min-w-0">
+                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
+                    GitHub
+                  </span>
+                  <span className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
+                    @Juan-Sterling
+                  </span>
+                </div>
               </div>
-
-              <div className="pt-4 mt-4 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA]">
-                <span>view_repos</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#71717A] group-hover:text-[#E11D2E] dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </div>
+              <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-2" />
             </a>
           </AnimatedSection>
         </div>
-
-        {/* Bottom Banner: Location, Availability & Direct Action */}
-        <AnimatedSection delay={340}>
-          <div className="p-5 sm:p-6 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
-            <div className="space-y-1.5 text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-xs sm:text-sm font-mono text-[#09090B] dark:text-[#D4D4D8]">
-                <MapPin className="w-4 h-4 text-[#E11D2E]" />
-                <span>{contact.location} (Remote / On-site)</span>
-              </div>
-              <div className="flex items-center justify-center sm:justify-start gap-2 text-xs font-mono text-[#52525B] dark:text-[#A1A1AA]">
-                <Clock className="w-3.5 h-3.5 text-[#E11D2E]" />
-                <span>{contact.responseCommitment}</span>
-              </div>
-            </div>
-
-            <a
-              href={`mailto:${contact.email}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] active:scale-95 text-white font-medium text-xs sm:text-sm transition-all duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer shrink-0"
-            >
-              <Mail className="w-4 h-4" />
-              <span>Send Direct Email</span>
-            </a>
-          </div>
-        </AnimatedSection>
       </div>
     </section>
   );

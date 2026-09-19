@@ -47,7 +47,7 @@ export default function ProjectCard({ project }) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E11D2E]/50 hover:border-[#E11D2E] hover:bg-[#E11D2E]/10 text-xs font-mono text-[#09090B] dark:text-white transition-all group/btn shadow-xs"
               >
-                <span>Live Demo</span>
+                <span>Visit</span>
                 <ExternalLink className="w-3 h-3 text-[#E11D2E] group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
               </a>
             )}
