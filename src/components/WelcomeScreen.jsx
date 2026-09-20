@@ -44,9 +44,8 @@ export default function WelcomeScreen({ onComplete }) {
   return (
     <aside
       aria-label="Welcome Screen"
-      className={`fixed inset-0 z-[9999] flex flex-col justify-between bg-[#FAFAFA] dark:bg-[#000000] p-6 sm:p-12 select-none transition-all duration-500 ease-in-out ${
-        isExiting ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100'
-      }`}
+      className={`fixed inset-0 z-[9999] flex flex-col justify-between bg-[#FAFAFA] dark:bg-[#000000] p-6 sm:p-12 select-none transition-all duration-500 ease-in-out ${isExiting ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100'
+        }`}
     >
       {/* 1. Ambient Background Grid & Crimson Glow */}
       <div
@@ -102,7 +101,7 @@ export default function WelcomeScreen({ onComplete }) {
         {/* Dynamic Animated WELCOME Headline with Red Glow */}
         <div className="min-h-[4.5rem] sm:min-h-[6rem] flex items-center justify-center overflow-hidden">
           <h1 className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter text-[#09090B] dark:text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.25)] dark:drop-shadow-[0_0_35px_rgba(225,29,46,0.5)] animate-in fade-in zoom-in-95 duration-300">
-            WELCOME
+            HELLO
           </h1>
         </div>
 
@@ -154,7 +153,7 @@ export default function WelcomeScreen({ onComplete }) {
 
       {/* 4. Bottom Footer: Baemon Swagger */}
       <div className="relative z-10 w-full flex items-center justify-between text-[11px] font-mono text-[#71717A] dark:text-[#52525B]">
-        <span>MONSTERS IN THE BUILDING</span>
+        <span>DESIGN INSPIRED BY BABYMONSTER</span>
         <span className="hidden sm:inline">SHEESH // DRIP // FOREVER</span>
         <span>INDONESIA</span>
       </div>

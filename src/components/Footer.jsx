@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowUp } from 'lucide-react';
 
 const ROLES = [
   "Full Stack Developer",
@@ -49,15 +48,11 @@ export default function Footer() {
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <footer className="border-t border-[#E4E4E7] dark:border-[#2A2A2A] bg-white dark:bg-[#000000] py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto flex flex-col items-center sm:items-start text-center sm:text-left">
         {/* Identity & Note */}
-        <div className="space-y-1 text-center sm:text-left">
+        <div className="space-y-1">
           <div className="flex items-center justify-center sm:justify-start gap-2">
             <span className="font-['Space_Grotesk',sans-serif] text-sm font-bold text-[#09090B] dark:text-white">
               Juan Sterling
@@ -86,17 +81,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Back to Top */}
-        <div className="flex items-center">
-          <button
-            type="button"
-            onClick={scrollToTop}
-            className="group p-2.5 rounded-md bg-[#F4F4F5] dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/60 hover:bg-white dark:hover:bg-[#181818] active:scale-95 transition-all duration-200 cursor-pointer shadow-xs"
-            aria-label="Back to top of page"
-          >
-            <ArrowUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
-          </button>
-        </div>
+        {/* BABYMONSTER Inspiration Credit with extra breathing room */}
+        <p className="text-[11px] font-mono text-[#71717A] dark:text-[#52525B] pt-4">
+          Design inspired by <span className="text-[#E11D2E] font-semibold">BABYMONSTER</span>
+        </p>
       </div>
     </footer>
   );
