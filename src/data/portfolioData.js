@@ -60,6 +60,7 @@ export const portfolioData = {
     "Next.js",
     "Supabase",
     "Vercel",
+    "Netlify",
     "jQuery",
     "Symfony",
     "Docker",
@@ -123,6 +124,13 @@ export const portfolioData = {
       description: "Developed a web-based product catalog for LOUIFOOTBALL. The website is designed to showcase available products and editions, providing visitors with an easy way to browse and explore LOUIFOOTBALL's merchandise collection.",
       technologies: ["Next.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary"],
       liveUrl: "https://louifootball.vercel.app/",
+    },
+    {
+      title: "FPS Aim Traning",
+      period: "2026",
+      description: "As a fan of FPS games such as Valorant and Counter-Strike, I created a simple web-based aim trainer to practice and improve my aiming skills in FPS games.",
+      technologies: ["HTML", "CSS", "JavaScript", "Netlify"],
+      liveUrl: "https://aimtrainbyjuster.netlify.app/",
     },
     {
       title: "GAME PENALTY FOOTBALL",
