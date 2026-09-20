@@ -209,12 +209,13 @@ export default function Experience() {
             <AnimatedSection>
               <div className="flex items-end justify-between gap-4 mb-6">
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif]">
-                      Other Projects &amp; Collaborations
-                    </h3>
-                    <span className="h-2 w-2 rounded-full bg-[#E11D2E] inline-block" aria-hidden="true" />
-                  </div>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif]">
+                    Other Projects &amp;{' '}
+                    <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
+                      Collaborations
+                      <span className="h-2 w-2 rounded-full bg-[#E11D2E] inline-block shrink-0" aria-hidden="true" />
+                    </span>
+                  </h3>
                   <p className="text-xs sm:text-sm text-[#52525B] dark:text-[#A1A1AA] max-w-2xl leading-relaxed">
                     A collection of projects outside my full-time roles, featuring applications, platforms, and initiatives where I have been involved—either directly or indirectly.
                   </p>
