@@ -30,6 +30,7 @@ export const portfolioData = {
         "Database Systems",
         "Software Engineering",
         "Computer Networks",
+        "Cloud Computing",
         "Machine Learning",
         "Algorithms & Data Structures",
         "Multiplatform Programming",

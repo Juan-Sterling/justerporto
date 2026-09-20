@@ -137,17 +137,17 @@ export default function WelcomeScreen({ onComplete }) {
         </div>
 
         {/* Laser Loading Bar (Batter Up Theme) */}
-        <div className="mt-8 w-full max-w-xs sm:max-w-sm space-y-2">
-          <div className="w-full h-[2px] bg-[#E4E4E7] dark:bg-[#1F1F23] rounded-full overflow-hidden relative">
+        <div className="mt-8 w-full max-w-sm sm:max-w-md space-y-2.5">
+          <div className="w-full h-2 sm:h-2.5 bg-[#E4E4E7] dark:bg-[#1F1F23] rounded-full overflow-hidden relative p-[1px] border border-[#E4E4E7] dark:border-[#2A2A2A]">
             <div
-              className="h-full bg-gradient-to-r from-transparent via-[#E11D2E] to-[#FF4D5E] transition-all duration-150 shadow-[0_0_10px_rgba(225,29,46,0.5)] dark:shadow-[0_0_14px_rgba(225,29,46,0.9)]"
+              className="h-full rounded-full bg-gradient-to-r from-[#E11D2E] via-[#FF3B4D] to-[#FF4D5E] transition-all duration-150 shadow-[0_0_12px_rgba(225,29,46,0.6)] dark:shadow-[0_0_16px_rgba(225,29,46,0.95)]"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="flex items-center justify-between text-[10px] sm:text-xs font-mono text-[#71717A] dark:text-[#52525B]">
-            <span className="tracking-wider">BATTER UP // LOADING</span>
-            <span className="text-[#09090B] dark:text-white font-semibold">{progress}%</span>
+          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA]">
+            <span className="tracking-wider font-medium">BATTER UP // LOADING</span>
+            <span className="text-[#09090B] dark:text-white font-bold">{progress}%</span>
           </div>
         </div>
       </div>

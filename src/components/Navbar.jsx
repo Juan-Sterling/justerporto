@@ -3,9 +3,9 @@ import { Menu, X, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const NAV_ITEMS = [
-  { id: 'education', label: 'Education' },
-  { id: 'skills', label: 'Skills' },
   { id: 'experience', label: 'Work Experience' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'education', label: 'Education' },
   { id: 'contact', label: 'Contact' },
 ];
 

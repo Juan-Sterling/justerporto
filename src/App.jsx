@@ -13,7 +13,7 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
-    const sections = ['education', 'skills', 'experience', 'contact'];
+    const sections = ['experience', 'skills', 'education', 'contact'];
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const offset = 220; // Trigger threshold
@@ -30,7 +30,7 @@ export default function App() {
         }
       }
 
-      // If above education, clear active section
+      // If above experience, clear active section
       setActiveSection('');
     };
 
@@ -55,9 +55,9 @@ export default function App() {
           aria-hidden="true"
         />
         <Hero />
-        <Education />
-        <Skills />
         <Experience />
+        <Skills />
+        <Education />
         <Contact />
       </main>
 
