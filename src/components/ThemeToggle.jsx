@@ -8,9 +8,9 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
   if (variant === 'drawer') {
     return (
       <div className={`p-3 rounded-md bg-[#F4F4F5] dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] space-y-2.5 ${className}`}>
-        <div className="flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA]">
-          <span>// appearance mode</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] font-medium">
+        <div className="flex items-center justify-between text-xs text-[#71717A] dark:text-[#A1A1AA] font-medium">
+          <span>Theme</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] font-medium capitalize">
             {isSystem ? 'auto (device)' : theme}
           </span>
         </div>

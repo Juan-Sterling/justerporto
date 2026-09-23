@@ -1,68 +1,76 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Juan Sterling — Software Developer</title>
-    
-    <!-- SEO & Metadata -->
-    <meta name="description" content="Juan Sterling is a Software Developer specializing in modern web applications, clean architecture, and responsive user experiences." />
-    <meta name="keywords" content="Juan Sterling, Software Developer, Fullstack, Frontend, React, Tailwind CSS, Web Development" />
-    <meta name="author" content="Juan Sterling" />
-    
-    <!-- Open Graph / Social Cards -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Juan Sterling — Software Developer" />
-    <meta property="og:description" content="Personal developer portfolio for Juan Sterling showcasing education, skills, work experience, and contact." />
-    <meta property="og:url" content="https://justerporto.vercel.app" />
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Juan Sterling — Software Developer" />
-    <meta name="twitter:description" content="Personal developer portfolio for Juan Sterling showcasing education, skills, work experience, and contact." />
-    
-    <meta name="color-scheme" content="light dark" />
-    
-    <!-- Google Fonts: Inter, Space Grotesk, JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Initial Theme Detection (Prevents FOUC) -->
-    <script>
-      (function () {
-        try {
-          const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-          
-          let isDark = true;
-          if (stored === 'dark') {
-            isDark = true;
-          } else if (stored === 'light') {
-            isDark = false;
-          } else if (prefersDark) {
-            isDark = true;
-          } else if (prefersLight) {
-            isDark = false;
-          } else {
-            isDark = true; // Default fallback to dark for portfolio
-          }
 
-          if (isDark) {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-            document.documentElement.style.colorScheme = 'dark';
-          } else {
-            document.documentElement.classList.add('light');
-            document.documentElement.classList.remove('dark');
-            document.documentElement.style.colorScheme = 'light';
-          }
-        } catch (e) {}
-      })();
-    </script>
-  </head>
-  <body class="bg-[#FAFAFA] dark:bg-[#000000] text-[#09090B] dark:text-white font-sans antialiased selection:bg-[#E11D2E]/25 selection:text-white transition-colors duration-300">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio of Juan Sterling</title>
+
+  <!-- SEO & Metadata -->
+  <meta name="description"
+    content="Juan Sterling is a Software Developer specializing in modern web applications, clean architecture, and responsive user experiences." />
+  <meta name="keywords"
+    content="Juan Sterling, Software Developer, Fullstack, Frontend, React, Tailwind CSS, Web Development" />
+  <meta name="author" content="Juan Sterling" />
+
+  <!-- Open Graph / Social Cards -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Juan Sterling — Software Developer" />
+  <meta property="og:description"
+    content="Personal developer portfolio for Juan Sterling showcasing education, skills, work experience, and contact." />
+  <meta property="og:url" content="https://justerporto.vercel.app" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Juan Sterling — Software Developer" />
+  <meta name="twitter:description"
+    content="Personal developer portfolio for Juan Sterling showcasing education, skills, work experience, and contact." />
+
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- Google Fonts: Inter, Space Grotesk, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Initial Theme Detection (Prevents FOUC) -->
+  <script>
+    (function () {
+      try {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+
+        let isDark = true;
+        if (stored === 'dark') {
+          isDark = true;
+        } else if (stored === 'light') {
+          isDark = false;
+        } else if (prefersDark) {
+          isDark = true;
+        } else if (prefersLight) {
+          isDark = false;
+        } else {
+          isDark = true; // Default fallback to dark for portfolio
+        }
+
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+          document.documentElement.style.colorScheme = 'dark';
+        } else {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
+        }
+      } catch (e) { }
+    })();
+  </script>
+</head>
+
+<body
+  class="bg-[#FAFAFA] dark:bg-[#000000] text-[#09090B] dark:text-white font-sans antialiased selection:bg-[#E11D2E]/25 selection:text-white transition-colors duration-300">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

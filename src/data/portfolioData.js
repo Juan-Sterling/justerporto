@@ -86,7 +86,7 @@ export const portfolioData = {
       location: "North Jakarta, Indonesia",
       type: "Full-time",
       responsibilities: [
-        "Work with the Foxion team on a project for their client, using HTML, Laravel, and PHP programming languages",
+        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Survey Division in managing vessel classification admission and maintenance processes.",
       ],
       technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "GitLab"],
     },
@@ -97,7 +97,8 @@ export const portfolioData = {
       location: "North Jakarta, Indonesia",
       type: "Contract",
       responsibilities: [
-        "Work with the StafBook team on a project for their client, PT. Biro Klasifikasi Indonesia (BUMN), involving document digitization using HTML, Laravel, and PHP programming languages, as well as assisting in the development and enhancement of StafBook's products.",
+        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Statutory Division in managing statutory certificates.",
+        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Matkom Division in managing Service Supplier, Material Component, and Welding certificates.",
       ],
       technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "GitLab"],
     },

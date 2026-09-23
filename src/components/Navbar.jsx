@@ -135,9 +135,6 @@ export default function Navbar({ activeSection = '' }) {
       {/* Mobile Drawer Menu */}
       {isOpen && (
         <div className="md:hidden bg-white dark:bg-[#090909] border-b border-[#E4E4E7] dark:border-[#2A2A2A] px-4 pt-3 pb-6 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 shadow-xl">
-          <div className="text-xs font-mono text-[#71717A] dark:text-[#A1A1AA] px-3 py-1 border-b border-[#E4E4E7]/60 dark:border-[#2A2A2A]/50 mb-1">
-            // navigation menu
-          </div>
           <div className="space-y-1">
             {NAV_ITEMS.map((item) => {
               const isActive = activeSection === item.id;
@@ -149,14 +146,13 @@ export default function Navbar({ activeSection = '' }) {
                     e.preventDefault();
                     handleNavClick(item.id);
                   }}
-                  className={`flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-[#F4F4F5] dark:bg-[#141414] text-[#E11D2E] border-l-2 border-[#E11D2E] font-semibold'
                       : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#141414]/60'
                   }`}
                 >
-                  <span>{item.label}</span>
-                  <span className="font-mono text-xs text-[#A1A1AA] dark:text-[#52525B]">#{item.id}</span>
+                  {item.label}
                 </a>
               );
             })}
