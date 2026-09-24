@@ -123,7 +123,7 @@ export const portfolioData = {
       title: "LOUIFOOTBALL CATALOG",
       period: "2026",
       description: "Developed a web-based product catalog for LOUIFOOTBALL. The website is designed to showcase available products and editions, providing visitors with an easy way to browse and explore LOUIFOOTBALL's merchandise collection.",
-      technologies: ["Next.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary"],
+      technologies: ["Next.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary", "REST API"],
       liveUrl: "https://louifootball.vercel.app/",
     },
     {
