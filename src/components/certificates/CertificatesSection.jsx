@@ -20,10 +20,11 @@ import TechBadge from '../TechBadge';
 export default function CertificatesSection() {
   const certificates = portfolioData.certificates || [];
   const [selectedId, setSelectedId] = useState(certificates[0]?.id || '');
+  const [mobileExpandedId, setMobileExpandedId] = useState(certificates[0]?.id || '');
   const [previewCert, setPreviewCert] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Active certificate object
+  // Active certificate object for desktop spotlight
   const activeCert = certificates.find((c) => c.id === selectedId) || certificates[0];
 
   const handleOpenPreview = (cert) => {
@@ -40,6 +41,12 @@ export default function CertificatesSection() {
     setTimeout(() => {
       setPreviewCert(null);
     }, 200);
+  };
+
+  const handleCardClick = (id) => {
+    setSelectedId(id);
+    // On mobile: toggle accordion
+    setMobileExpandedId((prev) => (prev === id ? null : id));
   };
 
   // Keyboard navigation & body scroll locking for lightbox
@@ -69,15 +76,9 @@ export default function CertificatesSection() {
 
   return (
     <div className="pt-10 sm:pt-14 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/70">
-      {/* Section Sub-Header */}
+      {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-[#E11D2E] animate-pulse" />
-            <span className="text-xs font-mono text-[#E11D2E] uppercase tracking-wider font-semibold">
-              // Spotlight Showcase
-            </span>
-          </div>
           <h3 className="font-['Space_Grotesk',sans-serif] text-2xl sm:text-3xl font-bold text-[#09090B] dark:text-white tracking-tight">
             Certifications & Honors
           </h3>
@@ -95,42 +96,51 @@ export default function CertificatesSection() {
         </div>
       </div>
 
-      {/* Split 2-Panel Master-Detail Layout */}
+      {/* Responsive Layout: Mobile Accordion, Desktop Split Master-Detail */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* LEFT COLUMN: Master List Index (5 Cols on Desktop) */}
+        {/* LEFT COLUMN: Master List (Desktop) & Accordion List (Mobile) */}
         <div className="lg:col-span-5 flex flex-col gap-3">
           <div className="flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA] px-1 mb-1">
             <span>INDEX ({certificates.length})</span>
-            <span className="text-[11px] text-[#E11D2E]">Click to inspect</span>
+            <span className="text-[11px] text-[#E11D2E]">
+              <span className="lg:hidden">Tap to expand</span>
+              <span className="hidden lg:inline">Click to inspect</span>
+            </span>
           </div>
 
-          {certificates.map((cert, index) => {
-            const isSelected = cert.id === activeCert?.id;
+          {certificates.map((cert) => {
+            const isSelectedDesktop = cert.id === activeCert?.id;
+            const isExpandedMobile = cert.id === mobileExpandedId;
+
             return (
-              <button
+              <div
                 key={cert.id}
-                type="button"
-                onClick={() => setSelectedId(cert.id)}
-                className={`w-full text-left relative p-4 rounded-xl transition-all duration-200 cursor-pointer border group ${
-                  isSelected
+                className={`rounded-xl transition-all duration-200 border overflow-hidden ${
+                  isSelectedDesktop
                     ? 'bg-white dark:bg-[#151518] border-[#E11D2E] shadow-md dark:shadow-black/50 ring-1 ring-[#E11D2E]/25'
                     : 'bg-white/60 dark:bg-[#121214]/60 border-[#E4E4E7] dark:border-[#242426] hover:border-[#E11D2E]/40 hover:bg-white dark:hover:bg-[#161619]'
                 }`}
               >
-                {/* Active Indicator Bar */}
-                <div
-                  className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full transition-colors ${
-                    isSelected ? 'bg-[#E11D2E]' : 'bg-transparent group-hover:bg-[#E11D2E]/30'
-                  }`}
-                />
+                {/* Header Button (Desktop Selector / Mobile Accordion Trigger) */}
+                <button
+                  type="button"
+                  onClick={() => handleCardClick(cert.id)}
+                  className="w-full text-left relative p-4 cursor-pointer group flex items-start justify-between gap-3"
+                  aria-expanded={isExpandedMobile}
+                >
+                  {/* Left Active Indicator Bar */}
+                  <div
+                    className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full transition-colors ${
+                      isSelectedDesktop ? 'bg-[#E11D2E]' : 'bg-transparent group-hover:bg-[#E11D2E]/30'
+                    }`}
+                  />
 
-                <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0">
-                    {/* Index Number & Icon */}
+                    {/* Index Category Icon */}
                     <div
                       className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border transition-colors ${
-                        isSelected
+                        isSelectedDesktop
                           ? 'bg-[#E11D2E]/15 border-[#E11D2E]/30 text-[#E11D2E]'
                           : 'bg-[#F4F4F5] dark:bg-[#1A1A1D] border-[#E4E4E7] dark:border-[#2A2A2E] text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E]'
                       }`}
@@ -150,7 +160,7 @@ export default function CertificatesSection() {
 
                       <h4
                         className={`text-sm font-semibold tracking-tight transition-colors line-clamp-2 ${
-                          isSelected
+                          isSelectedDesktop
                             ? 'text-[#09090B] dark:text-white'
                             : 'text-[#3F3F46] dark:text-[#D4D4D8] group-hover:text-[#09090B] dark:group-hover:text-white'
                         }`}
@@ -164,7 +174,7 @@ export default function CertificatesSection() {
                     </div>
                   </div>
 
-                  {/* Right Chevron & Verified Check */}
+                  {/* Right Status & Expand Chevron */}
                   <div className="flex flex-col items-end gap-1.5 shrink-0 self-center">
                     {cert.verified && (
                       <span className="p-1 rounded-full text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20" title="Verified by Issuer">
@@ -173,20 +183,115 @@ export default function CertificatesSection() {
                     )}
                     <ChevronRight
                       className={`w-4 h-4 transition-transform duration-200 ${
-                        isSelected
-                          ? 'text-[#E11D2E] translate-x-0.5'
-                          : 'text-[#A1A1AA] dark:text-[#52525B] group-hover:text-[#E11D2E] group-hover:translate-x-0.5'
+                        isSelectedDesktop
+                          ? 'text-[#E11D2E]'
+                          : 'text-[#A1A1AA] dark:text-[#52525B] group-hover:text-[#E11D2E]'
+                      } ${
+                        isExpandedMobile ? 'rotate-90 lg:rotate-0' : 'rotate-0'
+                      } ${
+                        isSelectedDesktop ? 'lg:translate-x-0.5' : ''
                       }`}
                     />
                   </div>
+                </button>
+
+                {/* MOBILE INLINE ACCORDION BODY (Visible only on < lg screens when expanded) */}
+                <div
+                  className={`lg:hidden transition-all duration-300 ease-in-out px-4 pb-4 ${
+                    isExpandedMobile ? 'block opacity-100' : 'hidden opacity-0'
+                  }`}
+                >
+                  <div className="pt-3 border-t border-[#E4E4E7] dark:border-[#26262B]">
+                    
+                    {/* Certificate Preview Image Slot (Mobile) */}
+                    <div className="relative mb-3.5 w-full h-48 sm:h-56 rounded-lg overflow-hidden border border-[#E4E4E7] dark:border-[#26262B] bg-[#F4F4F5] dark:bg-[#0D0D10] group/preview">
+                      {cert.image && cert.image.trim() !== '' ? (
+                        <>
+                          <img
+                            src={cert.image}
+                            alt={`${cert.title} preview`}
+                            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105 cursor-pointer"
+                            onClick={() => handleOpenPreview(cert)}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleOpenPreview(cert)}
+                            className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 text-white text-xs font-mono backdrop-blur-[2px] cursor-pointer"
+                          >
+                            <Maximize2 className="w-4 h-4 text-[#E11D2E]" />
+                            <span>View Fullscreen</span>
+                          </button>
+                        </>
+                      ) : (
+                        /* Clean Minimal Placeholder */
+                        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center select-none bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#131316] dark:via-[#0F0F12] dark:to-[#0A0A0C] relative">
+                          <div
+                            className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#FFFFFF08_1px,transparent_1px),linear-gradient(to_bottom,#FFFFFF08_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] pointer-events-none"
+                            aria-hidden="true"
+                          />
+                          <div className="relative z-10 flex flex-col items-center justify-center py-1">
+                            <div className="w-9 h-9 rounded-lg bg-white dark:bg-[#1E1E22] border border-[#E4E4E7] dark:border-[#33333A] flex items-center justify-center text-[#71717A] dark:text-[#A1A1AA] mb-2 shadow-xs">
+                              <FileCheck className="w-4 h-4 text-[#E11D2E]" />
+                            </div>
+                            <p className="text-xs font-mono text-[#52525B] dark:text-[#A1A1AA] max-w-[200px] leading-relaxed text-center">
+                              Sorry, I haven't provided the image yet
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Scope & Description (Mobile) */}
+                    {cert.description && (
+                      <p className="text-xs text-[#3F3F46] dark:text-[#D4D4D8] leading-relaxed mb-3.5">
+                        {cert.description}
+                      </p>
+                    )}
+
+                    {/* Verified Competencies (Mobile) */}
+                    {cert.skills && cert.skills.length > 0 && (
+                      <div className="mb-3.5">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#71717A] dark:text-[#888891] block mb-1.5">
+                          Verified Competencies
+                        </span>
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {cert.skills.map((skill) => (
+                            <TechBadge key={skill} name={skill} size="sm" />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Mobile Action Footer */}
+                    <div className="pt-3 border-t border-[#E4E4E7] dark:border-[#222226] flex items-center justify-end">
+                      {cert.credentialUrl ? (
+                        <a
+                          href={cert.credentialUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#E11D2E] hover:bg-[#E11D2E]/90 text-white text-xs font-mono font-semibold transition-all shadow-xs group"
+                        >
+                          <span>Verify Credential</span>
+                          <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                        </a>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px] font-mono font-medium">
+                          <ShieldCheck className="w-3 h-3" />
+                          <span>Official Institutional Honor</span>
+                        </span>
+                      )}
+                    </div>
+
+                  </div>
                 </div>
-              </button>
+
+              </div>
             );
           })}
         </div>
 
-        {/* RIGHT COLUMN: Spotlight Detail Panel (7 Cols on Desktop) */}
-        <div className="lg:col-span-7">
+        {/* RIGHT COLUMN: Desktop Spotlight Detail Panel (Hidden on Mobile) */}
+        <div className="hidden lg:block lg:col-span-7">
           {activeCert && (
             <div className="sticky top-24 rounded-2xl bg-white dark:bg-[#141416] border border-[#E4E4E7] dark:border-[#27272A] p-5 sm:p-7 shadow-xl dark:shadow-black/60 transition-all duration-300">
               
@@ -232,7 +337,7 @@ export default function CertificatesSection() {
                 </div>
               </div>
 
-              {/* Certificate Preview Image Slot */}
+              {/* Certificate Preview Image Slot (Desktop) */}
               <div className="relative mb-5 w-full h-56 sm:h-72 rounded-xl overflow-hidden border border-[#E4E4E7] dark:border-[#26262B] bg-[#F4F4F5] dark:bg-[#0D0D10] group/preview">
                 {activeCert.image && activeCert.image.trim() !== '' ? (
                   <>
