@@ -14,16 +14,19 @@ export default function Experience() {
 
   const totalProjects = personalProjects.length;
 
-  // Infinite carousel logic with cloned boundary slides for seamless looping
-  const extendedProjects = totalProjects > 1
-    ? [
-        personalProjects[totalProjects - 1],
-        ...personalProjects,
-        personalProjects[0],
-      ]
-    : personalProjects;
+  // Carousel Peek logic with 2 cloned boundary slides on each end for seamless infinite peek looping
+  const extendedProjects =
+    totalProjects > 2
+      ? [
+          personalProjects[totalProjects - 2],
+          personalProjects[totalProjects - 1],
+          ...personalProjects,
+          personalProjects[0],
+          personalProjects[1],
+        ]
+      : personalProjects;
 
-  const [currentIndex, setCurrentIndex] = useState(totalProjects > 1 ? 1 : 0);
+  const [currentIndex, setCurrentIndex] = useState(totalProjects > 2 ? 2 : 0);
   const [withTransition, setWithTransition] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
   const [touchStartX, setTouchStartX] = useState(null);
@@ -35,15 +38,17 @@ export default function Experience() {
       const raf = requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setWithTransition(true);
+          setIsAnimating(false);
         });
       });
       return () => cancelAnimationFrame(raf);
     }
   }, [withTransition]);
 
-  const displayIndex = totalProjects > 1
-    ? (currentIndex - 1 + totalProjects) % totalProjects
-    : 0;
+  const displayIndex =
+    totalProjects > 2
+      ? (currentIndex - 2 + totalProjects) % totalProjects
+      : 0;
 
   const nextProject = () => {
     if (isAnimating || totalProjects <= 1) return;
@@ -63,22 +68,29 @@ export default function Experience() {
     if (isAnimating || totalProjects <= 1) return;
     setIsAnimating(true);
     setWithTransition(true);
-    setCurrentIndex(dotIndex + 1);
+    setCurrentIndex(dotIndex + 2);
   };
 
-  // When transition completes, instantly reset to real index if on a cloned boundary
-  const handleTransitionEnd = () => {
-    setIsAnimating(false);
-    if (totalProjects <= 1) return;
+  // When transform transition completes, instantly reset to real index if on a cloned boundary
+  const handleTransitionEnd = (e) => {
+    // Crucial: Only respond to transform transition on the track container itself
+    if (e.target !== e.currentTarget || e.propertyName !== 'transform') return;
 
-    if (currentIndex === totalProjects + 1) {
-      // Reached cloned first slide at the end: silently jump to real first slide
+    if (totalProjects <= 2) {
+      setIsAnimating(false);
+      return;
+    }
+
+    if (currentIndex >= totalProjects + 2) {
+      // Reached cloned boundary at the end: silently jump to real first slide
       setWithTransition(false);
-      setCurrentIndex(1);
-    } else if (currentIndex === 0) {
-      // Reached cloned last slide at the start: silently jump to real last slide
+      setCurrentIndex(currentIndex - totalProjects);
+    } else if (currentIndex < 2) {
+      // Reached cloned boundary at the start: silently jump to real last slide
       setWithTransition(false);
-      setCurrentIndex(totalProjects);
+      setCurrentIndex(currentIndex + totalProjects);
+    } else {
+      setIsAnimating(false);
     }
   };
 
@@ -107,7 +119,10 @@ export default function Experience() {
   const remainingExperience = experience.slice(INITIAL_EXPERIENCE_COUNT);
 
   return (
-    <section id="experience" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60">
+    <section
+      id="experience"
+      className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60"
+    >
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
           <SectionTitle
@@ -203,7 +218,7 @@ export default function Experience() {
           </div>
         )}
 
-        {/* Sub-section: Other Projects & Collaborations (Seamless Infinite Carousel) */}
+        {/* Sub-section: Other Projects & Collaborations (Carousel Peek) */}
         {personalProjects && personalProjects.length > 0 && (
           <div className="mt-16 pt-12 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/80">
             <AnimatedSection>
@@ -213,7 +228,10 @@ export default function Experience() {
                     Other Projects &amp;{' '}
                     <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
                       Collaborations
-                      <span className="h-2 w-2 rounded-full bg-[#E11D2E] inline-block shrink-0" aria-hidden="true" />
+                      <span
+                        className="h-2 w-2 rounded-full bg-[#E11D2E] inline-block shrink-0"
+                        aria-hidden="true"
+                      />
                     </span>
                   </h3>
                   <p className="text-xs sm:text-sm text-[#52525B] dark:text-[#A1A1AA] max-w-2xl leading-relaxed">
@@ -230,48 +248,100 @@ export default function Experience() {
               </div>
             </AnimatedSection>
 
-            {/* Carousel Container with Side Navigation Arrows */}
-            <div className="relative group/carousel">
-              {/* Left Arrow Button (Beside Card) */}
+            {/* Style block for responsive carousel peek variables */}
+            <style>{`
+              .carousel-peek-container {
+                --card-width: 76%;
+                --peek-offset: 12%;
+              }
+              @media (min-width: 640px) {
+                .carousel-peek-container {
+                  --card-width: 66%;
+                  --peek-offset: 17%;
+                }
+              }
+              @media (min-width: 1024px) {
+                .carousel-peek-container {
+                  --card-width: 62%;
+                  --peek-offset: 19%;
+                }
+              }
+            `}</style>
+
+            {/* Carousel Peek Container with Side Navigation Arrows */}
+            <div className="relative group/carousel carousel-peek-container">
+              {/* Left Edge Shadow Fade Vignette (Subtle feathering) */}
+              <div
+                className="pointer-events-none absolute inset-y-0 left-0 w-4 sm:w-8 bg-gradient-to-r from-[#FAFAFA] dark:from-[#000000] to-transparent z-20 rounded-l-xl"
+                aria-hidden="true"
+              />
+
+              {/* Right Edge Shadow Fade Vignette (Subtle feathering) */}
+              <div
+                className="pointer-events-none absolute inset-y-0 right-0 w-4 sm:w-8 bg-gradient-to-l from-[#FAFAFA] dark:from-[#000000] to-transparent z-20 rounded-r-xl"
+                aria-hidden="true"
+              />
+
+              {/* Left Arrow Button */}
               <button
                 type="button"
                 onClick={prevProject}
-                className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] shadow-md dark:shadow-black/60 transition-all cursor-pointer"
+                className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-white/95 dark:bg-[#141414]/95 backdrop-blur-xs hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] shadow-md dark:shadow-black/70 transition-all cursor-pointer"
                 aria-label="Previous project"
               >
                 <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
               </button>
 
-              {/* Right Arrow Button (Beside Card) */}
+              {/* Right Arrow Button */}
               <button
                 type="button"
                 onClick={nextProject}
-                className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] shadow-md dark:shadow-black/60 transition-all cursor-pointer"
+                className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-white/95 dark:bg-[#141414]/95 backdrop-blur-xs hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] shadow-md dark:shadow-black/70 transition-all cursor-pointer"
                 aria-label="Next project"
               >
                 <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
               </button>
 
-              {/* Carousel Track Container (No native scrollbar, Touch Swipeable) */}
+              {/* Carousel Track Container (Touch Swipeable) */}
               <div
-                className="relative overflow-hidden w-full rounded-lg"
+                className="relative overflow-hidden w-full rounded-xl py-2"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
               >
                 <div
                   className={`flex ${withTransition ? 'transition-transform duration-500 ease-out' : ''}`}
-                  style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                  style={{ transform: `translateX(calc(var(--peek-offset) - (${currentIndex} * var(--card-width))))` }}
                   onTransitionEnd={handleTransitionEnd}
                 >
-                  {extendedProjects.map((project, idx) => (
-                    <div
-                      key={`${project.title}-${idx}`}
-                      className="w-full shrink-0 px-0.5"
-                    >
-                      <ProjectCard project={project} />
-                    </div>
-                  ))}
+                  {extendedProjects.map((project, idx) => {
+                    const isActive = idx === currentIndex;
+                    const isPrev = idx === currentIndex - 1;
+                    const isNext = idx === currentIndex + 1;
+                    const isAdjacent = isPrev || isNext;
+
+                    return (
+                      <div
+                        key={`${project.title}-${idx}`}
+                        style={{ width: 'var(--card-width)' }}
+                        className={`shrink-0 px-2 sm:px-3 ${
+                          withTransition ? 'transition-all duration-500 ease-out' : ''
+                        } ${
+                          isActive
+                            ? 'opacity-100 scale-100 z-10 shadow-lg dark:shadow-black/70'
+                            : isAdjacent
+                            ? 'opacity-60 sm:opacity-65 scale-[0.91] sm:scale-[0.93] hover:opacity-85 hover:scale-[0.93] sm:hover:scale-[0.95] cursor-pointer select-none'
+                            : 'opacity-20 scale-[0.86] select-none pointer-events-none'
+                        }`}
+                        onClick={() => {
+                          if (isPrev) prevProject();
+                          else if (isNext) nextProject();
+                        }}
+                      >
+                        <ProjectCard project={project} />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -310,5 +380,3 @@ export default function Experience() {
     </section>
   );
 }
-
-

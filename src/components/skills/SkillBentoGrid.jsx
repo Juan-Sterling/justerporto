@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import SkillBentoCard from './SkillBentoCard';
 import {
   SKILL_CATEGORIES,
@@ -7,6 +6,7 @@ import {
 } from '../../data/skillsData';
 import { getTechIconUrl } from '../../utils/techIcons';
 import AnimatedSection from '../AnimatedSection';
+import { useSkillModal } from '../../context/SkillModalContext';
 import {
   Code2,
   Server,
@@ -81,7 +81,7 @@ function ShowMoreToggle({ isExpanded, onToggle, labelMore = 'Show More', labelLe
 export default function SkillBentoGrid() {
   const [selectedCategory, setSelectedCategory] = useState('all'); // 'all' | 'frontend' | 'backend' | 'database' | 'tools'
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeSkill, setActiveSkill] = useState(null);
+  const { activeSkill, openSkillModal } = useSkillModal();
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Filter skills based on category and search query
@@ -101,30 +101,6 @@ export default function SkillBentoGrid() {
     }
     return list;
   }, [selectedCategory, searchQuery]);
-
-
-  const activeCategoryInfo = useMemo(() => {
-    if (!activeSkill) return null;
-    return SKILL_CATEGORIES.find((c) => c.id === activeSkill.category);
-  }, [activeSkill]);
-
-  // Handle ESC key and lock body scroll while modal is active
-  useEffect(() => {
-    if (!activeSkill) return;
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setActiveSkill(null);
-      }
-    };
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [activeSkill]);
-
   const handleSelectCategory = (catId) => {
     setSelectedCategory(catId);
     setIsExpanded(false);
@@ -260,7 +236,7 @@ export default function SkillBentoGrid() {
                           key={skill.id}
                           skill={skill}
                           isSelected={activeSkill?.id === skill.id}
-                          onClick={() => setActiveSkill(skill)}
+                          onClick={() => openSkillModal(skill)}
                         />
                       ))}
                     </div>
@@ -327,7 +303,7 @@ export default function SkillBentoGrid() {
                               key={skill.id}
                               skill={skill}
                               isSelected={activeSkill?.id === skill.id}
-                              onClick={() => setActiveSkill(skill)}
+                              onClick={() => openSkillModal(skill)}
                             />
                           ))}
                         </div>
@@ -357,7 +333,7 @@ export default function SkillBentoGrid() {
                     <SkillBentoCard
                       skill={skill}
                       isSelected={activeSkill?.id === skill.id}
-                      onClick={() => setActiveSkill(skill)}
+                      onClick={() => openSkillModal(skill)}
                     />
                   </AnimatedSection>
                 ))}
@@ -393,7 +369,7 @@ export default function SkillBentoGrid() {
                     <SkillBentoCard
                       skill={skill}
                       isSelected={activeSkill?.id === skill.id}
-                      onClick={() => setActiveSkill(skill)}
+                      onClick={() => openSkillModal(skill)}
                     />
                   </AnimatedSection>
                 ))}
@@ -417,7 +393,7 @@ export default function SkillBentoGrid() {
                             <SkillBentoCard
                               skill={skill}
                               isSelected={activeSkill?.id === skill.id}
-                              onClick={() => setActiveSkill(skill)}
+                              onClick={() => openSkillModal(skill)}
                             />
                           </AnimatedSection>
                         ))}
@@ -435,74 +411,6 @@ export default function SkillBentoGrid() {
           )}
         </div>
       )}
-
-      {/* ================================================================= */}
-      {/* 3. Skill Inspection Modal / Detail Card (Portaled directly to body) */}
-      {/* ================================================================= */}
-      {activeSkill &&
-        typeof document !== 'undefined' &&
-        createPortal(
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
-            onClick={() => setActiveSkill(null)}
-          >
-            <div
-              className="w-full max-w-md rounded-2xl bg-white dark:bg-[#141414] border-2 border-[#E11D2E] p-5 shadow-2xl shadow-[#E11D2E]/20 transition-all text-left relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-[#F4F4F5] dark:bg-[#1E1E1E] border border-[#E4E4E7] dark:border-[#2C2C2C] p-2 flex items-center justify-center shrink-0">
-                    {getTechIconUrl(activeSkill.name) ? (
-                      <img
-                        src={getTechIconUrl(activeSkill.name)}
-                        alt=""
-                        className={`w-full h-full object-contain ${
-                          activeSkill.name.toLowerCase() === 'github' ? 'dark:invert' : ''
-                        }`}
-                      />
-                    ) : (
-                      <Sparkles className="w-5 h-5 text-[#E11D2E]" />
-                    )}
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#E11D2E] font-semibold">
-                      {activeCategoryInfo?.label || activeSkill.category}
-                    </span>
-                    <h3 className="font-['Space_Grotesk',sans-serif] text-xl font-bold text-[#09090B] dark:text-white leading-tight">
-                      {activeSkill.name}
-                    </h3>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveSkill(null)}
-                  className="p-1.5 rounded-lg text-[#71717A] hover:text-[#09090B] dark:text-[#A1A1AA] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#202020] transition-colors cursor-pointer"
-                  aria-label="Close modal"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Architecture Role */}
-              <div className="mt-3.5 pt-3 border-t border-[#E4E4E7] dark:border-[#242424]">
-                <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block mb-1">
-                  Architecture Role
-                </span>
-                <p className="text-xs sm:text-sm text-[#3F3F46] dark:text-[#D4D4D8] leading-relaxed">
-                  {activeSkill.role}
-                </p>
-              </div>
-
-
-            </div>
-          </div>,
-          document.body
-        )}
     </div>
   );
 }

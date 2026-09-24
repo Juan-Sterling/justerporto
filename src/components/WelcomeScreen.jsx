@@ -1,13 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Code2 } from 'lucide-react';
 
+const GREETINGS = [
+  { text: 'HELLO', lang: 'EN' },
+  { text: '안녕하세요', lang: 'KR' },
+  { text: 'こんにちは', lang: 'JP' },
+];
+
 export default function WelcomeScreen({ onComplete }) {
   const [progress, setProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const [isStruck, setIsStruck] = useState(false);
+  const [greetingIndex, setGreetingIndex] = useState(0);
+  const [greetingVisible, setGreetingVisible] = useState(true);
 
   useEffect(() => {
     // Prevent background scrolling while welcome screen is active
     document.body.style.overflow = 'hidden';
+
+    // Strike-through trigger after brief initial delay (500ms)
+    const strikeTimer = setTimeout(() => {
+      setIsStruck(true);
+    }, 500);
+
+    // Language transitions: HELLO (0ms) -> 안녕하세요 (850ms) -> こんにちは (1750ms)
+    const langTimer1 = setTimeout(() => {
+      setGreetingVisible(false);
+      setTimeout(() => {
+        setGreetingIndex(1);
+        setGreetingVisible(true);
+      }, 160);
+    }, 850);
+
+    const langTimer2 = setTimeout(() => {
+      setGreetingVisible(false);
+      setTimeout(() => {
+        setGreetingIndex(2);
+        setGreetingVisible(true);
+      }, 160);
+    }, 1750);
 
     // Progress counter animation from 0% to 100%
     const progressInterval = setInterval(() => {
@@ -16,18 +47,21 @@ export default function WelcomeScreen({ onComplete }) {
           clearInterval(progressInterval);
           return 100;
         }
-        const increment = prev < 50 ? 4 : prev < 85 ? 6 : 9;
+        const increment = prev < 40 ? 3 : prev < 75 ? 3 : 4;
         return Math.min(prev + increment, 100);
       });
-    }, 45);
+    }, 55);
 
     // Exit transition trigger
     const exitTimer = setTimeout(() => {
       handleExit();
-    }, 2100);
+    }, 2800);
 
     return () => {
       document.body.style.overflow = '';
+      clearTimeout(strikeTimer);
+      clearTimeout(langTimer1);
+      clearTimeout(langTimer2);
       clearInterval(progressInterval);
       clearTimeout(exitTimer);
     };
@@ -98,19 +132,73 @@ export default function WelcomeScreen({ onComplete }) {
           </div>
         </div>
 
-        {/* Dynamic Animated WELCOME Headline with Red Glow */}
-        <div className="min-h-[4.5rem] sm:min-h-[6rem] flex items-center justify-center overflow-hidden">
-          <h1 className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter text-[#09090B] dark:text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.25)] dark:drop-shadow-[0_0_35px_rgba(225,29,46,0.5)] animate-in fade-in zoom-in-95 duration-300">
-            HELLO
+        {/* Dynamic Multilingual Greeting Headline (EN -> KR -> JP) with Red Glow */}
+        <div className="min-h-[4.5rem] sm:min-h-[6rem] md:min-h-[7rem] flex items-center justify-center overflow-hidden">
+          <h1
+            key={greetingIndex}
+            className={`font-['Space_Grotesk',sans-serif] text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter text-[#09090B] dark:text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.3)] dark:drop-shadow-[0_0_35px_rgba(225,29,46,0.6)] transition-all duration-200 transform select-none ${
+              greetingVisible
+                ? 'opacity-100 translate-y-0 scale-100'
+                : 'opacity-0 -translate-y-4 scale-95'
+            }`}
+            style={{
+              transitionTimingFunction: greetingVisible
+                ? 'cubic-bezier(0.16, 1, 0.3, 1)'
+                : 'cubic-bezier(0.4, 0, 1, 1)',
+            }}
+          >
+            {GREETINGS[greetingIndex].text}
           </h1>
         </div>
 
-        {/* Catchphrase Homage: "BABY, I'M A DEVELOPER" */}
-        <div className="mt-2 flex items-center justify-center gap-1.5 font-mono text-xs sm:text-sm md:text-base">
+        {/* Catchphrase Homage: "BABY, I'M A MONSTER -> DEVELOPER" */}
+        <div className="mt-2.5 flex items-center justify-center font-mono text-xs sm:text-sm md:text-base select-none">
+          {/* Opening Quote */}
           <span className="text-[#E11D2E] font-bold text-base sm:text-lg select-none">"</span>
-          <span className="tracking-widest uppercase font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#09090B] via-[#E11D2E] to-[#09090B] dark:from-white dark:via-[#FF4D5E] dark:to-white">
-            BABY, I'M A DEVELOPER
+
+          {/* Intro Text */}
+          <span className="tracking-widest uppercase font-bold text-[#09090B] dark:text-white ml-0.5 sm:ml-1">
+            BABY, I'M A
           </span>
+
+          {/* MONSTER word: starts white, fades to gray when struck */}
+          <span className="relative inline-flex items-center px-1 font-bold uppercase tracking-widest">
+            <span
+              className={`transition-colors duration-400 ease-out ${
+                isStruck
+                  ? 'text-[#71717A] dark:text-[#52525B]'
+                  : 'text-[#09090B] dark:text-white'
+              }`}
+            >
+              MONSTER
+            </span>
+            {/* Animated Red Strikethrough Line */}
+            <span
+              className={`absolute left-0 h-[2px] sm:h-[2.5px] bg-[#E11D2E] rounded-full transition-all duration-350 ease-out shadow-[0_0_8px_rgba(225,29,46,0.9)] ${
+                isStruck ? 'w-full' : 'w-0'
+              }`}
+              style={{ top: '50%', transform: 'translateY(-50%)' }}
+              aria-hidden="true"
+            />
+          </span>
+
+          {/* Smoothly expanding DEVELOPER Word (Sentence stays perfectly centered) */}
+          <span
+            className={`inline-flex items-center overflow-hidden transition-all duration-500 ease-out ${
+              isStruck
+                ? 'max-w-[140px] sm:max-w-[190px] opacity-100 scale-100'
+                : 'max-w-0 opacity-0 scale-90 pointer-events-none'
+            }`}
+            style={{
+              transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          >
+            <span className="pl-1 sm:pl-1.5 tracking-widest uppercase font-extrabold text-[#E11D2E] whitespace-nowrap drop-shadow-[0_0_10px_rgba(225,29,46,0.7)]">
+              DEVELOPER
+            </span>
+          </span>
+
+          {/* Closing Quote: directly beside MONSTER initially, glides right as DEVELOPER expands */}
           <span className="text-[#E11D2E] font-bold text-base sm:text-lg select-none">"</span>
         </div>
 

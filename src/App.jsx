@@ -7,6 +7,7 @@ import Skills from './sections/Skills';
 import Experience from './sections/Experience';
 import Contact from './sections/Contact';
 import Footer from './components/Footer';
+import { SkillModalProvider } from './context/SkillModalContext';
 
 export default function App() {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -40,29 +41,31 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#000000] text-[#09090B] dark:text-white flex flex-col selection:bg-[#E11D2E]/30 selection:text-white transition-colors duration-300">
-      {/* Opening Welcome Screen Animation */}
-      {showWelcome && <WelcomeScreen onComplete={() => setShowWelcome(false)} />}
+    <SkillModalProvider>
+      <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#000000] text-[#09090B] dark:text-white flex flex-col selection:bg-[#E11D2E]/30 selection:text-white transition-colors duration-300">
+        {/* Opening Welcome Screen Animation */}
+        {showWelcome && <WelcomeScreen onComplete={() => setShowWelcome(false)} />}
 
-      {/* Sticky Header Navigation */}
-      <Navbar activeSection={activeSection} />
+        {/* Sticky Header Navigation */}
+        <Navbar activeSection={activeSection} />
 
-      {/* Main Content Sections with Unified Canvas Grid Motif */}
-      <main className="flex-1 w-full relative">
-        {/* Developer Canvas Grid across all sections */}
-        <div 
-          className="absolute inset-0 bg-[linear-gradient(to_right,#0000000d_1px,transparent_1px),linear-gradient(to_bottom,#0000000d_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#2A2A2A20_1px,transparent_1px),linear-gradient(to_bottom,#2A2A2A20_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none" 
-          aria-hidden="true"
-        />
-        <Hero />
-        <Experience />
-        <Skills />
-        <Education />
-        <Contact />
-      </main>
+        {/* Main Content Sections with Unified Canvas Grid Motif */}
+        <main className="flex-1 w-full relative">
+          {/* Developer Canvas Grid across all sections */}
+          <div
+            className="absolute inset-0 bg-[linear-gradient(to_right,#0000000d_1px,transparent_1px),linear-gradient(to_bottom,#0000000d_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#2A2A2A20_1px,transparent_1px),linear-gradient(to_bottom,#2A2A2A20_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none"
+            aria-hidden="true"
+          />
+          <Hero />
+          <Experience />
+          <Skills />
+          <Education />
+          <Contact />
+        </main>
 
-      {/* Semantic Footer */}
-      <Footer />
-    </div>
+        {/* Semantic Footer */}
+        <Footer />
+      </div>
+    </SkillModalProvider>
   );
 }

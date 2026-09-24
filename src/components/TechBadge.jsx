@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { getTechIconUrl } from '../utils/techIcons';
+import { useSkillModal } from '../context/SkillModalContext';
 
 export { getTechIconUrl };
 
 export default function TechBadge({ name, size = 'default' }) {
+  const { openSkillModal } = useSkillModal();
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const iconUrl = getTechIconUrl(name);
@@ -12,6 +14,12 @@ export default function TechBadge({ name, size = 'default' }) {
   const containerSize = size === 'sm' ? 'w-7 h-7' : 'w-8 h-8';
   const iconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4 sm:w-4.5 sm:h-4.5';
 
+  const handleClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    openSkillModal(name);
+  };
+
   return (
     <div
       className="relative inline-flex items-center"
@@ -19,16 +27,24 @@ export default function TechBadge({ name, size = 'default' }) {
       onMouseLeave={() => setIsHovered(false)}
       onFocus={() => setIsHovered(true)}
       onBlur={() => setIsHovered(false)}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleClick(e);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`View architectural details for ${name}`}
     >
       {/* Icon Badge */}
       <div
-        className={`${containerSize} rounded-md border transition-all duration-200 flex items-center justify-center p-1.5 cursor-pointer ${
+        className={`${containerSize} rounded-md border transition-all duration-200 flex items-center justify-center p-1.5 cursor-pointer select-none active:scale-90 ${
           isHovered
             ? 'border-[#E11D2E] bg-white dark:bg-[#1C1C1C] -translate-y-0.5 shadow-md shadow-black/20 dark:shadow-black/70 ring-1 ring-[#E11D2E]/30'
             : 'bg-[#F4F4F5] dark:bg-[#090909] border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60'
         }`}
-        aria-label={name}
-        title={name}
+        title={`Click to view details for ${name}`}
       >
         {iconUrl && !imgError ? (
           <img

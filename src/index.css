@@ -80,6 +80,7 @@ textarea:focus-visible {
   html {
     scroll-behavior: auto;
   }
+
   *,
   *::before,
   *::after {

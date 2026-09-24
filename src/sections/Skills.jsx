@@ -2,13 +2,14 @@ import React from 'react';
 import SectionTitle from '../components/SectionTitle';
 import AnimatedSection from '../components/AnimatedSection';
 import SkillBentoGrid from '../components/skills/SkillBentoGrid';
+import CertificatesSection from '../components/certificates/CertificatesSection';
 import { SKILL_CATEGORIES, SKILLS_DATA } from '../data/skillsData';
 
 export default function Skills() {
   return (
     <section id="skills" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60">
       <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
-        
+
         {/* Section Header */}
         <AnimatedSection>
           <SectionTitle
@@ -21,6 +22,11 @@ export default function Skills() {
         {/* Bento Grid with Category Filters & Search */}
         <AnimatedSection delay={100}>
           <SkillBentoGrid />
+        </AnimatedSection>
+
+        {/* Certifications & Credentials Mockup Section */}
+        <AnimatedSection delay={150}>
+          <CertificatesSection />
         </AnimatedSection>
 
         {/* Hidden Semantic Tree for Screen Readers & SEO Web Crawlers */}
