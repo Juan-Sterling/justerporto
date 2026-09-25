@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import SectionTitle from '../components/SectionTitle';
 import ExperienceItem from '../components/ExperienceItem';
 import ProjectCard from '../components/ProjectCard';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
-import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, Mouse } from 'lucide-react';
 
 const INITIAL_EXPERIENCE_COUNT = 2;
 
@@ -32,6 +32,19 @@ export default function Experience() {
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
 
+  // Mouse Drag state
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [mouseStartX, setMouseStartX] = useState(null);
+  const [hasDraggedMouse, setHasDraggedMouse] = useState(false);
+
+  // Ref to the carousel peek container to attach passive:false wheel listener
+  const carouselRef = useRef(null);
+  const isAnimatingRef = useRef(false);
+
+  useEffect(() => {
+    isAnimatingRef.current = isAnimating;
+  }, [isAnimating]);
+
   // Re-enable CSS transition on next animation frame after an instant reset
   useEffect(() => {
     if (!withTransition) {
@@ -50,19 +63,27 @@ export default function Experience() {
       ? (currentIndex - 2 + totalProjects) % totalProjects
       : 0;
 
-  const nextProject = () => {
-    if (isAnimating || totalProjects <= 1) return;
+  const nextProject = useCallback(() => {
+    if (isAnimatingRef.current || totalProjects <= 1) return;
     setIsAnimating(true);
     setWithTransition(true);
     setCurrentIndex((prev) => prev + 1);
-  };
+  }, [totalProjects]);
 
-  const prevProject = () => {
-    if (isAnimating || totalProjects <= 1) return;
+  const prevProject = useCallback(() => {
+    if (isAnimatingRef.current || totalProjects <= 1) return;
     setIsAnimating(true);
     setWithTransition(true);
     setCurrentIndex((prev) => prev - 1);
-  };
+  }, [totalProjects]);
+
+  const nextProjectRef = useRef(nextProject);
+  const prevProjectRef = useRef(prevProject);
+
+  useEffect(() => {
+    nextProjectRef.current = nextProject;
+    prevProjectRef.current = prevProject;
+  }, [nextProject, prevProject]);
 
   const goToProject = (dotIndex) => {
     if (isAnimating || totalProjects <= 1) return;
@@ -94,6 +115,68 @@ export default function Experience() {
     }
   };
 
+  // Mouse wheel scroll navigation (works with standard vertical mouse scroll & trackpad horizontal swipe)
+  useEffect(() => {
+    const container = carouselRef.current;
+    if (!container) return;
+
+    let accumulatedDelta = 0;
+    let resetTimer = null;
+    let lastWheelTime = 0;
+
+    const handleWheel = (e) => {
+      // Determine dominant direction
+      const isHorizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      const primaryDelta = isHorizontal ? e.deltaX : e.deltaY;
+
+      // Filter out micro-jitter from sensitive touchpads
+      if (Math.abs(primaryDelta) < 3) return;
+
+      // Prevent window scroll while mouse wheel is scrolling over carousel cards
+      e.preventDefault();
+
+      const now = Date.now();
+      // If user paused scrolling for >200ms, start fresh
+      if (now - lastWheelTime > 200) {
+        accumulatedDelta = 0;
+      }
+      lastWheelTime = now;
+
+      // Ignore incoming wheel ticks while a slide animation is active to prevent runaway inertia
+      if (isAnimatingRef.current) {
+        accumulatedDelta = 0;
+        return;
+      }
+
+      accumulatedDelta += primaryDelta;
+
+      // Threshold: 30px is achieved on a single notch on standard mice (~100px) or deliberate trackpad swipe
+      const WHEEL_THRESHOLD = 30;
+
+      if (Math.abs(accumulatedDelta) >= WHEEL_THRESHOLD) {
+        if (accumulatedDelta > 0) {
+          nextProjectRef.current();
+        } else {
+          prevProjectRef.current();
+        }
+        accumulatedDelta = 0;
+      }
+
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => {
+        accumulatedDelta = 0;
+      }, 150);
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+      clearTimeout(resetTimer);
+    };
+  }, []);
+
+  // Touch handlers (Mobile swipe)
   const handleTouchStart = (e) => {
     if (isAnimating) return;
     setTouchEndX(null);
@@ -112,6 +195,44 @@ export default function Experience() {
       nextProject();
     } else if (distance < -minSwipeDistance) {
       prevProject();
+    }
+  };
+
+  // Mouse Drag handlers (Desktop click-and-drag)
+  const handleMouseDown = (e) => {
+    // Only respond to main left click
+    if (e.button !== 0 || isAnimating) return;
+    setIsMouseDown(true);
+    setMouseStartX(e.clientX);
+    setHasDraggedMouse(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isMouseDown || mouseStartX === null) return;
+    if (Math.abs(e.clientX - mouseStartX) > 8) {
+      setHasDraggedMouse(true);
+    }
+  };
+
+  const handleMouseUp = (e) => {
+    if (!isMouseDown || mouseStartX === null) return;
+    const distance = mouseStartX - e.clientX;
+    const minSwipeDistance = 45;
+    if (distance > minSwipeDistance) {
+      nextProject();
+    } else if (distance < -minSwipeDistance) {
+      prevProject();
+    }
+    setIsMouseDown(false);
+    setMouseStartX(null);
+    setTimeout(() => setHasDraggedMouse(false), 60);
+  };
+
+  const handleMouseLeave = () => {
+    if (isMouseDown) {
+      setIsMouseDown(false);
+      setMouseStartX(null);
+      setTimeout(() => setHasDraggedMouse(false), 60);
     }
   };
 
@@ -239,11 +360,17 @@ export default function Experience() {
                   </p>
                 </div>
 
-                {/* Counter */}
-                <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto font-mono text-xs text-[#71717A] dark:text-[#A1A1AA] bg-white dark:bg-[#141414] px-2.5 py-1 rounded border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs">
-                  <span className="text-[#E11D2E] font-semibold">0{displayIndex + 1}</span>
-                  <span>/</span>
-                  <span>0{totalProjects}</span>
+                {/* Counter & Hint */}
+                <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
+                  <div className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[11px] text-[#71717A] dark:text-[#A1A1AA] bg-white dark:bg-[#141414] px-2.5 py-1 rounded border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs select-none">
+                    <Mouse className="w-3.5 h-3.5 text-[#E11D2E]" />
+                    <span>Scroll / Drag to browse</span>
+                  </div>
+                  <div className="flex items-center gap-2 font-mono text-xs text-[#71717A] dark:text-[#A1A1AA] bg-white dark:bg-[#141414] px-2.5 py-1 rounded border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs">
+                    <span className="text-[#E11D2E] font-semibold">0{displayIndex + 1}</span>
+                    <span>/</span>
+                    <span>0{totalProjects}</span>
+                  </div>
                 </div>
               </div>
             </AnimatedSection>
@@ -269,7 +396,10 @@ export default function Experience() {
             `}</style>
 
             {/* Carousel Peek Container with Side Navigation Arrows */}
-            <div className="relative group/carousel carousel-peek-container">
+            <div
+              ref={carouselRef}
+              className="relative group/carousel carousel-peek-container"
+            >
               {/* Left Edge Shadow Fade Vignette (Subtle feathering) */}
               <div
                 className="pointer-events-none absolute inset-y-0 left-0 w-4 sm:w-8 bg-gradient-to-r from-[#FAFAFA] dark:from-[#000000] to-transparent z-20 rounded-l-xl"
@@ -302,15 +432,21 @@ export default function Experience() {
                 <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
               </button>
 
-              {/* Carousel Track Container (Touch Swipeable) */}
+              {/* Carousel Track Container (Touch & Mouse Drag Swipeable, Wheel Scrollable) */}
               <div
-                className="relative overflow-hidden w-full rounded-xl py-2"
+                className={`relative overflow-hidden w-full rounded-xl py-2 ${
+                  isMouseDown ? 'cursor-grabbing select-none' : 'cursor-grab'
+                }`}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
               >
                 <div
-                  className={`flex ${withTransition ? 'transition-transform duration-500 ease-out' : ''}`}
+                  className={`flex ${withTransition ? 'transition-transform duration-400 ease-out' : ''}`}
                   style={{ transform: `translateX(calc(var(--peek-offset) - (${currentIndex} * var(--card-width))))` }}
                   onTransitionEnd={handleTransitionEnd}
                 >
@@ -325,7 +461,7 @@ export default function Experience() {
                         key={`${project.title}-${idx}`}
                         style={{ width: 'var(--card-width)' }}
                         className={`shrink-0 px-2 sm:px-3 ${
-                          withTransition ? 'transition-all duration-500 ease-out' : ''
+                          withTransition ? 'transition-all duration-400 ease-out' : ''
                         } ${
                           isActive
                             ? 'opacity-100 scale-100 z-10 shadow-lg dark:shadow-black/70'
@@ -334,6 +470,7 @@ export default function Experience() {
                             : 'opacity-20 scale-[0.86] select-none pointer-events-none'
                         }`}
                         onClick={() => {
+                          if (hasDraggedMouse) return;
                           if (isPrev) prevProject();
                           else if (isNext) nextProject();
                         }}

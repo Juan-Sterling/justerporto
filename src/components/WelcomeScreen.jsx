@@ -14,23 +14,31 @@ export default function WelcomeScreen({ onComplete }) {
   const [greetingIndex, setGreetingIndex] = useState(0);
   const [greetingVisible, setGreetingVisible] = useState(true);
 
+  const handleExit = React.useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      document.body.style.overflow = '';
+      if (onComplete) onComplete();
+    }, 500);
+  }, [onComplete]);
+
   useEffect(() => {
     // Prevent background scrolling while welcome screen is active
     document.body.style.overflow = 'hidden';
 
-    // Strike-through trigger after brief initial delay (500ms)
+    // Strike-through trigger after user has time to read "BABY, I'M A MONSTER" (800ms)
     const strikeTimer = setTimeout(() => {
       setIsStruck(true);
-    }, 500);
+    }, 800);
 
-    // Language transitions: HELLO (0ms) -> 안녕하세요 (850ms) -> こんにちは (1750ms)
+    // Language transitions: HELLO (0ms) -> 안녕하세요 (950ms) -> こんにちは (1900ms)
     const langTimer1 = setTimeout(() => {
       setGreetingVisible(false);
       setTimeout(() => {
         setGreetingIndex(1);
         setGreetingVisible(true);
       }, 160);
-    }, 850);
+    }, 950);
 
     const langTimer2 = setTimeout(() => {
       setGreetingVisible(false);
@@ -38,7 +46,7 @@ export default function WelcomeScreen({ onComplete }) {
         setGreetingIndex(2);
         setGreetingVisible(true);
       }, 160);
-    }, 1750);
+    }, 1900);
 
     // Progress counter animation from 0% to 100%
     const progressInterval = setInterval(() => {
@@ -55,7 +63,7 @@ export default function WelcomeScreen({ onComplete }) {
     // Exit transition trigger
     const exitTimer = setTimeout(() => {
       handleExit();
-    }, 2800);
+    }, 3100);
 
     return () => {
       document.body.style.overflow = '';
@@ -65,15 +73,7 @@ export default function WelcomeScreen({ onComplete }) {
       clearInterval(progressInterval);
       clearTimeout(exitTimer);
     };
-  }, []);
-
-  const handleExit = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      document.body.style.overflow = '';
-      if (onComplete) onComplete();
-    }, 500);
-  };
+  }, [handleExit]);
 
   return (
     <aside
@@ -164,7 +164,7 @@ export default function WelcomeScreen({ onComplete }) {
           {/* MONSTER word: starts white, fades to gray when struck */}
           <span className="relative inline-flex items-center px-1 font-bold uppercase tracking-widest">
             <span
-              className={`transition-colors duration-400 ease-out ${
+              className={`transition-colors duration-700 ease-in-out ${
                 isStruck
                   ? 'text-[#71717A] dark:text-[#52525B]'
                   : 'text-[#09090B] dark:text-white'
@@ -172,9 +172,9 @@ export default function WelcomeScreen({ onComplete }) {
             >
               MONSTER
             </span>
-            {/* Animated Red Strikethrough Line */}
+            {/* Animated Red Strikethrough Line (Smooth laser draw) */}
             <span
-              className={`absolute left-0 h-[2px] sm:h-[2.5px] bg-[#E11D2E] rounded-full transition-all duration-350 ease-out shadow-[0_0_8px_rgba(225,29,46,0.9)] ${
+              className={`absolute left-0 h-[2px] sm:h-[2.5px] bg-[#E11D2E] rounded-full transition-all duration-700 ease-in-out shadow-[0_0_8px_rgba(225,29,46,0.9)] ${
                 isStruck ? 'w-full' : 'w-0'
               }`}
               style={{ top: '50%', transform: 'translateY(-50%)' }}
@@ -184,7 +184,7 @@ export default function WelcomeScreen({ onComplete }) {
 
           {/* Smoothly expanding DEVELOPER Word (Sentence stays perfectly centered) */}
           <span
-            className={`inline-flex items-center overflow-hidden transition-all duration-500 ease-out ${
+            className={`inline-flex items-center overflow-hidden transition-all duration-700 ease-out ${
               isStruck
                 ? 'max-w-[140px] sm:max-w-[190px] opacity-100 scale-100'
                 : 'max-w-0 opacity-0 scale-90 pointer-events-none'
