@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { flushSync } from 'react-dom';
 
 const ThemeContext = createContext();
 
@@ -76,35 +77,87 @@ export function ThemeProvider({ children }) {
     }
   }, []);
 
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+  const executeThemeChange = (nextTheme, manual = true) => {
     setTheme(nextTheme);
-    setIsSystem(false);
-    localStorage.setItem('theme', nextTheme);
+    if (manual) {
+      setIsSystem(false);
+      localStorage.setItem('theme', nextTheme);
+    } else {
+      setIsSystem(true);
+      localStorage.removeItem('theme');
+    }
   };
 
-  const resetToSystem = () => {
-    localStorage.removeItem('theme');
-    setIsSystem(true);
+  const applyThemeWithTransition = (nextTheme, e, manual = true) => {
+    // Add smooth CSS color transitions to all DOM nodes
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.add('theme-transitioning');
+      setTimeout(() => {
+        document.documentElement.classList.remove('theme-transitioning');
+      }, 550);
+    }
+
+    // View Transitions API with circular ripple expanding from the button
+    const isAppearanceTransition =
+      typeof document !== 'undefined' &&
+      document.startViewTransition &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!isAppearanceTransition) {
+      executeThemeChange(nextTheme, manual);
+      return;
+    }
+
+    const x = e?.clientX ?? (typeof window !== 'undefined' ? window.innerWidth / 2 : 0);
+    const y = e?.clientY ?? (typeof window !== 'undefined' ? 40 : 0);
+    const endRadius = Math.hypot(
+      Math.max(x, typeof window !== 'undefined' ? window.innerWidth - x : 1000),
+      Math.max(y, typeof window !== 'undefined' ? window.innerHeight - y : 1000)
+    );
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        executeThemeChange(nextTheme, manual);
+      });
+    });
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ];
+      document.documentElement.animate(
+        {
+          clipPath: clipPath,
+        },
+        {
+          duration: 550,
+          easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    });
+  };
+
+  const toggleTheme = (e) => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    applyThemeWithTransition(nextTheme, e, true);
+  };
+
+  const resetToSystem = (e) => {
     const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    if (systemPrefersDark) {
-      setTheme('dark');
-    } else if (systemPrefersLight) {
-      setTheme('light');
-    } else {
-      setTheme('dark');
-    }
+    const sysTheme = systemPrefersDark ? 'dark' : systemPrefersLight ? 'light' : 'dark';
+    applyThemeWithTransition(sysTheme, e, false);
   };
 
-  const setThemeExplicit = (mode) => {
+  const setThemeExplicit = (mode, e) => {
     if (mode === 'system') {
-      resetToSystem();
-    } else {
-      setTheme(mode);
-      setIsSystem(false);
-      localStorage.setItem('theme', mode);
+      resetToSystem(e);
+      return;
     }
+    if (mode === theme) return;
+    applyThemeWithTransition(mode, e, true);
   };
 
   return (

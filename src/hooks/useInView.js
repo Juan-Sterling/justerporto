@@ -1,19 +1,26 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 /**
  * Lightweight IntersectionObserver hook for scroll-triggered entrance animations.
+ * Supports both standard and conditionally mounted elements via callback ref.
  * Automatically resets when scrolling away to enable bidirectional (scroll down & scroll up) animations.
  * Respects prefers-reduced-motion.
  */
 export function useInView(options = { threshold: 0.1, triggerOnce: false }) {
-  const ref = useRef(null);
+  const [node, setNode] = useState(null);
   const [isInView, setIsInView] = useState(false);
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+  const ref = useCallback((element) => {
+    setNode(element);
+  }, []);
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  useEffect(() => {
+    if (!node) return;
+
+    const prefersReducedMotion = typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     if (prefersReducedMotion) {
       setIsInView(true);
       return;
@@ -27,7 +34,7 @@ export function useInView(options = { threshold: 0.1, triggerOnce: false }) {
       if (entry.isIntersecting) {
         setIsInView(true);
         if (triggerOnce) {
-          observer.unobserve(el);
+          observer.unobserve(node);
         }
       } else if (!triggerOnce) {
         setIsInView(false);
@@ -37,9 +44,9 @@ export function useInView(options = { threshold: 0.1, triggerOnce: false }) {
       rootMargin,
     });
 
-    observer.observe(el);
+    observer.observe(node);
     return () => observer.disconnect();
-  }, [options.threshold, options.triggerOnce, options.rootMargin]);
+  }, [node, options.threshold, options.triggerOnce, options.rootMargin]);
 
   return [ref, isInView];
 }

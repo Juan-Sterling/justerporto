@@ -255,12 +255,12 @@ export default function Experience() {
         {/* Work Experience Timeline */}
         <div className="mt-8">
           {initialExperience.map((item, index) => (
-            <AnimatedSection key={item.organization + item.period} delay={index * 120}>
-              <ExperienceItem
-                experience={item}
-                isLast={false}
-              />
-            </AnimatedSection>
+            <ExperienceItem
+              key={item.organization + item.period}
+              experience={item}
+              isLast={false}
+              delay={index * 130}
+            />
           ))}
 
           {/* Smooth Expandable Section for Remaining Experience with Peek & Fade */}
@@ -283,6 +283,7 @@ export default function Experience() {
                     key={item.organization + item.period}
                     experience={item}
                     isLast={index === remainingExperience.length - 1}
+                    delay={isExpanded ? index * 100 : 0}
                   />
                 ))}
               </div>
@@ -349,12 +350,12 @@ export default function Experience() {
                 <div className="space-y-3">
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif]">
                     Other Projects &amp;{' '}
-                    <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
-                      Collaborations
-                      <span
-                        className="h-2 w-2 rounded-full bg-[#E11D2E] inline-block shrink-0"
-                        aria-hidden="true"
-                      />
+                    <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                      <span className="text-[#E11D2E]">Collaborations</span>
+                      <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D2E] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#E11D2E] shadow-[0_0_10px_rgba(225,29,46,0.9)]" />
+                      </span>
                     </span>
                   </h3>
                   <p className="text-xs sm:text-sm text-[#52525B] dark:text-[#A1A1AA] max-w-2xl leading-relaxed">

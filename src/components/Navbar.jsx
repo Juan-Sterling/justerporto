@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
@@ -12,6 +12,11 @@ const NAV_ITEMS = [
 export default function Navbar({ activeSection = '' }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navRef = useRef(null);
+  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
+  const [clickedSection, setClickedSection] = useState(null);
+
+  const effectiveActive = clickedSection || activeSection;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +25,46 @@ export default function Navbar({ activeSection = '' }) {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Smooth sliding pill indicator tracking active section tab
+  useEffect(() => {
+    const updatePill = () => {
+      if (!navRef.current) return;
+      if (!effectiveActive) {
+        setPillStyle((prev) => ({ ...prev, opacity: 0 }));
+        return;
+      }
+
+      const activeEl = navRef.current.querySelector(`[data-nav-id="${effectiveActive}"]`);
+      if (activeEl) {
+        const navRect = navRef.current.getBoundingClientRect();
+        const elRect = activeEl.getBoundingClientRect();
+        setPillStyle({
+          left: elRect.left - navRect.left,
+          width: elRect.width,
+          opacity: 1,
+        });
+      } else {
+        setPillStyle((prev) => ({ ...prev, opacity: 0 }));
+      }
+    };
+
+    updatePill();
+    window.addEventListener('resize', updatePill);
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(updatePill);
+    }
+
+    return () => window.removeEventListener('resize', updatePill);
+  }, [effectiveActive]);
+
+  // When activeSection prop catches up to clickedSection, clear clickedSection
+  useEffect(() => {
+    if (clickedSection && activeSection === clickedSection) {
+      setClickedSection(null);
+    }
+  }, [activeSection, clickedSection]);
 
   // Close mobile drawer on Escape key or desktop resize
   useEffect(() => {
@@ -39,10 +84,24 @@ export default function Navbar({ activeSection = '' }) {
 
   const handleNavClick = (id) => {
     setIsOpen(false);
+    setClickedSection(id);
+
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const headerOffset = 80; // breathing room below floating navbar
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
     }
+
+    // Safety clear clicked override after transition & scroll completes
+    setTimeout(() => {
+      setClickedSection(null);
+    }, 1000);
   };
 
   return (
@@ -73,6 +132,7 @@ export default function Navbar({ activeSection = '' }) {
             href="#hero"
             onClick={(e) => {
               e.preventDefault();
+              setClickedSection(null);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className="group flex items-center gap-2 sm:gap-2.5 text-[#09090B] dark:text-white font-semibold tracking-tight text-sm sm:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] rounded-full py-1 px-1.5 sm:px-2 hover:bg-white/40 dark:hover:bg-white/[0.06] transition-colors"
@@ -110,31 +170,44 @@ export default function Navbar({ activeSection = '' }) {
           {/* Desktop Navigation Capsule */}
           <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
             <nav
-              className="flex items-center gap-1 p-1 rounded-full bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.05] dark:border-white/[0.08]"
+              ref={navRef}
+              className="relative flex items-center gap-1 p-1 rounded-full bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.05] dark:border-white/[0.08]"
               aria-label="Main Navigation"
             >
+              {/* Smooth Sliding Active Pill Indicator */}
+              <div
+                className="absolute left-0 top-1 bottom-1 rounded-full bg-white dark:bg-white/[0.14] border border-black/[0.06] dark:border-white/20 shadow-xs backdrop-blur-md transition-all duration-350 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none will-change-transform"
+                style={{
+                  transform: `translateX(${pillStyle.left}px)`,
+                  width: `${pillStyle.width}px`,
+                  opacity: pillStyle.opacity,
+                }}
+                aria-hidden="true"
+              />
+
               {NAV_ITEMS.map((item) => {
-                const isActive = activeSection === item.id;
+                const isActive = effectiveActive === item.id;
                 return (
                   <a
                     key={item.id}
+                    data-nav-id={item.id}
                     href={`#${item.id}`}
                     onClick={(e) => {
                       e.preventDefault();
                       handleNavClick(item.id);
                     }}
-                    className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center gap-1.5 ${
+                    className={`relative z-10 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center gap-1.5 select-none ${
                       isActive
-                        ? 'bg-white/90 dark:bg-white/[0.12] text-[#09090B] dark:text-white font-semibold shadow-xs border border-white/80 dark:border-white/15 backdrop-blur-md'
-                        : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.06]'
+                        ? 'text-[#09090B] dark:text-white font-semibold'
+                        : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-white/30 dark:hover:bg-white/[0.04]'
                     }`}
                   >
-                    {isActive && (
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-[#E11D2E] shadow-[0_0_6px_rgba(225,29,46,0.8)] animate-pulse"
-                        aria-hidden="true"
-                      />
-                    )}
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full bg-[#E11D2E] shadow-[0_0_6px_rgba(225,29,46,0.8)] transition-all duration-300 ${
+                        isActive ? 'scale-100 opacity-100 animate-pulse' : 'scale-0 opacity-0 -ml-2 w-0'
+                      }`}
+                      aria-hidden="true"
+                    />
                     <span>{item.label}</span>
                   </a>
                 );
@@ -170,7 +243,7 @@ export default function Navbar({ activeSection = '' }) {
           <div className="pointer-events-auto w-full max-w-md mt-2 rounded-2xl bg-white/75 dark:bg-[#161b22]/75 backdrop-blur-2xl backdrop-saturate-200 border border-white/60 dark:border-white/15 p-3.5 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.3),0_20px_50px_rgba(0,0,0,0.5)] space-y-3 animate-in fade-in slide-in-from-top-3 duration-200 md:hidden z-50">
             <div className="space-y-1">
               {NAV_ITEMS.map((item) => {
-                const isActive = activeSection === item.id;
+                const isActive = effectiveActive === item.id;
                 return (
                   <a
                     key={item.id}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowDown, FileDown, Mail, Code2, MapPin } from 'lucide-react';
 import AnimatedSection from '../components/AnimatedSection';
+import { useInView } from '../hooks/useInView';
 import { portfolioData } from '../data/portfolioData';
 
 const ROLES = [
@@ -8,8 +9,24 @@ const ROLES = [
   "Software Developer",
 ];
 
-export default function Hero() {
+export default function Hero({ welcomeActive = false }) {
   const { personal } = portfolioData;
+
+  const [titleRef, isTitleInView] = useInView({ threshold: 0.1, triggerOnce: false });
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    if (!welcomeActive && isTitleInView) {
+      const t = setTimeout(() => {
+        setHasEntered(true);
+      }, 60);
+      return () => clearTimeout(t);
+    } else if (!isTitleInView) {
+      setHasEntered(false);
+    }
+  }, [welcomeActive, isTitleInView]);
+
+  const nameWords = (personal.name || 'Juan Sterling').trim().split(/\s+/);
 
   // Dynamic role typewriter cycle (typing 1-by-1, pause, deleting 1-by-1, pause)
   const [roleIndex, setRoleIndex] = useState(0);
@@ -106,13 +123,40 @@ export default function Hero() {
         <AnimatedSection delay={120}>
           <div className="space-y-3">
             <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
-              <h1 className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-[#09090B] dark:text-white leading-none tracking-tighter">
-                {personal.name}
+              <h1
+                ref={titleRef}
+                className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-[#09090B] dark:text-white leading-none tracking-tighter flex flex-wrap items-center gap-x-3 sm:gap-x-4"
+              >
+                <span className="sr-only">{personal.name}</span>
+                <span aria-hidden="true" className="inline-flex flex-wrap items-center gap-x-3 sm:gap-x-4">
+                  {nameWords.map((word, idx) => (
+                    <span
+                      key={`${word}-${idx}`}
+                      className="inline-block overflow-hidden py-1 sm:py-2 -my-1 sm:-my-2"
+                    >
+                      <span
+                        className="inline-block transition-transform duration-700 ease-out will-change-transform text-[#09090B] dark:text-white hover:text-[#E11D2E] transition-colors"
+                        style={{
+                          transform: hasEntered ? 'translateY(0)' : 'translateY(115%)',
+                          transitionDelay: `${idx * 130 + 80}ms`,
+                        }}
+                      >
+                        {word}
+                      </span>
+                    </span>
+                  ))}
+                </span>
               </h1>
 
-              {/* BABYMONSTER Devil Emblem */}
+              {/* BABYMONSTER Devil Emblem with Spring-Bounce Entrance Animation */}
               <div 
-                className="relative inline-flex flex-col items-center justify-center shrink-0 -mt-1 sm:-mt-2 select-none group cursor-default"
+                className="relative inline-flex flex-col items-center justify-center shrink-0 -mt-1 sm:-mt-2 select-none group cursor-default transition-all duration-700 will-change-transform"
+                style={{
+                  transform: hasEntered ? 'scale(1) rotate(0deg)' : 'scale(0) rotate(-20deg)',
+                  opacity: hasEntered ? 1 : 0,
+                  transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  transitionDelay: '280ms',
+                }}
                 title="BAEMON // 07"
               >
                 {/* Stylized Devil Horns */}

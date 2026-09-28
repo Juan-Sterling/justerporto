@@ -79,10 +79,17 @@ export default function CertificatesSection() {
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h3 className="font-['Space_Grotesk',sans-serif] text-2xl sm:text-3xl font-bold text-[#09090B] dark:text-white tracking-tight">
-            Certifications & Honors
+          <h3 className="font-['Space_Grotesk',sans-serif] text-2xl sm:text-3xl font-bold text-[#09090B] dark:text-white tracking-tight flex items-center gap-2 flex-wrap">
+            <span>Certifications &amp;</span>
+            <span className="inline-flex items-center gap-2 whitespace-nowrap">
+              <span className="text-[#E11D2E]">Honors</span>
+              <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D2E] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#E11D2E] shadow-[0_0_10px_rgba(225,29,46,0.9)]" />
+              </span>
+            </span>
           </h3>
-          <p className="text-xs sm:text-sm text-[#71717A] dark:text-[#A1A1AA] mt-1.5 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#71717A] dark:text-[#A1A1AA] max-w-2xl leading-relaxed">
             A collection of certificates and honors that I have earned throughout my journey.
           </p>
         </div>

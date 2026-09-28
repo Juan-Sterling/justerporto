@@ -20,9 +20,7 @@ export default function Skills() {
         </AnimatedSection>
 
         {/* Bento Grid with Category Filters & Search */}
-        <AnimatedSection delay={100}>
-          <SkillBentoGrid />
-        </AnimatedSection>
+        <SkillBentoGrid />
 
         {/* Certifications & Credentials Mockup Section */}
         <AnimatedSection delay={150}>

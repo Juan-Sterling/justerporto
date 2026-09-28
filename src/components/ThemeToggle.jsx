@@ -17,7 +17,7 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
         <div className="grid grid-cols-3 gap-1.5 p-1 rounded-lg bg-white/70 dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A]">
           <button
             type="button"
-            onClick={resetToSystem}
+            onClick={(e) => resetToSystem(e)}
             className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-all cursor-pointer ${
               isSystem
                 ? 'bg-[#E11D2E] text-white shadow-xs font-semibold'
@@ -30,7 +30,7 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
 
           <button
             type="button"
-            onClick={() => setThemeExplicit('dark')}
+            onClick={(e) => setThemeExplicit('dark', e)}
             className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-all cursor-pointer ${
               !isSystem && isDark
                 ? 'bg-[#E11D2E] text-white shadow-xs font-semibold'
@@ -43,7 +43,7 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
 
           <button
             type="button"
-            onClick={() => setThemeExplicit('light')}
+            onClick={(e) => setThemeExplicit('light', e)}
             className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-all cursor-pointer ${
               !isSystem && !isDark
                 ? 'bg-[#E11D2E] text-white shadow-xs font-semibold'
@@ -61,17 +61,27 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
   return (
     <button
       type="button"
-      onClick={toggleTheme}
-      className={`relative p-2 rounded-full border border-white/60 dark:border-white/10 bg-white/60 dark:bg-white/[0.06] backdrop-blur-md text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/60 dark:hover:border-[#E11D2E]/60 shadow-xs hover:shadow-sm transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E11D2E] group/theme ${className}`}
+      onClick={(e) => toggleTheme(e)}
+      className={`relative p-2 rounded-full border border-white/60 dark:border-white/10 bg-white/60 dark:bg-white/[0.06] backdrop-blur-md text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/60 dark:hover:border-[#E11D2E]/60 shadow-xs hover:shadow-sm active:scale-90 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E11D2E] group/theme overflow-hidden ${className}`}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isSystem ? `Auto (Device: ${isDark ? 'Dark' : 'Light'}) - Click to toggle manual` : isDark ? "Dark Mode - Click to switch" : "Light Mode - Click to switch"}
     >
       <div className="relative w-4 h-4 sm:w-4.5 sm:h-4.5 flex items-center justify-center">
-        {isDark ? (
-          <Sun className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-400 group-hover/theme:rotate-90 group-hover/theme:scale-110 transition-transform duration-300" />
-        ) : (
-          <Moon className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-indigo-600 group-hover/theme:-rotate-45 group-hover/theme:scale-110 transition-transform duration-300" />
-        )}
+        {/* Animated Sun & Moon Icons with smooth morph, rotation and scale */}
+        <Sun
+          className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-400 absolute transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform ${
+            isDark
+              ? 'opacity-100 rotate-0 scale-100 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]'
+              : 'opacity-0 -rotate-90 scale-25 pointer-events-none'
+          }`}
+        />
+        <Moon
+          className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-indigo-500 dark:text-indigo-400 absolute transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform ${
+            !isDark
+              ? 'opacity-100 rotate-0 scale-100 drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]'
+              : 'opacity-0 rotate-90 scale-25 pointer-events-none'
+          }`}
+        />
       </div>
       {isSystem && (
         <span 

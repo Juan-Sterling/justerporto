@@ -55,7 +55,7 @@ export default function App() {
 
         {/* Main Content Sections */}
         <main className="flex-1 w-full relative z-10">
-          <Hero />
+          <Hero welcomeActive={showWelcome} />
           <Experience />
           <Skills />
           <Education />

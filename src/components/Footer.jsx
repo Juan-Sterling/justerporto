@@ -48,41 +48,52 @@ export default function Footer() {
     return () => clearInterval(interval);
   }, []);
 
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="border-t border-[#E4E4E7] dark:border-[#262c36] bg-white dark:bg-[#0f1117] py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="max-w-6xl mx-auto flex flex-col items-center sm:items-start text-center sm:text-left">
-        {/* Identity & Note */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-center sm:justify-start gap-2">
-            <span className="font-['Space_Grotesk',sans-serif] text-sm font-bold text-[#09090B] dark:text-white">
-              Juan Sterling
-            </span>
-            <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
-            <div className="inline-flex items-center overflow-hidden">
-              <span
-                className={`font-mono text-xs transition-all duration-300 transform ${isFading
+      <div className="max-w-4xl mx-auto flex flex-col items-center justify-center text-center space-y-3">
+        {/* Identity & Rotating Role */}
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <span className="font-['Space_Grotesk',sans-serif] text-sm font-bold text-[#09090B] dark:text-white">
+            Juan Sterling
+          </span>
+          <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
+          <div className="inline-flex items-center overflow-hidden">
+            <span
+              className={`font-mono text-xs transition-all duration-300 transform ${
+                isFading
                   ? 'opacity-0 -translate-y-2'
                   : 'opacity-100 translate-y-0 text-[#E11D2E]'
-                  }`}
-              >
-                {ROLES[roleIndex]}
-              </span>
-            </div>
-          </div>
-          <div className="min-h-[1.5rem] flex items-center justify-center sm:justify-start overflow-hidden">
-            <p
-              className={`text-xs text-[#71717A] transition-all duration-300 transform ${isTaglineFading
-                ? 'opacity-0 -translate-y-2'
-                : 'opacity-100 translate-y-0'
-                }`}
+              }`}
             >
-              {TAGLINES[taglineIndex]}
-            </p>
+              {ROLES[roleIndex]}
+            </span>
           </div>
         </div>
 
-        {/* BABYMONSTER Inspiration Credit with extra breathing room */}
-        <p className="text-[11px] font-mono text-[#71717A] dark:text-[#52525B] pt-4">
+        {/* Rotating Tagline */}
+        <div className="min-h-[1.5rem] flex items-center justify-center overflow-hidden">
+          <p
+            className={`text-xs text-[#71717A] dark:text-[#A1A1AA] transition-all duration-300 transform ${
+              isTaglineFading
+                ? 'opacity-0 -translate-y-2'
+                : 'opacity-100 translate-y-0'
+            }`}
+          >
+            {TAGLINES[taglineIndex]}
+          </p>
+        </div>
+
+        {/* Copyright notice */}
+        <div className="pt-2 text-xs font-mono text-[#71717A] dark:text-[#A1A1AA] flex items-center justify-center gap-1.5 flex-wrap">
+          <span>&copy; {currentYear} Juan Sterling.</span>
+          <span className="hidden sm:inline text-[#A1A1AA] dark:text-[#52525B]">•</span>
+          <span>All rights reserved.</span>
+        </div>
+
+        {/* BABYMONSTER Inspiration Credit */}
+        <p className="text-[11px] font-mono text-[#71717A] dark:text-[#52525B]">
           Design inspired by <span className="text-[#E11D2E] font-semibold">BABYMONSTER</span>
         </p>
       </div>
