@@ -258,47 +258,49 @@ export default function Experience() {
             <AnimatedSection key={item.organization + item.period} delay={index * 120}>
               <ExperienceItem
                 experience={item}
-                isLast={
-                  !isExpanded && remainingExperience.length > 0
-                    ? index === initialExperience.length - 1
-                    : remainingExperience.length === 0 && index === initialExperience.length - 1
-                }
+                isLast={false}
               />
             </AnimatedSection>
           ))}
 
-          {/* Smooth Expandable Section for Remaining Experience */}
-          <div
-            className="transition-all duration-500 ease-in-out"
-            style={{
-              display: 'grid',
-              gridTemplateRows: isExpanded ? '1fr' : '0fr',
-              opacity: isExpanded ? 1 : 0,
-            }}
-          >
-            <div className="overflow-hidden min-h-0">
-              {remainingExperience.map((item, index) => (
-                <ExperienceItem
-                  key={item.organization + item.period}
-                  experience={item}
-                  isLast={index === remainingExperience.length - 1}
-                />
-              ))}
+          {/* Smooth Expandable Section for Remaining Experience with Peek & Fade */}
+          <div className="relative">
+            <div
+              className="relative transition-all duration-700 ease-in-out overflow-hidden"
+              style={{
+                maxHeight: isExpanded ? '2000px' : '115px',
+                maskImage: isExpanded
+                  ? 'none'
+                  : 'linear-gradient(to bottom, black 0%, black 30%, rgba(0, 0, 0, 0.4) 65%, transparent 100%)',
+                WebkitMaskImage: isExpanded
+                  ? 'none'
+                  : 'linear-gradient(to bottom, black 0%, black 30%, rgba(0, 0, 0, 0.4) 65%, transparent 100%)',
+              }}
+            >
+              <div>
+                {remainingExperience.map((item, index) => (
+                  <ExperienceItem
+                    key={item.organization + item.period}
+                    experience={item}
+                    isLast={index === remainingExperience.length - 1}
+                  />
+                ))}
+              </div>
             </div>
+
+            {/* Subtle Smooth Gradient Veil over the bottom of the peeking card */}
+            <div
+              className={`pointer-events-none absolute -bottom-1 inset-x-0 h-28 bg-gradient-to-t from-[#FAFAFA] dark:from-[#0f1117] via-[#FAFAFA]/70 dark:via-[#0f1117]/70 to-transparent transition-opacity duration-500 z-10 ${
+                isExpanded ? 'opacity-0' : 'opacity-100'
+              }`}
+              aria-hidden="true"
+            />
           </div>
         </div>
 
         {/* Dynamic Non-Box Show More / Show Less Toggle */}
         {remainingExperience.length > 0 && (
           <div className="relative mt-2 mb-6 flex flex-col items-center justify-center">
-            {/* Subtle gradient veil when collapsed */}
-            <div
-              className={`absolute -top-16 inset-x-0 h-16 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 dark:from-[#000000] dark:via-[#000000]/80 to-transparent pointer-events-none transition-opacity duration-500 ${
-                isExpanded ? 'opacity-0' : 'opacity-100'
-              }`}
-              aria-hidden="true"
-            />
-
             {/* Subtle divider line with centered interactive trigger */}
             <div className="w-full flex items-center justify-center relative">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -309,7 +311,7 @@ export default function Experience() {
               <button
                 type="button"
                 onClick={() => setIsExpanded((prev) => !prev)}
-                className="relative z-10 inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#333333] hover:border-[#E11D2E] dark:hover:border-[#E11D2E] text-[#09090B] dark:text-[#F4F4F5] text-xs font-mono shadow-xs hover:shadow-md hover:shadow-[#E11D2E]/10 active:scale-95 transition-all duration-200 cursor-pointer group select-none"
+                className="relative z-10 inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#333333] hover:border-[#E11D2E] dark:hover:border-[#E11D2E] text-[#09090B] dark:text-[#F4F4F5] text-xs font-mono shadow-sm hover:shadow-md hover:shadow-[#E11D2E]/10 active:scale-95 transition-all duration-200 cursor-pointer group select-none"
                 aria-expanded={isExpanded}
               >
                 <span className="relative flex h-2 w-2">
@@ -400,15 +402,15 @@ export default function Experience() {
               ref={carouselRef}
               className="relative group/carousel carousel-peek-container"
             >
-              {/* Left Edge Shadow Fade Vignette (Subtle feathering) */}
+              {/* Left Edge Smooth Feathering Vignette */}
               <div
-                className="pointer-events-none absolute inset-y-0 left-0 w-4 sm:w-8 bg-gradient-to-r from-[#FAFAFA] dark:from-[#000000] to-transparent z-20 rounded-l-xl"
+                className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#FAFAFA]/90 dark:from-[#0f1117]/90 via-[#FAFAFA]/40 dark:via-[#0f1117]/40 to-transparent z-20 rounded-l-xl transition-opacity duration-300"
                 aria-hidden="true"
               />
 
-              {/* Right Edge Shadow Fade Vignette (Subtle feathering) */}
+              {/* Right Edge Smooth Feathering Vignette */}
               <div
-                className="pointer-events-none absolute inset-y-0 right-0 w-4 sm:w-8 bg-gradient-to-l from-[#FAFAFA] dark:from-[#000000] to-transparent z-20 rounded-r-xl"
+                className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#FAFAFA]/90 dark:from-[#0f1117]/90 via-[#FAFAFA]/40 dark:via-[#0f1117]/40 to-transparent z-20 rounded-r-xl transition-opacity duration-300"
                 aria-hidden="true"
               />
 
@@ -416,7 +418,7 @@ export default function Experience() {
               <button
                 type="button"
                 onClick={prevProject}
-                className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-white/95 dark:bg-[#141414]/95 backdrop-blur-xs hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] shadow-md dark:shadow-black/70 transition-all cursor-pointer"
+                className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-white/90 dark:bg-[#161b22]/90 backdrop-blur-md hover:bg-white dark:hover:bg-[#1c212a] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-white/60 dark:border-white/10 hover:border-[#E11D2E] shadow-sm hover:shadow-md transition-all cursor-pointer"
                 aria-label="Previous project"
               >
                 <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
@@ -426,7 +428,7 @@ export default function Experience() {
               <button
                 type="button"
                 onClick={nextProject}
-                className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-white/95 dark:bg-[#141414]/95 backdrop-blur-xs hover:bg-[#F4F4F5] dark:hover:bg-[#1c1c1c] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] shadow-md dark:shadow-black/70 transition-all cursor-pointer"
+                className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-white/90 dark:bg-[#161b22]/90 backdrop-blur-md hover:bg-white dark:hover:bg-[#1c212a] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-white/60 dark:border-white/10 hover:border-[#E11D2E] shadow-sm hover:shadow-md transition-all cursor-pointer"
                 aria-label="Next project"
               >
                 <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
@@ -437,6 +439,12 @@ export default function Experience() {
                 className={`relative overflow-hidden w-full rounded-xl py-2 ${
                   isMouseDown ? 'cursor-grabbing select-none' : 'cursor-grab'
                 }`}
+                style={{
+                  maskImage:
+                    'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.25) 2%, rgba(0,0,0,0.85) 6%, black 12%, black 88%, rgba(0,0,0,0.85) 94%, rgba(0,0,0,0.25) 98%, transparent 100%)',
+                  WebkitMaskImage:
+                    'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.25) 2%, rgba(0,0,0,0.85) 6%, black 12%, black 88%, rgba(0,0,0,0.85) 94%, rgba(0,0,0,0.25) 98%, transparent 100%)',
+                }}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}

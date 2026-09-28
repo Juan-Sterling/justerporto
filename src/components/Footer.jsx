@@ -49,7 +49,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="border-t border-[#E4E4E7] dark:border-[#2A2A2A] bg-white dark:bg-[#000000] py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <footer className="border-t border-[#E4E4E7] dark:border-[#262c36] bg-white dark:bg-[#0f1117] py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto flex flex-col items-center sm:items-start text-center sm:text-left">
         {/* Identity & Note */}
         <div className="space-y-1">

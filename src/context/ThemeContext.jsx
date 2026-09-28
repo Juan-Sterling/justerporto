@@ -27,6 +27,20 @@ export function ThemeProvider({ children }) {
     return true;
   });
 
+  const [bgTheme, setBgThemeState] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('bg_theme') || 'matrix';
+    }
+    return 'matrix';
+  });
+
+  const setBgTheme = (newBgTheme) => {
+    setBgThemeState(newBgTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('bg_theme', newBgTheme);
+    }
+  };
+
   // Apply theme class to documentElement
   useEffect(() => {
     const root = document.documentElement;
@@ -102,6 +116,8 @@ export function ThemeProvider({ children }) {
         resetToSystem,
         setThemeExplicit,
         isSystem,
+        bgTheme,
+        setBgTheme,
       }}
     >
       {children}

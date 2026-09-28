@@ -85,11 +85,11 @@ export default function Hero() {
         {/* 2. Top Row: Live Availability Beacon + Location Badge */}
         <AnimatedSection delay={0}>
           <div className="flex flex-wrap items-center gap-3">
-            {/* Pulsing Live Availability Badge */}
+            {/* Development Status Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] text-xs font-mono text-[#52525B] dark:text-[#D4D4D8] shadow-xs">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></span>
               </span>
               <span>{personal.availability}</span>
             </div>

@@ -78,7 +78,7 @@ export default function WelcomeScreen({ onComplete }) {
   return (
     <aside
       aria-label="Welcome Screen"
-      className={`fixed inset-0 z-[9999] flex flex-col justify-between bg-[#FAFAFA] dark:bg-[#000000] p-6 sm:p-12 select-none transition-all duration-500 ease-in-out ${isExiting ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100'
+      className={`fixed inset-0 z-[9999] flex flex-col justify-between bg-[#FAFAFA] dark:bg-[#0f1117] p-4 sm:p-12 select-none transition-all duration-500 ease-in-out ${isExiting ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100'
         }`}
     >
       {/* 1. Ambient Background Grid & Crimson Glow */}
@@ -152,17 +152,17 @@ export default function WelcomeScreen({ onComplete }) {
         </div>
 
         {/* Catchphrase Homage: "BABY, I'M A MONSTER -> DEVELOPER" */}
-        <div className="mt-2.5 flex items-center justify-center font-mono text-xs sm:text-sm md:text-base select-none">
+        <div className="mt-2.5 flex items-center justify-center font-mono text-[11px] sm:text-sm md:text-base select-none max-w-full px-1">
           {/* Opening Quote */}
-          <span className="text-[#E11D2E] font-bold text-base sm:text-lg select-none">"</span>
+          <span className="text-[#E11D2E] font-bold text-sm sm:text-base select-none">"</span>
 
           {/* Intro Text */}
-          <span className="tracking-widest uppercase font-bold text-[#09090B] dark:text-white ml-0.5 sm:ml-1">
+          <span className="tracking-wider sm:tracking-widest uppercase font-bold text-[#09090B] dark:text-white ml-0.5 sm:ml-1">
             BABY, I'M A
           </span>
 
           {/* MONSTER word: starts white, fades to gray when struck */}
-          <span className="relative inline-flex items-center px-1 font-bold uppercase tracking-widest">
+          <span className="relative inline-flex items-center px-1 font-bold uppercase tracking-wider sm:tracking-widest">
             <span
               className={`transition-colors duration-700 ease-in-out ${
                 isStruck
@@ -186,20 +186,20 @@ export default function WelcomeScreen({ onComplete }) {
           <span
             className={`inline-flex items-center overflow-hidden transition-all duration-700 ease-out ${
               isStruck
-                ? 'max-w-[140px] sm:max-w-[190px] opacity-100 scale-100'
+                ? 'max-w-[95px] sm:max-w-[160px] opacity-100 scale-100'
                 : 'max-w-0 opacity-0 scale-90 pointer-events-none'
             }`}
             style={{
               transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
-            <span className="pl-1 sm:pl-1.5 tracking-widest uppercase font-extrabold text-[#E11D2E] whitespace-nowrap drop-shadow-[0_0_10px_rgba(225,29,46,0.7)]">
+            <span className="pl-0.5 sm:pl-1.5 tracking-wider sm:tracking-widest uppercase font-extrabold text-[#E11D2E] whitespace-nowrap drop-shadow-[0_0_10px_rgba(225,29,46,0.7)]">
               DEVELOPER
             </span>
           </span>
 
           {/* Closing Quote: directly beside MONSTER initially, glides right as DEVELOPER expands */}
-          <span className="text-[#E11D2E] font-bold text-base sm:text-lg select-none">"</span>
+          <span className="text-[#E11D2E] font-bold text-sm sm:text-base select-none">"</span>
         </div>
 
         {/* 7-Member Pulsing Equalizer Bars (Homage to 7 Members) */}

@@ -8,7 +8,7 @@ export const portfolioData = {
     github2: "https://github.com/juansterling",
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
     location: "North Jakarta, Indonesia",
-    availability: "Available for opportunities",
+    availability: "Under Development • Feel Free to Explore",
     resumeUrl: "/CV_Juan_Sterling_Martua.pdf",
   },
 
@@ -19,6 +19,8 @@ export const portfolioData = {
       location: "Bandung, Indonesia",
       period: "2020 — 2024",
       gpa: "3.82 / 4.00",
+      logo: "", // Path or URL to campus logo (e.g. "/images/education/maranatha.png")
+      websiteUrl: "https://www.maranatha.edu/", // Campus website link
       achievements: [
         "6x Dean's List recipient for outstanding academic performance",
         "Participated in the MBKM program",
@@ -85,6 +87,8 @@ export const portfolioData = {
       organization: "Foxion Technologies",
       location: "North Jakarta, Indonesia",
       type: "Full-time",
+      logo: "", // Path or URL to company logo (e.g. "/images/experience/foxion.png")
+      websiteUrl: "", // Company website link
       responsibilities: [
         "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Survey Division in managing vessel classification admission and maintenance processes.",
       ],
@@ -96,6 +100,8 @@ export const portfolioData = {
       organization: "Stafbook (YCW22)",
       location: "North Jakarta, Indonesia",
       type: "Contract",
+      logo: "", // Path or URL to company logo (e.g. "/images/experience/stafbook.png")
+      websiteUrl: "", // Company website link
       responsibilities: [
         "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Statutory Division in managing statutory certificates.",
         "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Matkom Division in managing Service Supplier, Material Component, and Welding certificates.",
@@ -108,6 +114,8 @@ export const portfolioData = {
       organization: "i2c Studio",
       location: "Bandung, Indonesia",
       type: "Internship",
+      logo: "", // Path or URL to company logo (e.g. "/images/experience/i2c.png")
+      websiteUrl: "", // Company website link
       responsibilities: [
         "Being an intern and part-time software programmer who assists i2c Studio in creating a project for LPPM Maranatha called SIPPM.",
         "The SIPPM project uses PHP, Laravel, and PostgreSQL as the main tools.",

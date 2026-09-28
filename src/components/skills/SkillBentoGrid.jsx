@@ -28,15 +28,7 @@ const CATEGORY_ICONS = {
 
 function ShowMoreToggle({ isExpanded, onToggle, labelMore = 'Show More', labelLess = 'Show Less' }) {
   return (
-    <div className="relative mt-8 sm:mt-10 flex flex-col items-center justify-center">
-      {/* Subtle gradient veil when collapsed */}
-      <div
-        className={`absolute -top-16 inset-x-0 h-16 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 dark:from-[#000000] dark:via-[#000000]/80 to-transparent pointer-events-none transition-opacity duration-500 ${
-          isExpanded ? 'opacity-0' : 'opacity-100'
-        }`}
-        aria-hidden="true"
-      />
-
+    <div className="relative mt-3 sm:mt-4 flex flex-col items-center justify-center">
       {/* Subtle divider line with centered interactive trigger */}
       <div className="w-full flex items-center justify-center relative">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -247,16 +239,19 @@ export default function SkillBentoGrid() {
           </div>
 
           {/* Smooth Collapsible Section for Remaining Bento Clusters (Database & Tools) */}
-          <div
-            className="transition-all duration-500 ease-in-out"
-            style={{
-              display: 'grid',
-              gridTemplateRows: isExpanded ? '1fr' : '0fr',
-              opacity: isExpanded ? 1 : 0,
-              marginTop: isExpanded ? '0.875rem' : 0,
-            }}
-          >
-            <div className="overflow-hidden min-h-0">
+          <div className="relative mt-3.5 sm:mt-4">
+            <div
+              className="relative transition-all duration-700 ease-in-out overflow-hidden"
+              style={{
+                maxHeight: isExpanded ? '2000px' : '95px',
+                maskImage: isExpanded
+                  ? 'none'
+                  : 'linear-gradient(to bottom, black 0%, black 25%, rgba(0, 0, 0, 0.4) 60%, transparent 100%)',
+                WebkitMaskImage: isExpanded
+                  ? 'none'
+                  : 'linear-gradient(to bottom, black 0%, black 25%, rgba(0, 0, 0, 0.4) 60%, transparent 100%)',
+              }}
+            >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5 sm:gap-4 pt-1">
                 {remainingBentoCategories.map((cat, catIdx) => {
                   const catSkills = SKILLS_DATA.filter((s) => s.category === cat.id);
@@ -313,6 +308,14 @@ export default function SkillBentoGrid() {
                 })}
               </div>
             </div>
+
+            {/* Subtle Smooth Gradient Veil when collapsed */}
+            <div
+              className={`pointer-events-none absolute -bottom-1 inset-x-0 h-24 bg-gradient-to-t from-[#FAFAFA] dark:from-[#0f1117] via-[#FAFAFA]/70 dark:via-[#0f1117]/70 to-transparent transition-opacity duration-500 z-10 ${
+                isExpanded ? 'opacity-0' : 'opacity-100'
+              }`}
+              aria-hidden="true"
+            />
           </div>
 
           {/* Show More / Show Less Toggle Button */}
@@ -377,16 +380,19 @@ export default function SkillBentoGrid() {
 
               {remainingFilteredSkills.length > 0 && (
                 <>
-                  <div
-                    className="transition-all duration-500 ease-in-out"
-                    style={{
-                      display: 'grid',
-                      gridTemplateRows: isExpanded ? '1fr' : '0fr',
-                      opacity: isExpanded ? 1 : 0,
-                      marginTop: isExpanded ? '0.625rem' : 0,
-                    }}
-                  >
-                    <div className="overflow-hidden min-h-0">
+                  <div className="relative mt-2.5 sm:mt-3">
+                    <div
+                      className="relative transition-all duration-700 ease-in-out overflow-hidden"
+                      style={{
+                        maxHeight: isExpanded ? '1500px' : '55px',
+                        maskImage: isExpanded
+                          ? 'none'
+                          : 'linear-gradient(to bottom, black 0%, black 20%, rgba(0, 0, 0, 0.3) 55%, transparent 100%)',
+                        WebkitMaskImage: isExpanded
+                          ? 'none'
+                          : 'linear-gradient(to bottom, black 0%, black 20%, rgba(0, 0, 0, 0.3) 55%, transparent 100%)',
+                      }}
+                    >
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-3 pt-1">
                         {remainingFilteredSkills.map((skill, index) => (
                           <AnimatedSection key={skill.id} delay={(index % 6) * 40}>
@@ -399,6 +405,14 @@ export default function SkillBentoGrid() {
                         ))}
                       </div>
                     </div>
+
+                    {/* Subtle smooth gradient veil when collapsed */}
+                    <div
+                      className={`pointer-events-none absolute -bottom-1 inset-x-0 h-16 bg-gradient-to-t from-[#FAFAFA] dark:from-[#0f1117] via-[#FAFAFA]/70 dark:via-[#0f1117]/70 to-transparent transition-opacity duration-500 z-10 ${
+                        isExpanded ? 'opacity-0' : 'opacity-100'
+                      }`}
+                      aria-hidden="true"
+                    />
                   </div>
 
                   <ShowMoreToggle

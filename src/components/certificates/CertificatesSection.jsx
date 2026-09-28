@@ -226,7 +226,7 @@ export default function CertificatesSection() {
                         /* Clean Minimal Placeholder */
                         <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center select-none bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#131316] dark:via-[#0F0F12] dark:to-[#0A0A0C] relative">
                           <div
-                            className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#FFFFFF08_1px,transparent_1px),linear-gradient(to_bottom,#FFFFFF08_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] pointer-events-none"
+                            className="absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.06)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] pointer-events-none"
                             aria-hidden="true"
                           />
                           <div className="relative z-10 flex flex-col items-center justify-center py-1">
@@ -360,7 +360,7 @@ export default function CertificatesSection() {
                   /* Developer Blueprint Placeholder */
                   <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center select-none bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#131316] dark:via-[#0F0F12] dark:to-[#0A0A0C] relative">
                     <div
-                      className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#FFFFFF08_1px,transparent_1px),linear-gradient(to_bottom,#FFFFFF08_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] pointer-events-none"
+                      className="absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.06)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] pointer-events-none"
                       aria-hidden="true"
                     />
                     <div className="relative z-10 flex flex-col items-center justify-center py-1">

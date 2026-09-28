@@ -62,7 +62,7 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
     <button
       type="button"
       onClick={toggleTheme}
-      className={`relative p-2 rounded-md border border-[#E4E4E7] dark:border-[#2A2A2A] bg-[#FFFFFF] dark:bg-[#141414] text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/60 dark:hover:border-[#E11D2E]/60 shadow-xs hover:shadow-sm transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E11D2E] group/theme ${className}`}
+      className={`relative p-2 rounded-full border border-white/60 dark:border-white/10 bg-white/60 dark:bg-white/[0.06] backdrop-blur-md text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/60 dark:hover:border-[#E11D2E]/60 shadow-xs hover:shadow-sm transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E11D2E] group/theme ${className}`}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isSystem ? `Auto (Device: ${isDark ? 'Dark' : 'Light'}) - Click to toggle manual` : isDark ? "Dark Mode - Click to switch" : "Light Mode - Click to switch"}
     >
