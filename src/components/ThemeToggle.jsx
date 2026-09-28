@@ -69,14 +69,14 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
       <div className="relative w-4 h-4 sm:w-4.5 sm:h-4.5 flex items-center justify-center">
         {/* Animated Sun & Moon Icons with smooth morph, rotation and scale */}
         <Sun
-          className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-400 absolute transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform ${
+          className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-400 absolute transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform ${
             isDark
               ? 'opacity-100 rotate-0 scale-100 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]'
               : 'opacity-0 -rotate-90 scale-25 pointer-events-none'
           }`}
         />
         <Moon
-          className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-indigo-500 dark:text-indigo-400 absolute transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform ${
+          className={`w-4 h-4 sm:w-4.5 sm:h-4.5 text-indigo-500 dark:text-indigo-400 absolute transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] transform ${
             !isDark
               ? 'opacity-100 rotate-0 scale-100 drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]'
               : 'opacity-0 rotate-90 scale-25 pointer-events-none'

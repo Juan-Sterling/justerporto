@@ -89,15 +89,7 @@ export function ThemeProvider({ children }) {
   };
 
   const applyThemeWithTransition = (nextTheme, e, manual = true) => {
-    // Add smooth CSS color transitions to all DOM nodes
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.add('theme-transitioning');
-      setTimeout(() => {
-        document.documentElement.classList.remove('theme-transitioning');
-      }, 550);
-    }
-
-    // View Transitions API with circular ripple expanding from the button
+    // View Transitions API with circular ripple expanding from the button (pure GPU compositor)
     const isAppearanceTransition =
       typeof document !== 'undefined' &&
       document.startViewTransition &&
@@ -131,8 +123,8 @@ export function ThemeProvider({ children }) {
           clipPath: clipPath,
         },
         {
-          duration: 550,
-          easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+          duration: 320,
+          easing: 'ease-out',
           pseudoElement: '::view-transition-new(root)',
         }
       );
