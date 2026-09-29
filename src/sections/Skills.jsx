@@ -22,10 +22,8 @@ export default function Skills() {
         {/* Bento Grid with Category Filters & Search */}
         <SkillBentoGrid />
 
-        {/* Certifications & Credentials Mockup Section */}
-        <AnimatedSection delay={150}>
-          <CertificatesSection />
-        </AnimatedSection>
+        {/* Certifications & Credentials Mockup Section with Integrated Bidirectional Scroll Entrance */}
+        <CertificatesSection />
 
         {/* Hidden Semantic Tree for Screen Readers & SEO Web Crawlers */}
         <div className="sr-only" aria-label="Structured Technical Skills Directory">

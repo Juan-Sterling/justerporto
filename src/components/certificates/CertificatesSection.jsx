@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { portfolioData } from '../../data/portfolioData';
 import TechBadge from '../TechBadge';
+import { useInView } from '../../hooks/useInView';
 
 export default function CertificatesSection() {
   const certificates = portfolioData.certificates || [];
@@ -23,6 +24,31 @@ export default function CertificatesSection() {
   const [mobileExpandedId, setMobileExpandedId] = useState(certificates[0]?.id || '');
   const [previewCert, setPreviewCert] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Track scroll direction for directional entrance animation (scrolling up vs scrolling down)
+  const [scrollDirection, setScrollDirection] = useState('down');
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      const diff = currentY - lastY;
+      if (Math.abs(diff) > 4) {
+        setScrollDirection(diff > 0 ? 'down' : 'up');
+        lastY = currentY;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // In-view hooks with triggerOnce: false to re-trigger on both scroll up and scroll down
+  const [headerRef, isHeaderInView] = useInView({ threshold: 0.12, triggerOnce: false });
+  const [listRef, isListInView] = useInView({ threshold: 0.05, triggerOnce: false });
+  const [spotlightRef, isSpotlightInView] = useInView({ threshold: 0.05, triggerOnce: false });
+
+  // Directional entry offset
+  const getEntryOffset = (dist = 24) => (scrollDirection === 'down' ? `${dist}px` : `-${dist}px`);
 
   // Active certificate object for desktop spotlight
   const activeCert = certificates.find((c) => c.id === selectedId) || certificates[0];
@@ -76,9 +102,18 @@ export default function CertificatesSection() {
 
   return (
     <div className="pt-10 sm:pt-14 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/70">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
-        <div>
+      {/* Section Header with Bidirectional Entrance Animation */}
+      <div 
+        ref={headerRef}
+        className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8 will-change-transform"
+      >
+        <div
+          style={{
+            opacity: isHeaderInView ? 1 : 0,
+            transform: isHeaderInView ? 'translateY(0)' : `translateY(${getEntryOffset(24)})`,
+            transition: 'opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
           <h3 className="font-['Space_Grotesk',sans-serif] text-2xl sm:text-3xl font-bold text-[#09090B] dark:text-white tracking-tight flex items-center gap-2 flex-wrap">
             <span>Certifications &amp;</span>
             <span className="inline-flex items-center gap-2 whitespace-nowrap">
@@ -89,13 +124,21 @@ export default function CertificatesSection() {
               </span>
             </span>
           </h3>
-          <p className="text-xs sm:text-sm text-[#71717A] dark:text-[#A1A1AA] max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#71717A] dark:text-[#A1A1AA] max-w-2xl leading-relaxed mt-1">
             A collection of certificates and honors that I have earned throughout my journey.
           </p>
         </div>
 
         {/* Counter Badge */}
-        <div className="self-start sm:self-auto inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F4F4F5] dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] text-xs font-mono text-[#52525B] dark:text-[#A1A1AA] shrink-0">
+        <div 
+          style={{
+            opacity: isHeaderInView ? 1 : 0,
+            transform: isHeaderInView ? 'translateY(0) scale(1)' : `translateY(${getEntryOffset(18)}) scale(0.92)`,
+            transition: 'opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1)',
+            transitionDelay: isHeaderInView ? '120ms' : '0ms',
+          }}
+          className="self-start sm:self-auto inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F4F4F5] dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] text-xs font-mono text-[#52525B] dark:text-[#A1A1AA] shrink-0"
+        >
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
           <span>
             <strong className="text-[#09090B] dark:text-white font-semibold">{certificates.length}</strong> Verified Credentials
@@ -107,8 +150,15 @@ export default function CertificatesSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* LEFT COLUMN: Master List (Desktop) & Accordion List (Mobile) */}
-        <div className="lg:col-span-5 flex flex-col gap-3">
-          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA] px-1 mb-1">
+        <div ref={listRef} className="lg:col-span-5 flex flex-col gap-3">
+          <div 
+            style={{
+              opacity: isListInView ? 1 : 0,
+              transform: isListInView ? 'translateY(0)' : `translateY(${getEntryOffset(16)})`,
+              transition: 'opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+            className="flex items-center justify-between text-xs font-mono text-[#71717A] dark:text-[#A1A1AA] px-1 mb-1"
+          >
             <span>INDEX ({certificates.length})</span>
             <span className="text-[11px] text-[#E11D2E]">
               <span className="lg:hidden">Tap to expand</span>
@@ -116,14 +166,20 @@ export default function CertificatesSection() {
             </span>
           </div>
 
-          {certificates.map((cert) => {
+          {certificates.map((cert, index) => {
             const isSelectedDesktop = cert.id === activeCert?.id;
             const isExpandedMobile = cert.id === mobileExpandedId;
 
             return (
               <div
                 key={cert.id}
-                className={`rounded-xl transition-all duration-200 border overflow-hidden ${
+                style={{
+                  opacity: isListInView ? 1 : 0,
+                  transform: isListInView ? 'translateY(0) scale(1)' : `translateY(${getEntryOffset(26)}) scale(0.98)`,
+                  transition: 'opacity 550ms cubic-bezier(0.16, 1, 0.3, 1), transform 550ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms, border-color 200ms, box-shadow 200ms',
+                  transitionDelay: isListInView ? `${index * 60 + 50}ms` : '0ms',
+                }}
+                className={`rounded-xl border overflow-hidden will-change-transform ${
                   isSelectedDesktop
                     ? 'bg-white dark:bg-[#151518] border-[#E11D2E] shadow-md dark:shadow-black/50 ring-1 ring-[#E11D2E]/25'
                     : 'bg-white/60 dark:bg-[#121214]/60 border-[#E4E4E7] dark:border-[#242426] hover:border-[#E11D2E]/40 hover:bg-white dark:hover:bg-[#161619]'
@@ -298,9 +354,17 @@ export default function CertificatesSection() {
         </div>
 
         {/* RIGHT COLUMN: Desktop Spotlight Detail Panel (Hidden on Mobile) */}
-        <div className="hidden lg:block lg:col-span-7">
+        <div ref={spotlightRef} className="hidden lg:block lg:col-span-7">
           {activeCert && (
-            <div className="sticky top-24 rounded-2xl bg-white dark:bg-[#141416] border border-[#E4E4E7] dark:border-[#27272A] p-5 sm:p-7 shadow-xl dark:shadow-black/60 transition-all duration-300">
+            <div 
+              style={{
+                opacity: isSpotlightInView ? 1 : 0,
+                transform: isSpotlightInView ? 'translateY(0) scale(1)' : `translateY(${getEntryOffset(30)}) scale(0.97)`,
+                transition: 'opacity 650ms cubic-bezier(0.16, 1, 0.3, 1), transform 650ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms, border-color 200ms',
+                transitionDelay: isSpotlightInView ? '140ms' : '0ms',
+              }}
+              className="sticky top-24 rounded-2xl bg-white dark:bg-[#141416] border border-[#E4E4E7] dark:border-[#27272A] p-5 sm:p-7 shadow-xl dark:shadow-black/60 will-change-transform"
+            >
               
               {/* Spotlight Top Bar */}
               <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-[#E4E4E7] dark:border-[#222226]">
