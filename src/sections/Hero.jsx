@@ -178,9 +178,12 @@ export default function Hero({ welcomeActive = false }) {
             </div>
 
             {/* Dynamic Role with Typewriter & Blinking Caret */}
-            <div className="flex items-center gap-1 font-mono text-lg sm:text-xl md:text-2xl text-[#E11D2E] font-medium tracking-tight min-h-[2rem]">
-              <span>// {displayedRole}</span>
-              <span className="inline-block w-2.5 h-5 bg-[#E11D2E] animate-pulse" aria-hidden="true" />
+            <div className="inline-flex items-center gap-2 font-mono text-lg sm:text-xl md:text-2xl font-semibold tracking-tight min-h-[2.25rem]">
+              <span className="text-[#E11D2E] font-bold select-none">//</span>
+              <span className="text-zinc-900 dark:text-zinc-100 font-medium tracking-normal drop-shadow-xs dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+                {displayedRole}
+              </span>
+              <span className="inline-block w-2.5 h-5 sm:h-6 bg-[#E11D2E] animate-pulse rounded-xs shadow-[0_0_8px_rgba(225,29,46,0.8)]" aria-hidden="true" />
             </div>
           </div>
         </AnimatedSection>

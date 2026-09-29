@@ -101,19 +101,19 @@ export default function SectionTitle({
               transitionDelay: '240ms',
             }}
           />
-          {/* Secondary Subtle Tech Track Line */}
+          {/* Secondary Tech Track Line */}
           <div
-            className="h-[1px] bg-[#E4E4E7] dark:bg-[#2A2A2A] rounded-full transition-all duration-700 ease-out will-change-all origin-left"
+            className="h-[2px] bg-[#D4D4D8] dark:bg-zinc-600 dark:bg-white/30 rounded-full transition-all duration-700 ease-out will-change-all origin-left"
             style={{
-              width: isInView ? '36px' : '0px',
+              width: isInView ? '42px' : '0px',
               transitionDelay: '380ms',
             }}
           />
           {/* Micro Tech Hash Marks */}
           <span
-            className="font-mono text-[10px] text-[#A1A1AA] dark:text-[#52525B] tracking-widest transition-all duration-700 ease-out"
+            className="font-mono text-[11px] text-[#71717A] dark:text-zinc-400 tracking-widest transition-all duration-700 ease-out font-medium"
             style={{
-              opacity: isInView ? 0.7 : 0,
+              opacity: isInView ? 0.9 : 0,
               transform: isInView ? 'translateX(0)' : 'translateX(-8px)',
               transitionDelay: '480ms',
             }}

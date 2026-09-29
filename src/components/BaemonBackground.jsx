@@ -115,27 +115,48 @@ export default function BaemonBackground() {
       const osc2_3 = Math.sin(t * 0.58 + 3.6) * (height * 0.04);
       const osc2_4 = Math.cos(t * 0.46 + 4.8) * (height * 0.035);
 
-      // Ribbon 1 & Ribbon 2 Viewport Spine Control Points
-      // Composed across the viewport with multiple crossing nodes creating 3D diamond wireframe patterns
-      const pts1 = [
-        { x: -width * 0.25, y: height * 0.25 + osc1_0 },
-        { x: -width * 0.05, y: height * 0.32 + osc1_0 + mouseParallaxY * 0.4 },
-        { x: width * 0.26 + mouseParallaxX * 0.6, y: height * 0.58 + osc1_1 + mouseParallaxY * 0.6 },
-        { x: width * 0.50 + mouseParallaxX * 0.3, y: height * 0.42 + osc1_2 + mouseParallaxY * 0.3 },
-        { x: width * 0.74 - mouseParallaxX * 0.5, y: height * 0.62 + osc1_3 - mouseParallaxY * 0.5 },
-        { x: width * 1.05, y: height * 0.38 + osc1_4 },
-        { x: width * 1.25, y: height * 0.45 + osc1_4 },
-      ];
+      const isMobile = width < 768;
 
-      const pts2 = [
-        { x: -width * 0.25, y: height * 0.72 + osc2_0 },
-        { x: -width * 0.05, y: height * 0.65 + osc2_0 - mouseParallaxY * 0.4 },
-        { x: width * 0.26 - mouseParallaxX * 0.6, y: height * 0.38 + osc2_1 - mouseParallaxY * 0.6 },
-        { x: width * 0.50 - mouseParallaxX * 0.3, y: height * 0.58 + osc2_2 - mouseParallaxY * 0.3 },
-        { x: width * 0.74 + mouseParallaxX * 0.5, y: height * 0.35 + osc2_3 + mouseParallaxY * 0.5 },
-        { x: width * 1.05, y: height * 0.62 + osc2_4 },
-        { x: width * 1.25, y: height * 0.55 + osc2_4 },
-      ];
+      // Ribbon 1 & Ribbon 2 Viewport Spine Control Points
+      // On mobile screens, use broader, more expansive curves and node spacing so the ribbons
+      // breathe generously across the portrait aspect ratio without feeling cramped or pinched.
+      const pts1 = isMobile
+        ? [
+            { x: -width * 0.35, y: height * 0.22 + osc1_0 },
+            { x: -width * 0.08, y: height * 0.28 + osc1_0 + mouseParallaxY * 0.3 },
+            { x: width * 0.34 + mouseParallaxX * 0.4, y: height * 0.52 + osc1_1 + mouseParallaxY * 0.4 },
+            { x: width * 0.72 - mouseParallaxX * 0.4, y: height * 0.36 + osc1_2 - mouseParallaxY * 0.4 },
+            { x: width * 1.08, y: height * 0.60 + osc1_3 },
+            { x: width * 1.35, y: height * 0.66 + osc1_4 },
+          ]
+        : [
+            { x: -width * 0.25, y: height * 0.25 + osc1_0 },
+            { x: -width * 0.05, y: height * 0.32 + osc1_0 + mouseParallaxY * 0.4 },
+            { x: width * 0.26 + mouseParallaxX * 0.6, y: height * 0.58 + osc1_1 + mouseParallaxY * 0.6 },
+            { x: width * 0.50 + mouseParallaxX * 0.3, y: height * 0.42 + osc1_2 + mouseParallaxY * 0.3 },
+            { x: width * 0.74 - mouseParallaxX * 0.5, y: height * 0.62 + osc1_3 - mouseParallaxY * 0.5 },
+            { x: width * 1.05, y: height * 0.38 + osc1_4 },
+            { x: width * 1.25, y: height * 0.45 + osc1_4 },
+          ];
+
+      const pts2 = isMobile
+        ? [
+            { x: -width * 0.35, y: height * 0.70 + osc2_0 },
+            { x: -width * 0.08, y: height * 0.62 + osc2_0 - mouseParallaxY * 0.3 },
+            { x: width * 0.30 - mouseParallaxX * 0.4, y: height * 0.36 + osc2_1 - mouseParallaxY * 0.4 },
+            { x: width * 0.68 + mouseParallaxX * 0.4, y: height * 0.56 + osc2_2 + mouseParallaxY * 0.4 },
+            { x: width * 1.08, y: height * 0.30 + osc2_3 },
+            { x: width * 1.35, y: height * 0.36 + osc2_4 },
+          ]
+        : [
+            { x: -width * 0.25, y: height * 0.72 + osc2_0 },
+            { x: -width * 0.05, y: height * 0.65 + osc2_0 - mouseParallaxY * 0.4 },
+            { x: width * 0.26 - mouseParallaxX * 0.6, y: height * 0.38 + osc2_1 - mouseParallaxY * 0.6 },
+            { x: width * 0.50 - mouseParallaxX * 0.3, y: height * 0.58 + osc2_2 - mouseParallaxY * 0.3 },
+            { x: width * 0.74 + mouseParallaxX * 0.5, y: height * 0.35 + osc2_3 + mouseParallaxY * 0.5 },
+            { x: width * 1.05, y: height * 0.62 + osc2_4 },
+            { x: width * 1.25, y: height * 0.55 + osc2_4 },
+          ];
 
       // Sample a Catmull-Rom spline array into dense segments
       const sampleSpline = (pts, samplesPerSegment = 30) => {
@@ -182,13 +203,13 @@ export default function BaemonBackground() {
 
       // Rendering configuration:
       // High line count with 3D twist and moiré wireframe intersections
-      const isMobile = width < 640;
-      const numLines = isMobile ? 36 : 58;
-      const ribbonWidth = isMobile ? 120 : 210;
+      const numLines = isMobile ? 38 : 58;
+      // Generous ribbon width on mobile so it doesn't look thin or constricted
+      const ribbonWidth = isMobile ? Math.max(width * 0.44, 170) : 210;
 
       // Dark mode: luminous crimson glow with screen composite
       // Light mode: elegant burgundy with soft alpha
-      const baseAlpha = isDark ? 0.35 : 0.24;
+      const baseAlpha = isDark ? (isMobile ? 0.38 : 0.35) : 0.24;
       ctx.globalCompositeOperation = isDark ? 'screen' : 'source-over';
 
       const drawRibbon = (samples, phaseOffset = 0) => {
@@ -228,17 +249,31 @@ export default function BaemonBackground() {
           for (let j = 0; j < samples.length; j++) {
             const pt = samples[j];
 
-            // 3D twist modulation (steady, constant forward flow)
-            const twistAngle = pt.progress * Math.PI * 3.5 + time * 0.35 + phaseOffset;
-            const twistFactor = Math.cos(twistAngle);
-            const curl = (u * u - 0.33) * 16 * Math.sin(twistAngle * 0.5);
+            // 3D continuous volumetric ribbon projection
+            // Pure trigonometric formulation guarantees C-infinity smoothness with zero discontinuities or tears
+            const twistFreq = isMobile ? Math.PI * 1.6 : Math.PI * 3.5;
+            const twistAngle = pt.progress * twistFreq + time * 0.35 + phaseOffset;
+            const cosT = Math.cos(twistAngle);
+            const sinT = Math.sin(twistAngle);
 
-            // Soft width breathing
-            const dynamicWidth = ribbonWidth * (0.85 + 0.15 * Math.sin(pt.progress * Math.PI * 4 + time * 0.4));
+            // Volumetric ribbon depth: gives the ribbon an elegant arched silk fold when viewed edge-on
+            // completely avoiding any pinching or flat collapses without any discontinuous operations
+            const depthWidth = isMobile ? ribbonWidth * 0.32 : ribbonWidth * 0.26;
+            const breathFreq = isMobile ? Math.PI * 2.2 : Math.PI * 4;
+            const dynamicWidth = ribbonWidth * (0.88 + 0.12 * Math.sin(pt.progress * breathFreq + time * 0.4));
 
-            // Displace along normal
-            const px = pt.x + pt.nx * (u * dynamicWidth * twistFactor + curl);
-            const py = pt.y + pt.ny * (u * dynamicWidth * twistFactor + curl);
+            // Continuous 3D surface displacement:
+            // - u * dynamicWidth * cosT: primary flat ribbon spread
+            // - (1 - u * u) * depthWidth * sinT: 3D arch depth when twisting
+            // - subtle secondary wave curl
+            const displacement =
+              u * dynamicWidth * cosT +
+              (1 - u * u) * depthWidth * sinT +
+              (u * u - 0.33) * 12 * Math.sin(twistAngle * 2);
+
+            // Displace along normal vector
+            const px = pt.x + pt.nx * displacement;
+            const py = pt.y + pt.ny * displacement;
 
             if (!started) {
               ctx.moveTo(px, py);
