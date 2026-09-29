@@ -43,7 +43,7 @@ export default function App() {
 
   return (
     <SkillModalProvider>
-      <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex flex-col selection:bg-[#E11D2E]/30 selection:text-white transition-colors duration-300">
+      <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex flex-col selection:bg-[#E11D2E]/30 selection:text-white">
         {/* Opening Welcome Screen Animation */}
         {showWelcome && <WelcomeScreen onComplete={() => setShowWelcome(false)} />}
 

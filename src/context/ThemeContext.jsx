@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { flushSync } from 'react-dom';
 
 const ThemeContext = createContext();
 
@@ -88,68 +87,25 @@ export function ThemeProvider({ children }) {
     }
   };
 
-  const applyThemeWithTransition = (nextTheme, e, manual = true) => {
-    // View Transitions API with circular ripple expanding from the button (pure GPU compositor)
-    const isAppearanceTransition =
-      typeof document !== 'undefined' &&
-      document.startViewTransition &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!isAppearanceTransition) {
-      executeThemeChange(nextTheme, manual);
-      return;
-    }
-
-    const x = e?.clientX ?? (typeof window !== 'undefined' ? window.innerWidth / 2 : 0);
-    const y = e?.clientY ?? (typeof window !== 'undefined' ? 40 : 0);
-    const endRadius = Math.hypot(
-      Math.max(x, typeof window !== 'undefined' ? window.innerWidth - x : 1000),
-      Math.max(y, typeof window !== 'undefined' ? window.innerHeight - y : 1000)
-    );
-
-    const transition = document.startViewTransition(() => {
-      flushSync(() => {
-        executeThemeChange(nextTheme, manual);
-      });
-    });
-
-    transition.ready.then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ];
-      document.documentElement.animate(
-        {
-          clipPath: clipPath,
-        },
-        {
-          duration: 320,
-          easing: 'ease-out',
-          pseudoElement: '::view-transition-new(root)',
-        }
-      );
-    });
-  };
-
-  const toggleTheme = (e) => {
+  const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    applyThemeWithTransition(nextTheme, e, true);
+    executeThemeChange(nextTheme, true);
   };
 
-  const resetToSystem = (e) => {
+  const resetToSystem = () => {
     const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     const systemPrefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
     const sysTheme = systemPrefersDark ? 'dark' : systemPrefersLight ? 'light' : 'dark';
-    applyThemeWithTransition(sysTheme, e, false);
+    executeThemeChange(sysTheme, false);
   };
 
-  const setThemeExplicit = (mode, e) => {
+  const setThemeExplicit = (mode) => {
     if (mode === 'system') {
-      resetToSystem(e);
+      resetToSystem();
       return;
     }
     if (mode === theme) return;
-    applyThemeWithTransition(mode, e, true);
+    executeThemeChange(mode, true);
   };
 
   return (

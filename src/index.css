@@ -143,20 +143,6 @@ textarea:focus-visible {
   animation: heroRedBarExpand 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* View Transitions for Theme Toggle Circular Ripple (GPU-accelerated) */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root) {
-  z-index: 999999;
-}
 
 /* Smooth motion respect */
 @media (prefers-reduced-motion: reduce) {
