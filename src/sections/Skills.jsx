@@ -7,7 +7,7 @@ import { SKILL_CATEGORIES, SKILLS_DATA } from '../data/skillsData';
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60">
+    <section id="skills" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
 
         {/* Section Header */}

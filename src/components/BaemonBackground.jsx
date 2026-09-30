@@ -1,12 +1,15 @@
 import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * BaemonBackground - Parametric Thin Red Wave Lines
  * 
  * Standalone dynamic ambient wave ribbons in the viewport.
- * Features 3D parametric silk wireframe curves that float and undulate
- * gracefully across the screen at a steady, calm, hypnotic pace,
- * independent of scroll and sections.
+ * Hidden on Hero section to give Hero a dedicated darkroom stage.
+ * Fades in seamlessly as user scrolls down into Experience, Skills, Education, Contact.
  */
 export default function BaemonBackground() {
   const canvasRef = useRef(null);

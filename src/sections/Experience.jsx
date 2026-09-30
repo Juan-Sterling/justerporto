@@ -5,12 +5,52 @@ import ProjectCard from '../components/ProjectCard';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
 import { ChevronDown, ChevronLeft, ChevronRight, Mouse } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const INITIAL_EXPERIENCE_COUNT = 2;
 
 export default function Experience() {
   const { experience, personalProjects = [] } = portfolioData;
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const timelineContainerRef = useRef(null);
+  const timelineLaserRef = useRef(null);
+
+  // GSAP ScrollTrigger Laser Beam that progresses through the work history
+  useEffect(() => {
+    const container = timelineContainerRef.current;
+    const laser = timelineLaserRef.current;
+    if (!container || !laser) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        laser,
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: container,
+            start: 'top 75%',
+            end: 'bottom 75%',
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    }, container);
+
+    // Refresh ScrollTrigger to account for expandable container height changes
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 720);
+
+    return () => {
+      clearTimeout(timer);
+      ctx.revert();
+    };
+  }, [isExpanded]);
 
   const totalProjects = personalProjects.length;
 
@@ -242,7 +282,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60"
+      className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8"
     >
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
@@ -253,7 +293,19 @@ export default function Experience() {
         </AnimatedSection>
 
         {/* Work Experience Timeline */}
-        <div className="mt-8">
+        <div ref={timelineContainerRef} className="mt-8 relative">
+          {/* Timeline Background Track */}
+          <div 
+            className="absolute left-[11px] sm:left-[15px] top-4 bottom-10 w-[1.5px] bg-[#E4E4E7] dark:bg-[#232326] rounded-full pointer-events-none" 
+            aria-hidden="true" 
+          />
+          {/* GSAP ScrollTrigger Laser Beam */}
+          <div 
+            ref={timelineLaserRef}
+            className="absolute left-[11px] sm:left-[15px] top-4 bottom-10 w-[1.5px] bg-gradient-to-b from-[#E11D2E] via-[#FF3B4D] to-[#E11D2E] origin-top shadow-[0_0_8px_rgba(225,29,46,0.9)] rounded-full pointer-events-none z-0 will-change-transform" 
+            aria-hidden="true" 
+          />
+
           {initialExperience.map((item, index) => (
             <ExperienceItem
               key={item.organization + item.period}

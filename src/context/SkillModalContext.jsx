@@ -161,9 +161,11 @@ export function SkillModalProvider({ children }) {
     };
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    window.__lenis?.stop();
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       document.body.style.overflow = prevOverflow;
+      window.__lenis?.start();
       window.removeEventListener('keydown', handleKeyDown);
       if (closeTimerRef.current) {
         clearTimeout(closeTimerRef.current);
@@ -182,12 +184,14 @@ export function SkillModalProvider({ children }) {
           <div
             role="dialog"
             aria-modal="true"
+            data-lenis-prevent
             className={`fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200 ease-out ${
               isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
             onClick={closeSkillModal}
           >
             <div
+              data-lenis-prevent
               className={`w-full max-w-md rounded-2xl bg-white dark:bg-[#141414] border-2 border-[#E11D2E] p-5 shadow-2xl shadow-[#E11D2E]/20 text-left relative transition-all duration-200 transform ${
                 isOpen
                   ? 'opacity-100 scale-100 translate-y-0'

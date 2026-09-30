@@ -85,9 +85,11 @@ export default function CertificatesSection() {
     };
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    window.__lenis?.stop();
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       document.body.style.overflow = prevOverflow;
+      window.__lenis?.start();
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [previewCert]);
@@ -505,6 +507,7 @@ export default function CertificatesSection() {
           <div
             role="dialog"
             aria-modal="true"
+            data-lenis-prevent
             aria-label={`${previewCert.title} full preview`}
             className={`fixed inset-0 z-[110] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm transition-opacity duration-200 ease-out ${
               isModalOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -512,6 +515,7 @@ export default function CertificatesSection() {
             onClick={handleClosePreview}
           >
             <div
+              data-lenis-prevent
               className={`w-full max-w-4xl rounded-2xl bg-[#0F0F12] border border-[#2D2D35] overflow-hidden shadow-2xl shadow-black/80 flex flex-col max-h-[92vh] transition-all duration-200 transform ${
                 isModalOpen
                   ? 'opacity-100 scale-100 translate-y-0'

@@ -17,7 +17,7 @@ export default function Education() {
   const { education } = portfolioData;
 
   return (
-    <section id="education" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60">
+    <section id="education" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <AnimatedSection>
           <SectionTitle

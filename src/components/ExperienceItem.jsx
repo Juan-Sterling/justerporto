@@ -26,23 +26,15 @@ export default function ExperienceItem({
   return (
     <div 
       ref={ref}
-      className="relative pl-6 sm:pl-8 group"
+      className="relative pl-6 sm:pl-8 group z-10"
     >
-      {/* Timeline vertical line with entrance animation */}
-      {!isLast && (
-        <div 
-          className="absolute left-[11px] sm:left-[15px] top-6 bottom-0 w-[1px] bg-gradient-to-b from-[#E11D2E]/40 via-[#E4E4E7] dark:via-[#2A2A2A] to-[#E4E4E7] dark:to-[#2A2A2A] group-hover:from-[#E11D2E] group-hover:via-[#E11D2E]/40 transition-all duration-700 origin-top will-change-transform" 
-          style={{
-            transform: isInView ? 'scaleY(1)' : 'scaleY(0)',
-            transitionDelay: `${delay + 140}ms`,
-          }}
-          aria-hidden="true" 
-        />
-      )}
-
-      {/* Timeline Node Dot (Git commit inspired) with scale spring animation */}
+      {/* Timeline Node Dot (Git commit inspired) with spring animation & laser glow bloom */}
       <div 
-        className="absolute left-0 sm:left-1 top-1.5 w-6 h-6 rounded-full bg-white dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] flex items-center justify-center text-[#E11D2E] group-hover:border-[#E11D2E] group-hover:ring-4 group-hover:ring-[#E11D2E]/20 group-hover:scale-110 transition-all duration-500 shadow-xs z-10 will-change-transform"
+        className={`absolute left-0 sm:left-1 top-1.5 w-6 h-6 rounded-full bg-white dark:bg-[#090909] flex items-center justify-center text-[#E11D2E] group-hover:border-[#E11D2E] group-hover:ring-4 group-hover:ring-[#E11D2E]/20 group-hover:scale-110 transition-all duration-500 shadow-xs z-10 will-change-transform ${
+          isInView
+            ? 'border border-[#E11D2E]/60 shadow-[0_0_12px_rgba(225,29,46,0.4)]'
+            : 'border border-[#E4E4E7] dark:border-[#2A2A2A]'
+        }`}
         style={{
           opacity: isInView ? 1 : 0,
           transform: isInView ? 'scale(1)' : 'scale(0)',

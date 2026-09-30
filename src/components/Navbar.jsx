@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import { useSmoothScroll } from '../context/SmoothScrollContext';
 
 const NAV_ITEMS = [
   { id: 'experience', label: 'Work Experience' },
@@ -15,6 +16,7 @@ export default function Navbar({ activeSection = '' }) {
   const navRef = useRef(null);
   const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const [clickedSection, setClickedSection] = useState(null);
+  const { scrollTo } = useSmoothScroll();
 
   const effectiveActive = clickedSection || activeSection;
 
@@ -85,18 +87,7 @@ export default function Navbar({ activeSection = '' }) {
   const handleNavClick = (id) => {
     setIsOpen(false);
     setClickedSection(id);
-
-    const element = document.getElementById(id);
-    if (element) {
-      const headerOffset = 80; // breathing room below floating navbar
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
+    scrollTo(`#${id}`, { offset: -80 });
 
     // Safety clear clicked override after transition & scroll completes
     setTimeout(() => {
@@ -133,7 +124,7 @@ export default function Navbar({ activeSection = '' }) {
             onClick={(e) => {
               e.preventDefault();
               setClickedSection(null);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              scrollTo(0, { offset: 0, duration: 1.4 });
             }}
             className="group flex items-center gap-2 sm:gap-2.5 text-[#09090B] dark:text-white font-semibold tracking-tight text-sm sm:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] rounded-full py-1 px-1.5 sm:px-2 hover:bg-white/40 dark:hover:bg-white/[0.06] transition-colors"
             aria-label="Juan Sterling Home"
