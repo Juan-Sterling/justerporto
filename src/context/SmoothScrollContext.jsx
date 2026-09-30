@@ -22,13 +22,13 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
     }
 
     const lenis = new Lenis({
-      duration: 1.15,
+      duration: 1.05,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 0.95,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.0,
       infinite: false,
     });
 
@@ -44,7 +44,7 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
     };
 
     gsap.ticker.add(tickerUpdate);
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(500, 33);
 
     // Expose lenis globally for debugging or direct access if needed
     window.__lenis = lenis;

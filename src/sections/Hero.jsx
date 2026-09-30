@@ -174,11 +174,22 @@ export default function Hero({ welcomeActive = false }) {
           trigger: heroRef.current,
           start: 'top top',
           end: 'bottom 5%',
-          scrub: 0.35, // Responsive 0.35s scrub eliminating lag on navbar programmatic jumps
+          scrub: 0.25, // Snappy 0.25s scrub eliminating lag on rapid flicks & trackpad scrolls
           fastScrollEnd: true,
           preventOverlaps: true,
         },
       });
+
+      // Calculate real physical vector from any element's center directly into the emblem epicenter
+      const getSingularityDelta = (el) => {
+        if (!el || !emblemRef.current) return { dx: 0, dy: -220 };
+        const eRect = emblemRef.current.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        return {
+          dx: (eRect.left + eRect.width / 2) - (elRect.left + elRect.width / 2),
+          dy: (eRect.top + eRect.height / 2) - (elRect.top + elRect.height / 2),
+        };
+      };
 
       // 1) Iris Aperture: Solid backdrop contracts into a pinpoint circular aperture
       if (auroraContainerRef.current) {
@@ -208,7 +219,7 @@ export default function Hero({ welcomeActive = false }) {
         scrollExitTl.to(
           irisRingRef.current,
           {
-            opacity: 0.9,
+            opacity: 0.85,
             duration: 0.15,
             ease: 'power1.out',
           },
@@ -230,7 +241,7 @@ export default function Hero({ welcomeActive = false }) {
         scrollExitTl.to(
           irisFlashRef.current,
           {
-            scale: 2.0,
+            scale: 1.8,
             opacity: 1,
             duration: 0.12,
             ease: 'power1.out',
@@ -249,48 +260,49 @@ export default function Hero({ welcomeActive = false }) {
         );
       }
 
-      // 4) Content Wrapper: Overall gravitational compression towards the focal singularity
+      // 4) Content Wrapper: Clean hardware-accelerated opacity fade without expensive filter:blur
       if (contentWrapperRef.current) {
         scrollExitTl.to(
           contentWrapperRef.current,
           {
-            scale: 0.42,
-            yPercent: -6,
-            filter: 'blur(5px)',
             opacity: 0,
             duration: 0.88,
             ease: 'power2.in',
           },
-          0
+          0.05
         );
       }
 
-      // 5) Badges (Top Row): Sucked strongly downward, spiraling into the vortex
+      // 5) Badges (Top Row): Sucked downward directly into the emblem
       if (badgesRef.current) {
-        scrollExitTl.to(
-          badgesRef.current.children,
-          {
-            yPercent: 150,
-            xPercent: 20,
-            scale: 0.08,
-            rotation: 16,
-            opacity: 0,
-            stagger: 0.02,
-            duration: 0.82,
-            ease: 'power2.in',
-          },
-          0
-        );
+        const badges = Array.from(badgesRef.current.children);
+        badges.forEach((badge, idx) => {
+          const { dx, dy } = getSingularityDelta(badge);
+          scrollExitTl.to(
+            badge,
+            {
+              x: dx,
+              y: dy,
+              scale: 0,
+              rotation: idx === 0 ? 15 : -15,
+              opacity: 0,
+              duration: 0.82,
+              ease: 'power2.in',
+            },
+            0
+          );
+        });
       }
 
       // 6) Headline ("Juan Sterling"): Swallowed inward into the center singularity
       if (headlineRef.current) {
+        const { dx, dy } = getSingularityDelta(headlineRef.current);
         scrollExitTl.to(
           headlineRef.current,
           {
-            scale: 0.12,
-            xPercent: 25,
-            yPercent: -8,
+            x: dx * 0.4,
+            y: dy * 0.4,
+            scale: 0.1,
             rotation: -8,
             opacity: 0,
             duration: 0.84,
@@ -307,7 +319,6 @@ export default function Hero({ welcomeActive = false }) {
           {
             scale: 1.4,
             rotation: 260,
-            filter: 'drop-shadow(0 0 30px rgba(225, 29, 46, 1))',
             duration: 0.78,
             ease: 'power1.in',
           },
@@ -327,13 +338,14 @@ export default function Hero({ welcomeActive = false }) {
 
       // 8) Dynamic Typewriter Role: Sucked upward and inward toward the center
       if (roleRef.current) {
+        const { dx, dy } = getSingularityDelta(roleRef.current);
         scrollExitTl.to(
           roleRef.current,
           {
-            yPercent: -120,
-            xPercent: 30,
-            scale: 0.12,
-            rotation: 10,
+            x: dx,
+            y: dy,
+            scale: 0.08,
+            rotation: 12,
             opacity: 0,
             duration: 0.82,
             ease: 'power2.in',
@@ -344,11 +356,13 @@ export default function Hero({ welcomeActive = false }) {
 
       // 9) Tagline Introduction: Sucked upward toward the vortex
       if (taglineRef.current) {
+        const { dx, dy } = getSingularityDelta(taglineRef.current);
         scrollExitTl.to(
           taglineRef.current,
           {
-            yPercent: -140,
-            scale: 0.1,
+            x: dx,
+            y: dy,
+            scale: 0.08,
             rotation: -6,
             opacity: 0,
             duration: 0.82,
@@ -358,90 +372,37 @@ export default function Hero({ welcomeActive = false }) {
         );
       }
 
-      // 10) CTA Buttons: All 3 buttons physically sucked up & inward into the center vortex
+      // 10) CTA Buttons: ALL buttons physically sucked directly into the center emblem on BOTH desktop and mobile
       if (ctaRef.current) {
-        // Parent container compresses and accelerates upward
-        scrollExitTl.to(
-          ctaRef.current,
-          {
-            y: -120,
-            scale: 0.35,
-            duration: 0.84,
-            ease: 'power2.in',
-          },
-          0
-        );
+        const buttons = Array.from(ctaRef.current.children);
+        buttons.forEach((btn, idx) => {
+          const { dx, dy } = getSingularityDelta(btn);
+          const spin = dx >= 0 ? 25 + idx * 6 : -25 - idx * 6;
 
-        const buttons = ctaRef.current.children;
-        if (buttons.length >= 3) {
-          // Button 1 (Left - View Experience): sucked strongly UP and RIGHT towards the emblem
           scrollExitTl.to(
-            buttons[0],
+            btn,
             {
-              x: 180,
-              y: -240,
+              x: dx,
+              y: dy,
               scale: 0,
-              rotation: 35,
+              rotation: spin,
               opacity: 0,
               duration: 0.84,
               ease: 'power2.in',
             },
             0
           );
-
-          // Button 2 (Center - Download CV): sucked straight UP towards the emblem
-          scrollExitTl.to(
-            buttons[1],
-            {
-              x: 0,
-              y: -260,
-              scale: 0,
-              rotation: -15,
-              opacity: 0,
-              duration: 0.84,
-              ease: 'power2.in',
-            },
-            0
-          );
-
-          // Button 3 (Right - Contact Me): sucked strongly UP and LEFT towards the emblem
-          scrollExitTl.to(
-            buttons[2],
-            {
-              x: -180,
-              y: -240,
-              scale: 0,
-              rotation: -35,
-              opacity: 0,
-              duration: 0.84,
-              ease: 'power2.in',
-            },
-            0
-          );
-        } else {
-          scrollExitTl.to(
-            buttons,
-            {
-              y: -250,
-              scale: 0,
-              opacity: 0,
-              stagger: 0.02,
-              duration: 0.84,
-              ease: 'power2.in',
-            },
-            0
-          );
-        }
+        });
       }
 
-      // 11) Volumetric Fog Orbs: Contract inward to feed the center vortex
+      // 11) Atmosphere Container & Volumetric Orbs (Lightweight GPU fade-out without layout recomputation)
       if (auroraCenterRef.current) {
         scrollExitTl.to(
           auroraCenterRef.current,
           {
-            scale: 0.2,
             opacity: 0,
-            duration: 0.85,
+            scale: 0.7,
+            duration: 0.8,
             ease: 'power1.in',
           },
           0
@@ -452,11 +413,8 @@ export default function Hero({ welcomeActive = false }) {
         scrollExitTl.to(
           fogLeftRef.current,
           {
-            xPercent: 40,
-            yPercent: 20,
-            scale: 0.3,
             opacity: 0,
-            duration: 0.85,
+            duration: 0.75,
             ease: 'power1.in',
           },
           0
@@ -467,11 +425,8 @@ export default function Hero({ welcomeActive = false }) {
         scrollExitTl.to(
           fogRightRef.current,
           {
-            xPercent: -40,
-            yPercent: 20,
-            scale: 0.3,
             opacity: 0,
-            duration: 0.85,
+            duration: 0.75,
             ease: 'power1.in',
           },
           0
@@ -551,20 +506,19 @@ export default function Hero({ welcomeActive = false }) {
         {/* Primary Volumetric Crimson Aurora Fog (Center Top) */}
         <div
           ref={auroraCenterRef}
-          className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[38rem] sm:w-[56rem] h-[24rem] sm:h-[34rem] rounded-[100%] bg-gradient-to-b from-[#E11D2E]/10 via-[#E11D2E]/5 to-transparent dark:from-[#E11D2E]/25 dark:via-[#E11D2E]/15 blur-[140px] sm:blur-[190px] animate-pulse pointer-events-none will-change-transform"
-          style={{ animationDuration: '7s' }}
+          className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[38rem] sm:w-[56rem] h-[24rem] sm:h-[34rem] rounded-[100%] bg-gradient-to-b from-[#E11D2E]/10 via-[#E11D2E]/5 to-transparent dark:from-[#E11D2E]/25 dark:via-[#E11D2E]/15 blur-[65px] sm:blur-[100px] pointer-events-none will-change-transform"
         />
 
         {/* Deep Ruby Ambient Smoke (Left Flank) */}
         <div
           ref={fogLeftRef}
-          className="absolute top-1/3 left-[15%] -translate-x-1/2 -translate-y-1/2 w-[24rem] sm:w-[32rem] h-[20rem] sm:h-[26rem] rounded-full bg-[#E11D2E]/6 dark:bg-[#880815]/22 blur-[130px] sm:blur-[160px] pointer-events-none will-change-transform"
+          className="absolute top-1/3 left-[15%] -translate-x-1/2 -translate-y-1/2 w-[24rem] sm:w-[32rem] h-[20rem] sm:h-[26rem] rounded-full bg-[#E11D2E]/6 dark:bg-[#880815]/22 blur-[55px] sm:blur-[85px] pointer-events-none will-change-transform"
         />
 
         {/* Soft Peach-Crimson Rim Glow (Right Flank) */}
         <div
           ref={fogRightRef}
-          className="absolute top-1/4 left-[85%] -translate-x-1/2 -translate-y-1/2 w-[22rem] sm:w-[30rem] h-[18rem] sm:h-[24rem] rounded-full bg-[#FF3B4D]/8 dark:bg-[#FF3B4D]/18 blur-[120px] sm:blur-[150px] pointer-events-none will-change-transform"
+          className="absolute top-1/4 left-[85%] -translate-x-1/2 -translate-y-1/2 w-[22rem] sm:w-[30rem] h-[18rem] sm:h-[24rem] rounded-full bg-[#FF3B4D]/8 dark:bg-[#FF3B4D]/18 blur-[50px] sm:blur-[80px] pointer-events-none will-change-transform"
         />
 
         {/* Smooth Bottom Dissolve to seamlessly blend with main page */}
@@ -574,7 +528,7 @@ export default function Hero({ welcomeActive = false }) {
       {/* 1.5. Theatrical Iris Flare Elements (Active during Theatrical Iris Pinch mode) */}
       <div
         ref={irisRingRef}
-        className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[220vmax] h-[220vmax] rounded-full border border-[#E11D2E]/70 shadow-[0_0_40px_rgba(225,29,46,0.5),inset_0_0_30px_rgba(225,29,46,0.3)] dark:shadow-[0_0_60px_rgba(225,29,46,0.8),inset_0_0_40px_rgba(225,29,46,0.4)] pointer-events-none z-10 will-change-transform opacity-0"
+        className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[130vmax] h-[130vmax] rounded-full border border-[#E11D2E]/60 shadow-[0_0_30px_rgba(225,29,46,0.6)] pointer-events-none z-10 will-change-transform opacity-0"
         aria-hidden="true"
       />
 
@@ -701,7 +655,7 @@ export default function Hero({ welcomeActive = false }) {
           <button
             type="button"
             onClick={() => scrollToSection('contact')}
-            className="opacity-0 group inline-flex items-center justify-center gap-2 w-full sm:w-48 h-11 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] active:scale-95 text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-[color,background-color,border-color,box-shadow] duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform"
+            className="opacity-0 group inline-flex items-center justify-center gap-2 w-full sm:w-48 h-11 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] active:scale-95 text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-[color,background-color,border-color,box-shadow] duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform col-span-2 sm:col-span-1"
           >
             <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
             <span>Contact Me</span>

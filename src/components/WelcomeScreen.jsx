@@ -230,57 +230,57 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
 
       if (exitMode === 'sheesh') {
         // ----------------------------------------
-        // MODE 1: "SHEESH" — Laser Claw Slash Split
+        // MODE 1: "SHEESH" — Laser Claw Slash Split (60/120fps GPU-Accelerated)
         // ----------------------------------------
         tl.to(containerRef.current, { scale: 0.99, duration: 0.08, ease: 'power2.out' }, 2.80);
 
-        tl.call(() => { onStartExitRef.current?.(); }, null, 2.88);
-
         tl.set(slashSvgRef.current, { opacity: 1 }, 2.88);
-        tl.to(flareRef.current, { opacity: 0.85, scale: 1.3, duration: 0.12, ease: 'power2.out' }, 2.88);
+        tl.to(flareRef.current, { opacity: 0.85, scale: 1.2, duration: 0.12, ease: 'power2.out' }, 2.88);
 
-        // Slash lines draw across
+        // Slash lines draw across with pure GPU strokes
         tl.to([slashMainRef.current, clawTopRef.current, clawBottomRef.current], {
           strokeDashoffset: 0,
-          duration: 0.16,
+          duration: 0.18,
           ease: 'power4.inOut',
         }, 2.88);
 
         // Flash
-        tl.to(flashRef.current, { opacity: 0.4, duration: 0.06, ease: 'power2.in' }, 2.94);
-        tl.to(flashRef.current, { opacity: 0, duration: 0.18, ease: 'power2.out' }, 3.00);
+        tl.to(flashRef.current, { opacity: 0.35, duration: 0.06, ease: 'power2.in' }, 2.94);
+        tl.to(flashRef.current, { opacity: 0, duration: 0.16, ease: 'power2.out' }, 3.00);
 
         if (sheeshBadgeRef.current) {
           tl.to(sheeshBadgeRef.current, { opacity: 1, scale: 1, duration: 0.15, ease: 'back.out(2)' }, 2.92);
         }
 
         const splitTime = 3.02;
+        // Mount Hero entrance right as split starts to seamlessly unveil without CPU choke
+        tl.call(() => { onStartExitRef.current?.(); }, null, splitTime);
         tl.set(containerRef.current, { pointerEvents: 'none' }, splitTime);
 
-        // Split panels fly apart diagonally
+        // Split panels slide apart diagonally (pure translate3d, no rotation re-rasterization)
         tl.to(topPanelRef.current, {
-          xPercent: -22,
-          yPercent: -26,
-          rotate: -2.5,
+          xPercent: -35,
+          yPercent: -30,
           opacity: 0,
-          duration: 0.58,
-          ease: 'power4.in',
+          duration: 0.55,
+          ease: 'power3.in',
+          force3D: true,
         }, splitTime);
 
         tl.to(bottomPanelRef.current, {
-          xPercent: 22,
-          yPercent: 26,
-          rotate: 2.5,
+          xPercent: 35,
+          yPercent: 30,
           opacity: 0,
-          duration: 0.58,
-          ease: 'power4.in',
+          duration: 0.55,
+          ease: 'power3.in',
+          force3D: true,
         }, splitTime);
 
         if (sheeshBadgeRef.current) {
-          tl.to(sheeshBadgeRef.current, { scale: 2.2, opacity: 0, duration: 0.45, ease: 'power3.out' }, splitTime + 0.04);
+          tl.to(sheeshBadgeRef.current, { scale: 1.5, opacity: 0, duration: 0.38, ease: 'power2.out' }, splitTime + 0.04);
         }
-        tl.to(slashSvgRef.current, { scale: 1.15, opacity: 0, duration: 0.42, ease: 'power3.out' }, splitTime + 0.04);
-        tl.to(flareRef.current, { scale: 2.6, opacity: 0, duration: 0.48, ease: 'power3.out' }, splitTime);
+        tl.to(slashSvgRef.current, { scale: 1.1, opacity: 0, duration: 0.4, ease: 'power2.out' }, splitTime + 0.04);
+        tl.to(flareRef.current, { scale: 1.6, opacity: 0, duration: 0.42, ease: 'power2.out' }, splitTime);
 
       } else if (exitMode === 'batterup') {
         // ----------------------------------------
@@ -452,8 +452,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         aria-hidden="true"
       />
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[38rem] h-80 sm:h-[38rem] bg-[#E11D2E]/10 dark:bg-[#E11D2E]/20 rounded-full blur-[120px] sm:blur-[150px] pointer-events-none animate-pulse"
-        style={{ animationDuration: '4s' }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-[32rem] h-72 sm:h-[32rem] bg-[#E11D2E]/10 dark:bg-[#E11D2E]/18 rounded-full blur-[60px] sm:blur-[90px] pointer-events-none"
         aria-hidden="true"
       />
 
@@ -614,24 +613,15 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
             {renderPanelContent('bottom')}
           </div>
 
-          {/* 3-Claw Laser Slash SVG */}
+          {/* 3-Claw Laser Slash SVG (GPU-Accelerated CSS Filters) */}
           <svg
             ref={slashSvgRef}
             viewBox="0 0 1000 1000"
             preserveAspectRatio="none"
-            className="absolute inset-0 w-full h-full pointer-events-none z-40 opacity-0 overflow-visible"
+            className="absolute inset-0 w-full h-full pointer-events-none z-40 opacity-0 overflow-visible will-change-transform"
             aria-hidden="true"
           >
             <defs>
-              <filter id="sheesh-glow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="5" result="blur1" />
-                <feGaussianBlur stdDeviation="14" result="blur2" />
-                <feMerge>
-                  <feMergeNode in="blur2" />
-                  <feMergeNode in="blur1" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
               <linearGradient id="laser-core-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#FF4D5E" />
                 <stop offset="50%" stopColor="#FFFFFF" />
@@ -645,16 +635,16 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
               stroke="#E11D2E"
               strokeWidth="3.5"
               strokeLinecap="round"
-              filter="url(#sheesh-glow)"
+              className="filter drop-shadow-[0_0_8px_rgba(225,29,46,0.85)]"
               opacity="0.85"
             />
             <path
               ref={slashMainRef}
               d="M -100 320 L 1100 680"
               stroke="url(#laser-core-grad)"
-              strokeWidth="7"
+              strokeWidth="6"
               strokeLinecap="round"
-              filter="url(#sheesh-glow)"
+              className="filter drop-shadow-[0_0_12px_rgba(255,77,94,0.9)]"
             />
             <path
               ref={clawBottomRef}
@@ -662,7 +652,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
               stroke="#E11D2E"
               strokeWidth="3.5"
               strokeLinecap="round"
-              filter="url(#sheesh-glow)"
+              className="filter drop-shadow-[0_0_8px_rgba(225,29,46,0.85)]"
               opacity="0.85"
             />
           </svg>
@@ -670,10 +660,10 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           {/* "SHEESH!" Impact Typography */}
           <div
             ref={sheeshBadgeRef}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none select-none text-center opacity-0"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none select-none text-center opacity-0 will-change-transform"
             aria-hidden="true"
           >
-            <span className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-7xl md:text-8xl font-black italic tracking-widest text-white drop-shadow-[0_0_20px_#E11D2E] drop-shadow-[0_0_40px_#E11D2E]">
+            <span className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-7xl md:text-8xl font-black italic tracking-widest text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.9)]">
               SHEESH!
             </span>
           </div>
@@ -820,7 +810,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       {/* Global Impact Center Flare */}
       <div
         ref={flareRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[36rem] h-80 sm:h-[36rem] bg-[#E11D2E]/30 rounded-full blur-[80px] sm:blur-[120px] opacity-0 pointer-events-none z-30"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-96 h-64 sm:h-96 bg-[#E11D2E]/25 rounded-full blur-[50px] sm:blur-[80px] opacity-0 pointer-events-none z-30 will-change-transform"
         aria-hidden="true"
       />
     </aside>
