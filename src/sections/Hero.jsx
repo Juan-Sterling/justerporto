@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { ArrowDown, FileDown, Mail, Code2, MapPin } from 'lucide-react';
+import { ArrowDown, FileText, ExternalLink, Mail, Code2, MapPin } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
 import gsap from 'gsap';
@@ -646,15 +646,15 @@ export default function Hero({ welcomeActive = false }) {
           </button>
 
           <a
-            href={personal.resumeUrl || "/CV_Juan_Sterling_Martua.pdf"}
-            download="CV_Juan_Sterling_Martua.pdf"
+            href={personal.resumeUrl || "https://drive.google.com/file/d/1g20NBQXWuKxJ4v7qwXC4Py855tLvzRNJ/view?usp=sharing"}
             target="_blank"
             rel="noopener noreferrer"
             className="opacity-0 group inline-flex items-center justify-center gap-2 w-full sm:w-48 h-11 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] active:scale-95 text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-[color,background-color,border-color,box-shadow] duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform"
-            aria-label="Download CV Juan Sterling"
+            aria-label="View CV Juan Sterling"
           >
-            <FileDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
-            <span>Download CV</span>
+            <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
+            <span>View CV</span>
+            <ExternalLink className="w-3 h-3 text-zinc-400 dark:text-zinc-500 group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0" />
           </a>
 
           <button

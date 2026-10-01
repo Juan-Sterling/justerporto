@@ -9,7 +9,7 @@ export const portfolioData = {
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
     location: "North Jakarta, Indonesia",
     availability: "Under Development • Feel Free to Explore",
-    resumeUrl: "/CV_Juan_Sterling_Martua.pdf",
+    resumeUrl: "https://drive.google.com/file/d/1g20NBQXWuKxJ4v7qwXC4Py855tLvzRNJ/view?usp=sharing",
   },
 
   education: [
@@ -90,7 +90,7 @@ export const portfolioData = {
       logo: "", // Path or URL to company logo (e.g. "/images/experience/foxion.png")
       websiteUrl: "", // Company website link
       responsibilities: [
-        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Survey Division in managing vessel classification admission and maintenance processes.",
+        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Survey Division of PT Biro Klasifikasi Indonesia (BUMN) in managing vessel classification admission and maintenance processes.",
       ],
       technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "GitLab"],
     },
@@ -103,8 +103,8 @@ export const portfolioData = {
       logo: "", // Path or URL to company logo (e.g. "/images/experience/stafbook.png")
       websiteUrl: "", // Company website link
       responsibilities: [
-        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Statutory Division in managing statutory certificates.",
-        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Matkom Division in managing Service Supplier, Material Component, and Welding certificates.",
+        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Statutory Division of PT Biro Klasifikasi Indonesia (BUMN) in managing statutory certificates.",
+        "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Matkom Division of PT Biro Klasifikasi Indonesia (BUMN) in managing Service Supplier, Material Component, and Welding certificates.",
       ],
       technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "GitLab"],
     },
