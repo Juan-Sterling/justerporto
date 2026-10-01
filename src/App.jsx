@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WelcomeScreen from './components/WelcomeScreen';
 import Navbar from './components/Navbar';
 import Hero from './sections/Hero';
@@ -52,6 +53,10 @@ export default function App() {
 
   const handleComplete = useCallback(() => {
     setShowWelcome(false);
+    // Refresh ScrollTriggers once the welcome screen overlay is removed
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 60);
   }, []);
 
   const triggerAnimation = (mode) => {

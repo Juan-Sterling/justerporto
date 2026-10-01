@@ -14,6 +14,7 @@ export default function Hero({ welcomeActive = false }) {
   const { scrollTo } = useSmoothScroll();
 
   const heroRef = useRef(null);
+  const portalRef = useRef(null);
   const glowRef = useRef(null);
   const badgesRef = useRef(null);
   const headlineRef = useRef(null);
@@ -51,11 +52,15 @@ export default function Hero({ welcomeActive = false }) {
 
     const ctx = gsap.context(() => {
       // 0. Synchronously prime all initial hidden states BEFORE browser paints
+      if (portalRef.current) {
+        gsap.set(portalRef.current, {
+          clipPath: 'circle(150% at 50% 42%)',
+          WebkitClipPath: 'circle(150% at 50% 42%)',
+        });
+      }
       if (auroraContainerRef.current) {
         gsap.set(auroraContainerRef.current, {
           opacity: 0,
-          clipPath: 'circle(150% at 50% 42%)',
-          WebkitClipPath: 'circle(150% at 50% 42%)',
         });
       }
       if (irisRingRef.current) gsap.set(irisRingRef.current, { scale: 1, opacity: 0 });
@@ -175,26 +180,30 @@ export default function Hero({ welcomeActive = false }) {
           start: 'top top',
           end: 'bottom 5%',
           scrub: 0.25, // Snappy 0.25s scrub eliminating lag on rapid flicks & trackpad scrolls
-          fastScrollEnd: true,
+          fastScrollEnd: false, // Smooth on rapid mobile flick scrolls without abrupt snapping
           preventOverlaps: true,
         },
       });
 
-      // Calculate real physical vector from any element's center directly into the emblem epicenter
+      // Calculate real physical vector from any element's center directly into the singularity aperture epicenter (50% 42%)
       const getSingularityDelta = (el) => {
-        if (!el || !emblemRef.current) return { dx: 0, dy: -220 };
-        const eRect = emblemRef.current.getBoundingClientRect();
+        if (!el || !heroRef.current) return { dx: 0, dy: -220 };
+        const hRect = heroRef.current.getBoundingClientRect();
         const elRect = el.getBoundingClientRect();
+
+        const targetCenterX = hRect.left + hRect.width * 0.5;
+        const targetCenterY = hRect.top + hRect.height * 0.42;
+
         return {
-          dx: (eRect.left + eRect.width / 2) - (elRect.left + elRect.width / 2),
-          dy: (eRect.top + eRect.height / 2) - (elRect.top + elRect.height / 2),
+          dx: targetCenterX - (elRect.left + elRect.width / 2),
+          dy: targetCenterY - (elRect.top + elRect.height / 2),
         };
       };
 
-      // 1) Iris Aperture: Solid backdrop contracts into a pinpoint circular aperture
-      if (auroraContainerRef.current) {
+      // 1) Iris Aperture: Circular singularity portal contracts
+      if (portalRef.current) {
         scrollExitTl.to(
-          auroraContainerRef.current,
+          portalRef.current,
           {
             clipPath: 'circle(0% at 50% 42%)',
             WebkitClipPath: 'circle(0% at 50% 42%)',
@@ -219,7 +228,7 @@ export default function Hero({ welcomeActive = false }) {
         scrollExitTl.to(
           irisRingRef.current,
           {
-            opacity: 0.85,
+            opacity: 0.9,
             duration: 0.15,
             ease: 'power1.out',
           },
@@ -260,20 +269,20 @@ export default function Hero({ welcomeActive = false }) {
         );
       }
 
-      // 4) Content Wrapper: Clean hardware-accelerated opacity fade without expensive filter:blur
+      // 4) Content Wrapper: Clean fade out inside the shrinking circle
       if (contentWrapperRef.current) {
         scrollExitTl.to(
           contentWrapperRef.current,
           {
             opacity: 0,
-            duration: 0.88,
-            ease: 'power2.in',
+            duration: 0.72,
+            ease: 'power1.out',
           },
-          0.05
+          0
         );
       }
 
-      // 5) Badges (Top Row): Sucked downward directly into the emblem
+      // 5) Badges (Top Row): Sucked downward directly into the center singularity
       if (badgesRef.current) {
         const badges = Array.from(badgesRef.current.children);
         badges.forEach((badge, idx) => {
@@ -286,8 +295,8 @@ export default function Hero({ welcomeActive = false }) {
               scale: 0,
               rotation: idx === 0 ? 15 : -15,
               opacity: 0,
-              duration: 0.82,
-              ease: 'power2.in',
+              duration: 0.74,
+              ease: 'power1.out',
             },
             0
           );
@@ -300,13 +309,13 @@ export default function Hero({ welcomeActive = false }) {
         scrollExitTl.to(
           headlineRef.current,
           {
-            x: dx * 0.4,
-            y: dy * 0.4,
-            scale: 0.1,
+            x: dx,
+            y: dy,
+            scale: 0,
             rotation: -8,
             opacity: 0,
-            duration: 0.84,
-            ease: 'power2.in',
+            duration: 0.75,
+            ease: 'power1.out',
           },
           0
         );
@@ -314,13 +323,16 @@ export default function Hero({ welcomeActive = false }) {
 
       // 7) BABYMONSTER Devil Emblem: Gravitational singularity epicenter - spins rapidly into a point
       if (emblemRef.current) {
+        const { dx: eDx, dy: eDy } = getSingularityDelta(emblemRef.current);
         scrollExitTl.to(
           emblemRef.current,
           {
-            scale: 1.4,
-            rotation: 260,
-            duration: 0.78,
-            ease: 'power1.in',
+            x: eDx,
+            y: eDy,
+            scale: 1.5,
+            rotation: 360,
+            duration: 0.72,
+            ease: 'power1.out',
           },
           0
         );
@@ -329,10 +341,10 @@ export default function Hero({ welcomeActive = false }) {
           {
             scale: 0,
             opacity: 0,
-            duration: 0.12,
-            ease: 'power2.in',
+            duration: 0.08,
+            ease: 'power1.out',
           },
-          0.78
+          0.72
         );
       }
 
@@ -344,11 +356,11 @@ export default function Hero({ welcomeActive = false }) {
           {
             x: dx,
             y: dy,
-            scale: 0.08,
-            rotation: 12,
+            scale: 0,
+            rotation: 8,
             opacity: 0,
-            duration: 0.82,
-            ease: 'power2.in',
+            duration: 0.74,
+            ease: 'power1.out',
           },
           0
         );
@@ -362,17 +374,17 @@ export default function Hero({ welcomeActive = false }) {
           {
             x: dx,
             y: dy,
-            scale: 0.08,
+            scale: 0,
             rotation: -6,
             opacity: 0,
-            duration: 0.82,
-            ease: 'power2.in',
+            duration: 0.74,
+            ease: 'power1.out',
           },
           0
         );
       }
 
-      // 10) CTA Buttons: ALL buttons physically sucked directly into the center emblem on BOTH desktop and mobile
+      // 10) CTA Buttons: ALL buttons physically sucked directly into the center on BOTH desktop and mobile
       if (ctaRef.current) {
         const buttons = Array.from(ctaRef.current.children);
         buttons.forEach((btn, idx) => {
@@ -387,8 +399,8 @@ export default function Hero({ welcomeActive = false }) {
               scale: 0,
               rotation: spin,
               opacity: 0,
-              duration: 0.84,
-              ease: 'power2.in',
+              duration: 0.76,
+              ease: 'power1.out',
             },
             0
           );
@@ -492,60 +504,53 @@ export default function Hero({ welcomeActive = false }) {
       ref={heroRef}
       id="hero"
       style={{ opacity: 0 }}
-      className={`min-h-[92vh] flex flex-col justify-center pt-28 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden select-none will-change-transform ${welcomeActive ? 'pointer-events-none' : ''}`}
+      className={`min-h-[92vh] relative overflow-hidden select-none will-change-transform ${welcomeActive ? 'pointer-events-none' : ''}`}
     >
-      {/* 1. Dedicated Stage Aurora / Crimson Fog Atmosphere (Covers wavy lines specifically on Hero) */}
+      {/* Theatrical Circular Iris Singularity Stage (Masks both stage backdrop & interactive content into a true circle) */}
       <div
-        ref={auroraContainerRef}
-        className="absolute inset-0 pointer-events-none overflow-hidden select-none will-change-transform opacity-0 bg-[#FAFAFA] dark:bg-[#07080B] z-0"
-        aria-hidden="true"
+        ref={portalRef}
+        className="relative w-full min-h-[92vh] flex flex-col justify-center pt-28 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden will-change-transform"
+        style={{
+          clipPath: 'circle(150% at 50% 42%)',
+          WebkitClipPath: 'circle(150% at 50% 42%)',
+        }}
       >
-        {/* Soft Stage Vignette Mask - Adaptive Light & Dark Mode */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_25%,rgba(225,29,46,0.06),rgba(250,250,250,0.75)_65%,rgba(250,250,250,1)_100%)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_25%,rgba(225,29,46,0.16),rgba(7,8,11,0.85)_70%,rgba(7,8,11,1)_100%)] pointer-events-none" />
-
-        {/* Primary Volumetric Crimson Aurora Fog (Center Top) */}
+        {/* 1. Dedicated Stage Aurora / Crimson Fog Atmosphere (Covers wavy lines specifically on Hero) */}
         <div
-          ref={auroraCenterRef}
-          className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[38rem] sm:w-[56rem] h-[24rem] sm:h-[34rem] rounded-[100%] bg-gradient-to-b from-[#E11D2E]/10 via-[#E11D2E]/5 to-transparent dark:from-[#E11D2E]/25 dark:via-[#E11D2E]/15 blur-[65px] sm:blur-[100px] pointer-events-none will-change-transform"
-        />
+          ref={auroraContainerRef}
+          className="absolute inset-0 pointer-events-none overflow-hidden select-none will-change-transform opacity-0 bg-[#FAFAFA] dark:bg-[#07080B] z-0"
+          aria-hidden="true"
+        >
+          {/* Soft Stage Vignette Mask - Adaptive Light & Dark Mode */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_25%,rgba(225,29,46,0.06),rgba(250,250,250,0.75)_65%,rgba(250,250,250,1)_100%)] dark:bg-[radial-gradient(ellipse_80%_60%_at_50%_25%,rgba(225,29,46,0.16),rgba(7,8,11,0.85)_70%,rgba(7,8,11,1)_100%)] pointer-events-none" />
 
-        {/* Deep Ruby Ambient Smoke (Left Flank) */}
+          {/* Primary Volumetric Crimson Aurora Fog (Center Top) */}
+          <div
+            ref={auroraCenterRef}
+            className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[38rem] sm:w-[56rem] h-[24rem] sm:h-[34rem] rounded-[100%] bg-gradient-to-b from-[#E11D2E]/10 via-[#E11D2E]/5 to-transparent dark:from-[#E11D2E]/25 dark:via-[#E11D2E]/15 blur-[65px] sm:blur-[100px] pointer-events-none will-change-transform"
+          />
+
+          {/* Deep Ruby Ambient Smoke (Left Flank) */}
+          <div
+            ref={fogLeftRef}
+            className="absolute top-1/3 left-[15%] -translate-x-1/2 -translate-y-1/2 w-[24rem] sm:w-[32rem] h-[20rem] sm:h-[26rem] rounded-full bg-[#E11D2E]/6 dark:bg-[#880815]/22 blur-[55px] sm:blur-[85px] pointer-events-none will-change-transform"
+          />
+
+          {/* Soft Peach-Crimson Rim Glow (Right Flank) */}
+          <div
+            ref={fogRightRef}
+            className="absolute top-1/4 left-[85%] -translate-x-1/2 -translate-y-1/2 w-[22rem] sm:w-[30rem] h-[18rem] sm:h-[24rem] rounded-full bg-[#FF3B4D]/8 dark:bg-[#FF3B4D]/18 blur-[50px] sm:blur-[80px] pointer-events-none will-change-transform"
+          />
+
+          {/* Smooth Bottom Dissolve to seamlessly blend with main page */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 to-transparent dark:from-[#0f1117] dark:via-[#0f1117]/60 pointer-events-none" />
+        </div>
+
+        {/* 2. Hero Interactive Content Wrapper (Animated on Step-Back Exit & Re-entrance) */}
         <div
-          ref={fogLeftRef}
-          className="absolute top-1/3 left-[15%] -translate-x-1/2 -translate-y-1/2 w-[24rem] sm:w-[32rem] h-[20rem] sm:h-[26rem] rounded-full bg-[#E11D2E]/6 dark:bg-[#880815]/22 blur-[55px] sm:blur-[85px] pointer-events-none will-change-transform"
-        />
-
-        {/* Soft Peach-Crimson Rim Glow (Right Flank) */}
-        <div
-          ref={fogRightRef}
-          className="absolute top-1/4 left-[85%] -translate-x-1/2 -translate-y-1/2 w-[22rem] sm:w-[30rem] h-[18rem] sm:h-[24rem] rounded-full bg-[#FF3B4D]/8 dark:bg-[#FF3B4D]/18 blur-[50px] sm:blur-[80px] pointer-events-none will-change-transform"
-        />
-
-        {/* Smooth Bottom Dissolve to seamlessly blend with main page */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 to-transparent dark:from-[#0f1117] dark:via-[#0f1117]/60 pointer-events-none" />
-      </div>
-
-      {/* 1.5. Theatrical Iris Flare Elements (Active during Theatrical Iris Pinch mode) */}
-      <div
-        ref={irisRingRef}
-        className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[130vmax] h-[130vmax] rounded-full border border-[#E11D2E]/60 shadow-[0_0_30px_rgba(225,29,46,0.6)] pointer-events-none z-10 will-change-transform opacity-0"
-        aria-hidden="true"
-      />
-
-      <div
-        ref={irisFlashRef}
-        className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20 will-change-transform opacity-0 flex items-center justify-center"
-        aria-hidden="true"
-      >
-        <div className="absolute w-[24rem] sm:w-[36rem] h-[3px] bg-gradient-to-r from-transparent via-[#FF3B4D] to-transparent shadow-[0_0_25px_#E11D2E]" />
-        <div className="w-12 h-12 rounded-full bg-white shadow-[0_0_40px_#E11D2E,0_0_80px_#FF3B4D] blur-xs" />
-      </div>
-
-      {/* 2. Hero Interactive Content Wrapper (Animated on Step-Back Exit & Re-entrance) */}
-      <div
-        ref={contentWrapperRef}
-        className="max-w-4xl mx-auto w-full space-y-7 relative z-10 will-change-transform"
-      >
+          ref={contentWrapperRef}
+          className="max-w-4xl mx-auto w-full space-y-7 relative z-10 will-change-transform"
+        >
         {/* 2. Top Row: Live Availability Beacon + Location Badge */}
         <div ref={badgesRef} className="flex flex-wrap items-center gap-3">
           {/* Development Status Badge */}
@@ -662,6 +667,23 @@ export default function Hero({ welcomeActive = false }) {
             <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
           </button>
         </div>
+      </div>
+    </div>
+
+      {/* 1.5. Theatrical Iris Flare Elements (Active during Theatrical Iris Pinch mode - outside portal so glowing bloom is unclipped) */}
+      <div
+        ref={irisRingRef}
+        className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[130vmax] h-[130vmax] rounded-full border border-[#E11D2E]/70 shadow-[0_0_40px_rgba(225,29,46,0.6)] pointer-events-none z-20 will-change-transform opacity-0"
+        aria-hidden="true"
+      />
+
+      <div
+        ref={irisFlashRef}
+        className="absolute top-[42%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-30 will-change-transform opacity-0 flex items-center justify-center"
+        aria-hidden="true"
+      >
+        <div className="absolute w-[24rem] sm:w-[36rem] h-[3px] bg-gradient-to-r from-transparent via-[#FF3B4D] to-transparent shadow-[0_0_25px_#E11D2E]" />
+        <div className="w-12 h-12 rounded-full bg-white shadow-[0_0_40px_#E11D2E,0_0_80px_#FF3B4D] blur-xs" />
       </div>
     </section>
   );
