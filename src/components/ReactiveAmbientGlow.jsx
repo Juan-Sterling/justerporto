@@ -21,7 +21,7 @@ export default function ReactiveAmbientGlow() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Initial State (At Hero: 0 opacity so Hero's dedicated stage aurora shines alone)
+      // 1. Initial State (At Hero: 0 opacity & hidden so Hero's dedicated stage aurora shines alone)
       gsap.set(primaryOrbRef.current, {
         top: 0,
         left: 0,
@@ -30,7 +30,7 @@ export default function ReactiveAmbientGlow() {
         x: '50vw',
         y: '20vh',
         scale: 1,
-        opacity: 0,
+        autoAlpha: 0,
       });
 
       gsap.set(secondaryOrbRef.current, {
@@ -41,7 +41,7 @@ export default function ReactiveAmbientGlow() {
         x: '50vw',
         y: '30vh',
         scale: 0.8,
-        opacity: 0,
+        autoAlpha: 0,
       });
 
       // 2. Continuous Scroll-Driven Atmosphere Timeline (Hardware-accelerated transforms only)
@@ -50,7 +50,7 @@ export default function ReactiveAmbientGlow() {
           trigger: document.body,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.8, // Snappy 0.8s responsive scrub
+          scrub: 0.35, // Snappy, responsive scrub without trailing animation lag
           fastScrollEnd: true,
           preventOverlaps: true,
         },
@@ -61,30 +61,30 @@ export default function ReactiveAmbientGlow() {
         x: '26vw',
         y: '32vh',
         scale: 1.15,
-        opacity: 0.85,
+        autoAlpha: 0.85,
         ease: 'power1.inOut',
-      }, 0.15)
+      }, 0.12)
       .to(secondaryOrbRef.current, {
         x: '38vw',
         y: '40vh',
         scale: 0.9,
-        opacity: 0.55,
+        autoAlpha: 0.55,
         ease: 'power1.inOut',
-      }, 0.15);
+      }, 0.12);
 
       // Step 2: Scroll into Skills (Orb centers and blooms wide across tech badges)
       tl.to(primaryOrbRef.current, {
         x: '50vw',
         y: '50vh',
-        scale: 1.3,
-        opacity: 0.9,
+        scale: 1.25,
+        autoAlpha: 0.9,
         ease: 'power1.inOut',
       }, 0.40)
       .to(secondaryOrbRef.current, {
         x: '62vw',
         y: '56vh',
         scale: 1.0,
-        opacity: 0.6,
+        autoAlpha: 0.6,
         ease: 'power1.inOut',
       }, 0.40);
 
@@ -92,15 +92,15 @@ export default function ReactiveAmbientGlow() {
       tl.to(primaryOrbRef.current, {
         x: '72vw',
         y: '70vh',
-        scale: 1.2,
-        opacity: 0.85,
+        scale: 1.15,
+        autoAlpha: 0.85,
         ease: 'power1.inOut',
       }, 0.68)
       .to(secondaryOrbRef.current, {
         x: '30vw',
         y: '68vh',
         scale: 0.85,
-        opacity: 0.5,
+        autoAlpha: 0.5,
         ease: 'power1.inOut',
       }, 0.68);
 
@@ -109,14 +109,14 @@ export default function ReactiveAmbientGlow() {
         x: '50vw',
         y: '86vh',
         scale: 1.1,
-        opacity: 0.85,
+        autoAlpha: 0.85,
         ease: 'power1.inOut',
       }, 0.92)
       .to(secondaryOrbRef.current, {
         x: '50vw',
         y: '82vh',
         scale: 0.9,
-        opacity: 0.55,
+        autoAlpha: 0.55,
         ease: 'power1.inOut',
       }, 0.92);
 
@@ -131,16 +131,16 @@ export default function ReactiveAmbientGlow() {
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none"
       aria-hidden="true"
     >
-      {/* Primary Reactive Radial Glow Orb */}
+      {/* Primary Reactive Radial Glow Orb (Pure GPU radial gradient shader, 0 runtime convolution lag) */}
       <div
         ref={primaryOrbRef}
-        className="absolute w-[30rem] sm:w-[44rem] h-[30rem] sm:h-[44rem] rounded-full bg-[#E11D2E]/10 dark:bg-[#E11D2E]/16 blur-[60px] sm:blur-[90px] will-change-transform"
+        className="absolute w-[22rem] sm:w-[36rem] h-[22rem] sm:h-[36rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(225,29,46,0.12)_0%,rgba(225,29,46,0.05)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(225,29,46,0.22)_0%,rgba(225,29,46,0.08)_50%,transparent_70%)] blur-md sm:blur-xl will-change-transform transform-gpu"
       />
 
-      {/* Secondary Soft Rim Accent Orb */}
+      {/* Secondary Soft Rim Accent Orb (Hidden on mobile to save GPU fill rate) */}
       <div
         ref={secondaryOrbRef}
-        className="absolute w-64 sm:w-[26rem] h-64 sm:h-[26rem] rounded-full bg-[#FF4D5E]/8 dark:bg-[#FF4D5E]/12 blur-[50px] sm:blur-[80px] will-change-transform"
+        className="absolute hidden sm:block w-56 sm:w-80 h-56 sm:h-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,77,94,0.08)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,77,94,0.15)_0%,transparent_70%)] blur-sm sm:blur-lg will-change-transform transform-gpu"
       />
     </div>
   );

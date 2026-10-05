@@ -36,7 +36,7 @@ export default function Education() {
         </div>
 
         {/* College Projects GitHub Callout */}
-        <AnimatedSection delay={200}>
+        {/* <AnimatedSection delay={200}>
           <div className="mt-6 p-5 sm:p-6 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
             <div className="flex items-start sm:items-center gap-3.5">
               <div className="p-2.5 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] shrink-0">
@@ -67,7 +67,7 @@ export default function Education() {
               <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>
           </div>
-        </AnimatedSection>
+        </AnimatedSection> */}
       </div>
     </section>
   );

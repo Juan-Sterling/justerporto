@@ -37,24 +37,33 @@ export default function App() {
 
   useEffect(() => {
     const sections = ['experience', 'skills', 'education', 'contact'];
+    let ticking = false;
+
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const offset = 220; // Trigger threshold
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const offset = 220; // Trigger threshold
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const id = sections[i];
-        const el = document.getElementById(id);
-        if (el) {
-          const top = el.offsetTop - offset;
-          if (scrollY >= top) {
-            setActiveSection(id);
-            return;
+          for (let i = sections.length - 1; i >= 0; i--) {
+            const id = sections[i];
+            const el = document.getElementById(id);
+            if (el) {
+              const top = el.offsetTop - offset;
+              if (scrollY >= top) {
+                setActiveSection(id);
+                ticking = false;
+                return;
+              }
+            }
           }
-        }
-      }
 
-      // If above experience, clear active section
-      setActiveSection('');
+          // If above experience, clear active section
+          setActiveSection('');
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -86,8 +95,8 @@ export default function App() {
 
           {/* Main Content Sections with Laser Horizon Transitions */}
           <main className="flex-1 w-full relative z-10">
+            {/* Hero Portal Zooms directly into Experience */}
             <Hero welcomeActive={showWelcome && !welcomeExiting} />
-            <LaserSectionDivider />
             <Experience />
             <LaserSectionDivider />
             <Skills />

@@ -7,11 +7,11 @@ export default function AnimatedSection({
   delay = 0,
   direction = 'up', // 'up' | 'none'
 }) {
-  // triggerOnce is false so animation triggers both when scrolling down and scrolling up
-  const [ref, isInView] = useInView({ threshold: 0.12, triggerOnce: false });
+  // Bidirectional in-view trigger with subtle margin to prevent pop-in jitter
+  const [ref, isInView] = useInView({ threshold: 0.08, triggerOnce: false, rootMargin: '20px 0px -20px 0px' });
 
   const getTransformClass = () => {
-    if (direction === 'up') return 'translate-y-7';
+    if (direction === 'up') return 'translate-y-5';
     return '';
   };
 
@@ -19,7 +19,7 @@ export default function AnimatedSection({
     <div
       ref={ref}
       style={{ transitionDelay: isInView ? `${delay}ms` : '0ms' }}
-      className={`transition-all duration-600 ease-out will-change-transform ${
+      className={`transition-[opacity,transform] duration-500 ease-out transform-gpu ${
         isInView
           ? 'opacity-100 translate-y-0'
           : `opacity-0 ${getTransformClass()}`

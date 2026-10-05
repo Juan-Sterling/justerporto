@@ -25,30 +25,13 @@ export default function CertificatesSection() {
   const [previewCert, setPreviewCert] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Track scroll direction for directional entrance animation (scrolling up vs scrolling down)
-  const [scrollDirection, setScrollDirection] = useState('down');
-
-  useEffect(() => {
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const currentY = window.scrollY;
-      const diff = currentY - lastY;
-      if (Math.abs(diff) > 4) {
-        setScrollDirection(diff > 0 ? 'down' : 'up');
-        lastY = currentY;
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   // In-view hooks with triggerOnce: false to re-trigger on both scroll up and scroll down
   const [headerRef, isHeaderInView] = useInView({ threshold: 0.12, triggerOnce: false });
   const [listRef, isListInView] = useInView({ threshold: 0.05, triggerOnce: false });
   const [spotlightRef, isSpotlightInView] = useInView({ threshold: 0.05, triggerOnce: false });
 
-  // Directional entry offset
-  const getEntryOffset = (dist = 24) => (scrollDirection === 'down' ? `${dist}px` : `-${dist}px`);
+  // Entry offset for smooth GPU-accelerated entrance
+  const getEntryOffset = (dist = 24) => `${dist}px`;
 
   // Active certificate object for desktop spotlight
   const activeCert = certificates.find((c) => c.id === selectedId) || certificates[0];

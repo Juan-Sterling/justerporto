@@ -30,7 +30,9 @@ export default function LaserSectionDivider() {
           trigger: containerRef.current,
           start: 'top 92%',
           end: 'top 48%',
-          scrub: 0.6,
+          scrub: 0.25,
+          fastScrollEnd: true,
+          preventOverlaps: true,
         },
       });
 
@@ -44,7 +46,7 @@ export default function LaserSectionDivider() {
 
       // Step 2: Soft radial crimson flare glows outward
       tl.to(flareRef.current, {
-        scale: 1.3,
+        scale: 1.25,
         opacity: 0.75,
         duration: 0.35,
         ease: 'power2.out',
@@ -84,28 +86,28 @@ export default function LaserSectionDivider() {
       className="relative w-full max-w-6xl mx-auto h-8 sm:h-12 flex items-center justify-center pointer-events-none select-none overflow-visible px-4 my-2 sm:my-4"
       aria-hidden="true"
     >
-      {/* Soft Center Crimson Glow Flare */}
+      {/* Soft Center Crimson Glow Flare (GPU radial gradient, lightweight blur) */}
       <div
         ref={flareRef}
-        className="absolute w-48 sm:w-80 h-10 rounded-full bg-[#E11D2E]/25 blur-xl pointer-events-none will-change-transform"
+        className="absolute w-48 sm:w-80 h-10 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.30)_0%,rgba(225,29,46,0.08)_50%,transparent_75%)] blur-sm sm:blur-md pointer-events-none will-change-transform transform-gpu"
       />
 
       {/* Secondary Soft Neon Bloom Line */}
       <div
         ref={bloomRef}
-        className="absolute left-1/6 right-1/6 h-[3px] bg-gradient-to-r from-transparent via-[#FF3B4D] to-transparent blur-[2.5px] pointer-events-none will-change-transform"
+        className="absolute left-1/6 right-1/6 h-[2.5px] bg-gradient-to-r from-transparent via-[#FF3B4D] to-transparent blur-[1.5px] pointer-events-none will-change-transform transform-gpu"
       />
 
       {/* Primary Razor-Sharp Crimson Laser Line */}
       <div
         ref={lineRef}
-        className="absolute left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#E11D2E] to-transparent shadow-[0_0_12px_rgba(225,29,46,0.9)] will-change-transform"
+        className="absolute left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#E11D2E] to-transparent shadow-[0_0_10px_rgba(225,29,46,0.85)] will-change-transform transform-gpu"
       />
 
       {/* Center White Core Spark */}
       <div
         ref={coreRef}
-        className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#FFFFFF,0_0_18px_#E11D2E] z-10 will-change-transform"
+        className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#FFFFFF,0_0_16px_#E11D2E] z-10 will-change-transform transform-gpu"
       />
     </div>
   );

@@ -29,6 +29,8 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
       smoothWheel: true,
       wheelMultiplier: 0.95,
       touchMultiplier: 1.0,
+      autoRaf: false, // GSAP ticker drives the RAF loop directly
+      syncTouch: false, // Let mobile touch scrolling run with native 120Hz hardware momentum
       infinite: false,
     });
 
@@ -44,7 +46,8 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
     };
 
     gsap.ticker.add(tickerUpdate);
-    gsap.ticker.lagSmoothing(500, 33);
+    // Disable lagSmoothing so GSAP does not clamp time or stutter when crossing sections
+    gsap.ticker.lagSmoothing(0);
 
     // Expose lenis globally for debugging or direct access if needed
     window.__lenis = lenis;
