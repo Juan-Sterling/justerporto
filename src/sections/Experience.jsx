@@ -364,22 +364,9 @@ export default function Experience() {
               <button
                 type="button"
                 onClick={() => setIsExpanded((prev) => !prev)}
-                className="relative z-10 inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#333333] hover:border-[#E11D2E] dark:hover:border-[#E11D2E] text-[#09090B] dark:text-[#F4F4F5] text-xs font-mono shadow-sm hover:shadow-md hover:shadow-[#E11D2E]/10 active:scale-95 transition-all duration-200 cursor-pointer group select-none"
+                className="relative z-10 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white dark:bg-[#141414] hover:bg-[#F4F4F5] dark:hover:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#333333] hover:border-[#E11D2E] dark:hover:border-[#E11D2E] text-[#09090B] dark:text-[#F4F4F5] text-xs font-mono shadow-sm hover:shadow-md hover:shadow-[#E11D2E]/10 active:scale-95 transition-all duration-200 cursor-pointer group select-none"
                 aria-expanded={isExpanded}
               >
-                <span className="relative flex h-2 w-2">
-                  <span
-                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                      isExpanded ? 'bg-transparent' : 'bg-[#E11D2E]'
-                    }`}
-                  />
-                  <span
-                    className={`relative inline-flex rounded-full h-2 w-2 ${
-                      isExpanded ? 'bg-[#71717A]' : 'bg-[#E11D2E]'
-                    }`}
-                  />
-                </span>
-
                 <span className="tracking-wider uppercase text-xs font-semibold group-hover:text-[#E11D2E] transition-colors">
                   {isExpanded ? 'Show Less' : 'Show More'}
                 </span>
@@ -402,13 +389,7 @@ export default function Experience() {
                 <div className="space-y-3">
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif]">
                     Other Projects &amp;{' '}
-                    <span className="inline-flex items-center gap-2 whitespace-nowrap">
-                      <span className="text-[#E11D2E]">Collaborations</span>
-                      <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D2E] opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#E11D2E] shadow-[0_0_10px_rgba(225,29,46,0.9)]" />
-                      </span>
-                    </span>
+                    <span className="text-[#E11D2E]">Collaborations</span>
                   </h3>
                   <p className="text-xs sm:text-sm text-[#52525B] dark:text-[#A1A1AA] max-w-2xl leading-relaxed">
                     A collection of projects outside my full-time roles, featuring applications, platforms, and initiatives where I have been involved—either directly or indirectly.

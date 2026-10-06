@@ -50,19 +50,19 @@ const BaemonPortalO = forwardRef(function BaemonPortalO(
             className="w-full h-full overflow-visible pointer-events-none transform-gpu"
             aria-hidden="true"
           >
-            {/* LEFT HALF of the Baemon "O" (Solid Crimson Red) */}
+            {/* LEFT HALF of the Baemon "O" (Solid Black in Light Mode, Solid Crimson Red in Dark Mode) */}
             <g ref={leftHalfRef} className="will-change-transform">
               <path
                 d="M 188 25.41 A 175 175 0 0 0 188 374.59 L 188 294.24 A 95 95 0 0 1 188 105.76 Z"
-                className="fill-[#E11D2E] transition-colors duration-200"
+                className="fill-black dark:fill-[#E11D2E] transition-colors duration-200"
               />
             </g>
 
-            {/* RIGHT HALF of the Baemon "O" (Solid Crimson Red) */}
+            {/* RIGHT HALF of the Baemon "O" (Solid Black in Light Mode, Solid Crimson Red in Dark Mode) */}
             <g ref={rightHalfRef} className="will-change-transform">
               <path
                 d="M 212 25.41 A 175 175 0 0 1 212 374.59 L 212 294.24 A 95 95 0 0 0 212 105.76 Z"
-                className="fill-[#E11D2E] transition-colors duration-200"
+                className="fill-black dark:fill-[#E11D2E] transition-colors duration-200"
               />
             </g>
           </svg>

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Award, CheckCircle2, ExternalLink, Maximize2, FileCheck } from 'lucide-react';
+import { Award, ExternalLink, Maximize2, FileCheck } from 'lucide-react';
 import TechBadge from '../TechBadge';
 
 export default function CertificateCard({ certificate, onPreview }) {
@@ -17,7 +16,7 @@ export default function CertificateCard({ certificate, onPreview }) {
   return (
     <div className="group relative flex flex-col justify-between rounded-xl bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-300 p-5 sm:p-6 shadow-xs hover:shadow-md dark:hover:shadow-black/50 hover:-translate-y-0.5">
       <div>
-        {/* Top Header: Issuer, Verified Badge & Period */}
+        {/* Top Header: Issuer & Period */}
         <div className="flex items-start justify-between gap-3 pb-3 mb-3.5 border-b border-[#E4E4E7] dark:border-[#242424]">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[#E11D2E]/10 dark:bg-[#E11D2E]/20 border border-[#E11D2E]/30 flex items-center justify-center text-[#E11D2E] shrink-0">
@@ -34,13 +33,6 @@ export default function CertificateCard({ certificate, onPreview }) {
               )}
             </div>
           </div>
-
-          {verified && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0 select-none">
-              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-              <span>Verified</span>
-            </span>
-          )}
         </div>
 
         {/* Certificate Title */}

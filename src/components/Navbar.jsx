@@ -154,7 +154,6 @@ export default function Navbar({ activeSection = '' }) {
               <span className="font-['Space_Grotesk',sans-serif] group-hover:text-[#E11D2E] dark:group-hover:text-white transition-colors font-bold text-sm sm:text-base">
                 Juan Sterling
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#E11D2E] animate-pulse" />
             </div>
           </a>
 
@@ -187,18 +186,12 @@ export default function Navbar({ activeSection = '' }) {
                       e.preventDefault();
                       handleNavClick(item.id);
                     }}
-                    className={`relative z-10 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center gap-1.5 select-none ${
+                    className={`relative z-10 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center select-none ${
                       isActive
                         ? 'text-[#09090B] dark:text-white font-semibold'
                         : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-white/30 dark:hover:bg-white/[0.04]'
                     }`}
                   >
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full bg-[#E11D2E] shadow-[0_0_6px_rgba(225,29,46,0.8)] transition-all duration-300 ${
-                        isActive ? 'scale-100 opacity-100 animate-pulse' : 'scale-0 opacity-0 -ml-2 w-0'
-                      }`}
-                      aria-hidden="true"
-                    />
                     <span>{item.label}</span>
                   </a>
                 );

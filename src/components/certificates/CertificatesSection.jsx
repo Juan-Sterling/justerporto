@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { 
-  Award, 
-  CheckCircle2, 
-  ExternalLink, 
-  Maximize2, 
-  FileCheck, 
-  ChevronRight, 
-  ShieldCheck, 
-  GraduationCap, 
+import {
+  Award,
+  ExternalLink,
+  Maximize2,
+  FileCheck,
+  ChevronRight,
+  GraduationCap,
   Calendar,
   Sparkles,
   Download,
@@ -88,7 +86,7 @@ export default function CertificatesSection() {
   return (
     <div className="pt-10 sm:pt-14 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/70">
       {/* Section Header with Bidirectional Entrance Animation */}
-      <div 
+      <div
         ref={headerRef}
         className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8 will-change-transform"
       >
@@ -101,42 +99,20 @@ export default function CertificatesSection() {
         >
           <h3 className="font-['Space_Grotesk',sans-serif] text-2xl sm:text-3xl font-bold text-[#09090B] dark:text-white tracking-tight flex items-center gap-2 flex-wrap">
             <span>Certifications &amp;</span>
-            <span className="inline-flex items-center gap-2 whitespace-nowrap">
-              <span className="text-[#E11D2E]">Honors</span>
-              <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D2E] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#E11D2E] shadow-[0_0_10px_rgba(225,29,46,0.9)]" />
-              </span>
-            </span>
+            <span className="text-[#E11D2E]">Honors</span>
           </h3>
           <p className="text-xs sm:text-sm text-[#71717A] dark:text-[#A1A1AA] max-w-2xl leading-relaxed mt-1">
             A collection of certificates and honors that I have earned throughout my journey.
           </p>
         </div>
-
-        {/* Counter Badge */}
-        <div 
-          style={{
-            opacity: isHeaderInView ? 1 : 0,
-            transform: isHeaderInView ? 'translateY(0) scale(1)' : `translateY(${getEntryOffset(18)}) scale(0.92)`,
-            transition: 'opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1)',
-            transitionDelay: isHeaderInView ? '120ms' : '0ms',
-          }}
-          className="self-start sm:self-auto inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F4F4F5] dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] text-xs font-mono text-[#52525B] dark:text-[#A1A1AA] shrink-0"
-        >
-          <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          <span>
-            <strong className="text-[#09090B] dark:text-white font-semibold">{certificates.length}</strong> Verified Credentials
-          </span>
-        </div>
       </div>
 
       {/* Responsive Layout: Mobile Accordion, Desktop Split Master-Detail */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
+
         {/* LEFT COLUMN: Master List (Desktop) & Accordion List (Mobile) */}
         <div ref={listRef} className="lg:col-span-5 flex flex-col gap-3">
-          <div 
+          <div
             style={{
               opacity: isListInView ? 1 : 0,
               transform: isListInView ? 'translateY(0)' : `translateY(${getEntryOffset(16)})`,
@@ -164,11 +140,10 @@ export default function CertificatesSection() {
                   transition: 'opacity 550ms cubic-bezier(0.16, 1, 0.3, 1), transform 550ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms, border-color 200ms, box-shadow 200ms',
                   transitionDelay: isListInView ? `${index * 60 + 50}ms` : '0ms',
                 }}
-                className={`rounded-xl border overflow-hidden will-change-transform ${
-                  isSelectedDesktop
+                className={`rounded-xl border overflow-hidden will-change-transform ${isSelectedDesktop
                     ? 'bg-white dark:bg-[#151518] border-[#E11D2E] shadow-md dark:shadow-black/50 ring-1 ring-[#E11D2E]/25'
                     : 'bg-white/60 dark:bg-[#121214]/60 border-[#E4E4E7] dark:border-[#242426] hover:border-[#E11D2E]/40 hover:bg-white dark:hover:bg-[#161619]'
-                }`}
+                  }`}
               >
                 {/* Header Button (Desktop Selector / Mobile Accordion Trigger) */}
                 <button
@@ -179,19 +154,17 @@ export default function CertificatesSection() {
                 >
                   {/* Left Active Indicator Bar */}
                   <div
-                    className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full transition-colors ${
-                      isSelectedDesktop ? 'bg-[#E11D2E]' : 'bg-transparent group-hover:bg-[#E11D2E]/30'
-                    }`}
+                    className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full transition-colors ${isSelectedDesktop ? 'bg-[#E11D2E]' : 'bg-transparent group-hover:bg-[#E11D2E]/30'
+                      }`}
                   />
 
                   <div className="flex items-start gap-3 min-w-0">
                     {/* Index Category Icon */}
                     <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border transition-colors ${
-                        isSelectedDesktop
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border transition-colors ${isSelectedDesktop
                           ? 'bg-[#E11D2E]/15 border-[#E11D2E]/30 text-[#E11D2E]'
                           : 'bg-[#F4F4F5] dark:bg-[#1A1A1D] border-[#E4E4E7] dark:border-[#2A2A2E] text-[#71717A] dark:text-[#A1A1AA] group-hover:text-[#E11D2E]'
-                      }`}
+                        }`}
                     >
                       {getIssuerIcon(cert.category)}
                     </div>
@@ -207,11 +180,10 @@ export default function CertificatesSection() {
                       </div>
 
                       <h4
-                        className={`text-sm font-semibold tracking-tight transition-colors line-clamp-2 ${
-                          isSelectedDesktop
+                        className={`text-sm font-semibold tracking-tight transition-colors line-clamp-2 ${isSelectedDesktop
                             ? 'text-[#09090B] dark:text-white'
                             : 'text-[#3F3F46] dark:text-[#D4D4D8] group-hover:text-[#09090B] dark:group-hover:text-white'
-                        }`}
+                          }`}
                       >
                         {cert.title}
                       </h4>
@@ -223,34 +195,25 @@ export default function CertificatesSection() {
                   </div>
 
                   {/* Right Status & Expand Chevron */}
-                  <div className="flex flex-col items-end gap-1.5 shrink-0 self-center">
-                    {cert.verified && (
-                      <span className="p-1 rounded-full text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20" title="Verified by Issuer">
-                        <CheckCircle2 className="w-3 h-3" />
-                      </span>
-                    )}
+                  <div className="flex items-center shrink-0 self-center">
                     <ChevronRight
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        isSelectedDesktop
+                      className={`w-4 h-4 transition-transform duration-200 ${isSelectedDesktop
                           ? 'text-[#E11D2E]'
                           : 'text-[#A1A1AA] dark:text-[#52525B] group-hover:text-[#E11D2E]'
-                      } ${
-                        isExpandedMobile ? 'rotate-90 lg:rotate-0' : 'rotate-0'
-                      } ${
-                        isSelectedDesktop ? 'lg:translate-x-0.5' : ''
-                      }`}
+                        } ${isExpandedMobile ? 'rotate-90 lg:rotate-0' : 'rotate-0'
+                        } ${isSelectedDesktop ? 'lg:translate-x-0.5' : ''
+                        }`}
                     />
                   </div>
                 </button>
 
                 {/* MOBILE INLINE ACCORDION BODY (Visible only on < lg screens when expanded) */}
                 <div
-                  className={`lg:hidden transition-all duration-300 ease-in-out px-4 pb-4 ${
-                    isExpandedMobile ? 'block opacity-100' : 'hidden opacity-0'
-                  }`}
+                  className={`lg:hidden transition-all duration-300 ease-in-out px-4 pb-4 ${isExpandedMobile ? 'block opacity-100' : 'hidden opacity-0'
+                    }`}
                 >
                   <div className="pt-3 border-t border-[#E4E4E7] dark:border-[#26262B]">
-                    
+
                     {/* Certificate Preview Image Slot (Mobile) */}
                     <div className="relative mb-3.5 w-full h-48 sm:h-56 rounded-lg overflow-hidden border border-[#E4E4E7] dark:border-[#26262B] bg-[#F4F4F5] dark:bg-[#0D0D10] group/preview">
                       {cert.image && cert.image.trim() !== '' ? (
@@ -300,7 +263,7 @@ export default function CertificatesSection() {
                     {cert.skills && cert.skills.length > 0 && (
                       <div className="mb-3.5">
                         <span className="text-[10px] font-mono uppercase tracking-wider text-[#71717A] dark:text-[#888891] block mb-1.5">
-                          Verified Competencies
+                          Competencies
                         </span>
                         <div className="flex flex-wrap items-center gap-1.5">
                           {cert.skills.map((skill) => (
@@ -323,8 +286,8 @@ export default function CertificatesSection() {
                           <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </a>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px] font-mono font-medium">
-                          <ShieldCheck className="w-3 h-3" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#F4F4F5] dark:bg-[#1A1A1D] text-[#71717A] dark:text-[#A1A1AA] border border-[#E4E4E7] dark:border-[#2A2A2E] text-[11px] font-mono font-medium">
+                          <Award className="w-3.5 h-3.5 text-[#E11D2E]" />
                           <span>Official Institutional Honor</span>
                         </span>
                       )}
@@ -341,7 +304,7 @@ export default function CertificatesSection() {
         {/* RIGHT COLUMN: Desktop Spotlight Detail Panel (Hidden on Mobile) */}
         <div ref={spotlightRef} className="hidden lg:block lg:col-span-7">
           {activeCert && (
-            <div 
+            <div
               style={{
                 opacity: isSpotlightInView ? 1 : 0,
                 transform: isSpotlightInView ? 'translateY(0) scale(1)' : `translateY(${getEntryOffset(30)}) scale(0.97)`,
@@ -350,7 +313,7 @@ export default function CertificatesSection() {
               }}
               className="sticky top-24 rounded-2xl bg-white dark:bg-[#141416] border border-[#E4E4E7] dark:border-[#27272A] p-5 sm:p-7 shadow-xl dark:shadow-black/60 will-change-transform"
             >
-              
+
               {/* Spotlight Top Bar */}
               <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-[#E4E4E7] dark:border-[#222226]">
                 <div className="flex items-center gap-2">
@@ -363,12 +326,6 @@ export default function CertificatesSection() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {activeCert.verified && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                      <span>Verified</span>
-                    </span>
-                  )}
                   {activeCert.image && (
                     <button
                       type="button"
@@ -443,11 +400,11 @@ export default function CertificatesSection() {
                 </div>
               )}
 
-              {/* Verified Stack / Competencies */}
+              {/* Stack / Competencies */}
               {activeCert.skills && activeCert.skills.length > 0 && (
                 <div className="mb-6 pt-4 border-t border-[#E4E4E7] dark:border-[#222226]">
                   <span className="text-[11px] font-mono uppercase tracking-wider text-[#71717A] dark:text-[#888891] block mb-2">
-                    Verified Competencies (Click to inspect)
+                    Competencies (Click to inspect)
                   </span>
                   <div className="flex flex-wrap items-center gap-1.5">
                     {activeCert.skills.map((skill) => (
@@ -470,8 +427,8 @@ export default function CertificatesSection() {
                     <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-mono font-medium">
-                    <ShieldCheck className="w-3.5 h-3.5" />
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#F4F4F5] dark:bg-[#1A1A1D] text-[#71717A] dark:text-[#A1A1AA] border border-[#E4E4E7] dark:border-[#2A2A2E] text-xs font-mono font-medium">
+                    <Award className="w-3.5 h-3.5 text-[#E11D2E]" />
                     <span>Official Institutional Honor</span>
                   </span>
                 )}
@@ -492,18 +449,16 @@ export default function CertificatesSection() {
             aria-modal="true"
             data-lenis-prevent
             aria-label={`${previewCert.title} full preview`}
-            className={`fixed inset-0 z-[110] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm transition-opacity duration-200 ease-out ${
-              isModalOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
+            className={`fixed inset-0 z-[110] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm transition-opacity duration-200 ease-out ${isModalOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
             onClick={handleClosePreview}
           >
             <div
               data-lenis-prevent
-              className={`w-full max-w-4xl rounded-2xl bg-[#0F0F12] border border-[#2D2D35] overflow-hidden shadow-2xl shadow-black/80 flex flex-col max-h-[92vh] transition-all duration-200 transform ${
-                isModalOpen
+              className={`w-full max-w-4xl rounded-2xl bg-[#0F0F12] border border-[#2D2D35] overflow-hidden shadow-2xl shadow-black/80 flex flex-col max-h-[92vh] transition-all duration-200 transform ${isModalOpen
                   ? 'opacity-100 scale-100 translate-y-0'
                   : 'opacity-0 scale-95 translate-y-3'
-              }`}
+                }`}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Top Bar */}
@@ -550,8 +505,8 @@ export default function CertificatesSection() {
               {/* Modal Bottom Bar */}
               <div className="px-5 py-3 bg-[#141418] border-t border-[#24242A] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
                 <div className="text-[#A1A1AA] truncate flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                  <span className="text-white font-medium">Verified by {previewCert.issuer}</span>
+                  <Award className="w-3.5 h-3.5 text-[#E11D2E]" />
+                  <span className="text-white font-medium">{previewCert.issuer}</span>
                 </div>
 
                 <div className="flex items-center gap-2">

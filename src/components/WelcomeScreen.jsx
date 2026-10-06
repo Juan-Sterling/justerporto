@@ -446,11 +446,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
   // Reusable visual layout rendered inside the cut panels
   const renderPanelContent = (panelId, options = {}) => (
     <div className="w-full h-full flex flex-col justify-between p-4 sm:p-12 select-none relative">
-      {/* 1. Ambient Background Grid & Crimson Glow */}
-      <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,#E11D2E0C_1px,transparent_1px),linear-gradient(to_bottom,#E11D2E0C_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#E11D2E08_1px,transparent_1px),linear-gradient(to_bottom,#E11D2E08_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none"
-        aria-hidden="true"
-      />
+      {/* 1. Ambient Crimson Glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-[32rem] h-72 sm:h-[32rem] bg-[#E11D2E]/10 dark:bg-[#E11D2E]/18 rounded-full blur-[60px] sm:blur-[90px] pointer-events-none"
         aria-hidden="true"
@@ -464,12 +460,12 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E11D2E]" />
           </span>
           <span className="tracking-widest uppercase text-[11px] text-[#52525B] dark:text-[#A1A1AA] font-semibold">
-            BAEMON // 07
+            BAEMON
           </span>
         </div>
 
         <div className="text-[11px] font-mono tracking-widest text-[#71717A] dark:text-[#52525B]">
-          MONSTIEZ // 2026.SYS
+          MONSTIEZ
         </div>
       </div>
 
@@ -577,7 +573,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       {/* 4. Bottom Footer: Baemon Swagger */}
       <div className={`relative z-10 w-full flex items-center justify-between text-[11px] font-mono text-[#71717A] dark:text-[#52525B] ${options.isDrip ? 'drip-collapse' : ''}`}>
         <span>DESIGN INSPIRED BY BABYMONSTER</span>
-        <span className="hidden sm:inline">SHEESH // DRIP // FOREVER</span>
+        <span className="hidden sm:inline"></span>
         <span>INDONESIA</span>
       </div>
     </div>

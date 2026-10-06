@@ -47,39 +47,21 @@ export default function SectionTitle({
               </span>
             ))}
 
-            {/* Last word bound together with the radar beacon dot so it never dangles alone */}
+            {/* Last word that wraps naturally */}
             {lastWord && (
-              <span className="inline-flex items-center gap-2 sm:gap-2.5 whitespace-nowrap">
-                <span className="inline-block overflow-hidden py-1 -my-1">
-                  <span
-                    className={`inline-block transition-transform duration-700 ease-out will-change-transform ${
-                      highlightLastWord
-                        ? 'text-[#E11D2E] drop-shadow-[0_0_10px_rgba(225,29,46,0.3)] group-hover/title:drop-shadow-[0_0_14px_rgba(225,29,46,0.7)]'
-                        : 'text-[#09090B] dark:text-white'
-                    }`}
-                    style={{
-                      transform: isInView ? 'translateY(0)' : 'translateY(115%)',
-                      transitionDelay: `${leadingWords.length * 60 + 80}ms`,
-                    }}
-                  >
-                    {lastWord}
-                  </span>
-                </span>
-
-                {/* Dynamic Radar Pulse Beacon */}
+              <span className="inline-block overflow-hidden py-1 -my-1">
                 <span
-                  className="relative inline-flex items-center justify-center transition-all duration-500 ease-out will-change-transform"
+                  className={`inline-block transition-transform duration-700 ease-out will-change-transform ${
+                    highlightLastWord
+                      ? 'text-[#E11D2E] drop-shadow-[0_0_10px_rgba(225,29,46,0.3)] group-hover/title:drop-shadow-[0_0_14px_rgba(225,29,46,0.7)]'
+                      : 'text-[#09090B] dark:text-white'
+                  }`}
                   style={{
-                    opacity: isInView ? 1 : 0,
-                    transform: isInView ? 'scale(1)' : 'scale(0)',
-                    transitionDelay: `${words.length * 60 + 120}ms`,
+                    transform: isInView ? 'translateY(0)' : 'translateY(115%)',
+                    transitionDelay: `${leadingWords.length * 60 + 80}ms`,
                   }}
-                  aria-hidden="true"
                 >
-                  <span className="relative flex h-2.5 w-2.5 sm:h-3 sm:w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D2E] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3 sm:w-3 bg-[#E11D2E] shadow-[0_0_12px_rgba(225,29,46,0.9)] group-hover/title:shadow-[0_0_18px_rgba(225,29,46,1)] transition-shadow duration-300" />
-                  </span>
+                  {lastWord}
                 </span>
               </span>
             )}
