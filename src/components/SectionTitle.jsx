@@ -8,7 +8,11 @@ export default function SectionTitle({
   showAccentLine = true,
   highlightLastWord = true,
 }) {
-  const [containerRef, isInView] = useInView({ threshold: 0.15, triggerOnce: false });
+  const [containerRef, isInView] = useInView({
+    threshold: 0.05,
+    triggerOnce: true,
+    rootMargin: '120px 0px 0px 0px',
+  });
 
   // Split title into words for staggered slide-up mask animation
   const words = (title || '').trim().split(/\s+/).filter(Boolean);

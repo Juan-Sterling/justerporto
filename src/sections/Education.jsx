@@ -19,12 +19,10 @@ export default function Education() {
   return (
     <section id="education" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <AnimatedSection>
-          <SectionTitle
-            title="Academic Background"
-            subtitle="Formal foundation in Information Technology, academic coursework, and degree credentials."
-          />
-        </AnimatedSection>
+        <SectionTitle
+          title="Academic Background"
+          subtitle="Formal foundation in Information Technology, academic coursework, and degree credentials."
+        />
 
         {/* Academic Credentials */}
         <div className="space-y-6">

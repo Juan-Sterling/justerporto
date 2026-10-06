@@ -11,13 +11,11 @@ export default function Skills() {
       <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
 
         {/* Section Header */}
-        <AnimatedSection>
-          <SectionTitle
-            title="Technical Capabilities"
-            subtitle="A unified collection of languages, frameworks, databases, and engineering tools used across modern software development."
-            className="!mb-0"
-          />
-        </AnimatedSection>
+        <SectionTitle
+          title="Technical Capabilities"
+          subtitle="A unified collection of languages, frameworks, databases, and engineering tools used across modern software development."
+          className="!mb-0"
+        />
 
         {/* Bento Grid with Category Filters & Search */}
         <SkillBentoGrid />

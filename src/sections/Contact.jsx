@@ -35,12 +35,10 @@ export default function Contact() {
   return (
     <section id="contact" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <AnimatedSection>
-          <SectionTitle
-            title="Direct Contact & Inquiries"
-            subtitle="Interested in discussing a software role, collaboration, or technical project? Reach out directly via email or connect through professional networks."
-          />
-        </AnimatedSection>
+        <SectionTitle
+          title="Direct Contact & Inquiries"
+          subtitle="Interested in discussing a software role, collaboration, or technical project? Reach out directly via email or connect through professional networks."
+        />
 
         {/* Contact Channels Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

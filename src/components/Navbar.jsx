@@ -87,7 +87,10 @@ export default function Navbar({ activeSection = '' }) {
   const handleNavClick = (id) => {
     setIsOpen(false);
     setClickedSection(id);
-    scrollTo(`#${id}`, { offset: -80 });
+    // For experience, offset: 2 ensures we cleanly complete Hero's 100vh pin
+    // For other sections, -15 offset preserves breathing room below floating navbar
+    const offset = id === 'experience' ? 2 : -15;
+    scrollTo(`#${id}`, { offset });
 
     // Safety clear clicked override after transition & scroll completes
     setTimeout(() => {
