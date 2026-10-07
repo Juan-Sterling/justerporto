@@ -1,6 +1,6 @@
 /**
  * Skills & Technical Capabilities Data Model
- * Organizes Juan's 36 technical capabilities into 4 core architecture categories
+ * Organizes Juan's 40 technical capabilities into 4 core architecture categories
  * with stack roles and categorized metadata.
  */
 
@@ -46,6 +46,12 @@ export const SKILLS_DATA = [
     role: 'Server-side rendering, static site generation, API routing & production React optimization.',
   },
   {
+    id: 'typescript',
+    name: 'TypeScript',
+    category: 'frontend',
+    role: 'Strongly typed JavaScript superset for scalable architecture, strict type contracts & codebase maintainability.',
+  },
+  {
     id: 'javascript',
     name: 'JavaScript',
     category: 'frontend',
@@ -74,6 +80,18 @@ export const SKILLS_DATA = [
     name: 'Bootstrap',
     category: 'frontend',
     role: 'Responsive enterprise grid layouts, UI components & client dashboard workflows.',
+  },
+  {
+    id: 'gsap',
+    name: 'GSAP',
+    category: 'frontend',
+    role: 'High-performance JavaScript animation platform for complex timelines, ScrollTrigger & interactive UI motions.',
+  },
+  {
+    id: 'lenis',
+    name: 'Lenis',
+    category: 'frontend',
+    role: 'Ultra-smooth, robust scrolling library engineered for seamless scroll orchestration and physics-based interactions.',
   },
   {
     id: 'jquery',

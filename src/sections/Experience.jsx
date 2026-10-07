@@ -401,9 +401,9 @@ export default function Experience() {
                     <span>Scroll / Drag to browse</span>
                   </div>
                   <div className="flex items-center gap-2 font-mono text-xs text-[#71717A] dark:text-[#A1A1AA] bg-white dark:bg-[#141414] px-2.5 py-1 rounded border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs">
-                    <span className="text-[#E11D2E] font-semibold">0{displayIndex + 1}</span>
+                    <span className="text-[#E11D2E] font-semibold">{String(displayIndex + 1).padStart(2, '0')}</span>
                     <span>/</span>
-                    <span>0{totalProjects}</span>
+                    <span>{String(totalProjects).padStart(2, '0')}</span>
                   </div>
                 </div>
               </div>

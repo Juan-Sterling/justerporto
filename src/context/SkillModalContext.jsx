@@ -11,6 +11,36 @@ const SkillModalContext = createContext({
 });
 
 const KNOWN_EXTRA_SKILLS = {
+  'typescript': {
+    id: 'typescript',
+    name: 'TypeScript',
+    category: 'frontend',
+    role: 'Strongly typed JavaScript superset for scalable architecture, strict type contracts & codebase maintainability.',
+  },
+  'ts': {
+    id: 'typescript',
+    name: 'TypeScript',
+    category: 'frontend',
+    role: 'Strongly typed JavaScript superset for scalable architecture, strict type contracts & codebase maintainability.',
+  },
+  'gsap': {
+    id: 'gsap',
+    name: 'GSAP',
+    category: 'frontend',
+    role: 'High-performance JavaScript animation platform for complex timelines, ScrollTrigger & interactive UI motions.',
+  },
+  'greensock': {
+    id: 'gsap',
+    name: 'GSAP',
+    category: 'frontend',
+    role: 'High-performance JavaScript animation platform for complex timelines, ScrollTrigger & interactive UI motions.',
+  },
+  'lenis': {
+    id: 'lenis',
+    name: 'Lenis',
+    category: 'frontend',
+    role: 'Ultra-smooth, robust scrolling library engineered for seamless scroll orchestration and physics-based interactions.',
+  },
   'three.js': {
     id: 'threejs',
     name: 'Three.js',
