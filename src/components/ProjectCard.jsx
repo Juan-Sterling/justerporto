@@ -74,11 +74,7 @@ export default function ProjectCard({ project }) {
           ) : (
             /* Clean Minimal Placeholder when image is not yet provided */
             <div className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#18181A] dark:via-[#141416] dark:to-[#0D0D0E] border border-[#E4E4E7] dark:border-[#2A2A2A] p-4 flex flex-col items-center justify-center text-center select-none group/placeholder">
-              {/* Subtle micro-dot pattern in placeholder */}
-              <div
-                className="absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.06)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] pointer-events-none"
-                aria-hidden="true"
-              />
+
 
               {/* Center Graphic & Label */}
               <div className="relative z-10 flex flex-col items-center justify-center py-1">

@@ -77,10 +77,7 @@ export default function CertificateCard({ certificate, onPreview }) {
           ) : (
             /* Clean Minimal Developer Placeholder when image not yet uploaded */
             <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center select-none bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#18181A] dark:via-[#141416] dark:to-[#0D0D0E] relative">
-              <div
-                className="absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.06)_1px,transparent_1px)] dark:bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] pointer-events-none"
-                aria-hidden="true"
-              />
+
               <div className="relative z-10 flex flex-col items-center">
                 <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#202024] border border-[#E4E4E7] dark:border-[#333333] flex items-center justify-center text-[#71717A] dark:text-[#A1A1AA] mb-2 shadow-xs">
                   <FileCheck className="w-5 h-5 text-[#E11D2E]" />
