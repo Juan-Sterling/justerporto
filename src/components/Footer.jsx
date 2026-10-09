@@ -51,21 +51,20 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[#E4E4E7] dark:border-[#262c36] bg-white dark:bg-[#0f1117] py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <footer className="relative z-10 rounded-t-[1.75rem] sm:rounded-t-[2.5rem] border border-b-0 border-[#E4E4E7] dark:border-[#1F1F23] bg-[#FFFFFF] dark:bg-[#000000] shadow-[0_-8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-4xl mx-auto flex flex-col items-center justify-center text-center space-y-3">
         {/* Identity & Rotating Role */}
         <div className="flex items-center justify-center gap-2 flex-wrap">
-          <span className="font-['Space_Grotesk',sans-serif] text-sm font-bold text-[#09090B] dark:text-white">
+          <span className="font-display text-sm font-bold text-[#09090B] dark:text-white">
             Juan Sterling
           </span>
           <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
           <div className="inline-flex items-center overflow-hidden">
             <span
-              className={`font-mono text-xs transition-all duration-300 transform ${
-                isFading
-                  ? 'opacity-0 -translate-y-2'
-                  : 'opacity-100 translate-y-0 text-[#E11D2E]'
-              }`}
+              className={`font-mono text-xs transition-all duration-300 transform ${isFading
+                ? 'opacity-0 -translate-y-2'
+                : 'opacity-100 translate-y-0 text-[#E11D2E]'
+                }`}
             >
               {ROLES[roleIndex]}
             </span>
@@ -75,26 +74,35 @@ export default function Footer() {
         {/* Rotating Tagline */}
         <div className="min-h-[1.5rem] flex items-center justify-center overflow-hidden">
           <p
-            className={`text-xs text-[#71717A] dark:text-[#A1A1AA] transition-all duration-300 transform ${
-              isTaglineFading
-                ? 'opacity-0 -translate-y-2'
-                : 'opacity-100 translate-y-0'
-            }`}
+            className={`text-xs text-[#52525B] dark:text-[#A1A1AA] transition-all duration-300 transform ${isTaglineFading
+              ? 'opacity-0 -translate-y-2'
+              : 'opacity-100 translate-y-0'
+              }`}
           >
             {TAGLINES[taglineIndex]}
           </p>
         </div>
 
         {/* Copyright notice */}
-        <div className="pt-2 text-xs font-mono text-[#71717A] dark:text-[#A1A1AA] flex items-center justify-center gap-1.5 flex-wrap">
+        <div className="pt-2 text-xs font-mono text-[#52525B] dark:text-[#A1A1AA] flex items-center justify-center gap-1.5 flex-wrap">
           <span>&copy; {currentYear} Juan Sterling.</span>
           <span className="hidden sm:inline text-[#A1A1AA] dark:text-[#52525B]">•</span>
           <span>All rights reserved.</span>
         </div>
 
         {/* BABYMONSTER Inspiration Credit */}
-        <p className="text-[11px] font-mono text-[#71717A] dark:text-[#52525B]">
-          Design inspired by <span className="text-[#E11D2E] font-semibold">BABYMONSTER</span>
+        <p className="text-[11px] font-mono text-[#71717A]">
+          Design inspired by{' '}
+          <a
+            id="footer-babymonster-link"
+            href="https://www.google.com/search?q=BABYMONSTER"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="BABYMONSTER (Google Search)"
+            className="text-[#E11D2E] font-semibold underline-offset-4 decoration-[#E11D2E]/60 hover:underline hover:text-[#FF3B4D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E]/50 rounded-sm transition-colors duration-200 cursor-pointer"
+          >
+            BABYMONSTER
+          </a>
         </p>
       </div>
     </footer>

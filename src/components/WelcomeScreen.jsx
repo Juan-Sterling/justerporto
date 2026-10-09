@@ -36,9 +36,10 @@ import { Code2 } from 'lucide-react';
 import gsap from 'gsap';
 
 const GREETINGS = [
-  { text: 'HELLO', lang: 'EN' },
-  { text: '안녕하세요', lang: 'KR' },
   { text: 'こんにちは', lang: 'JP' },
+  { text: '안녕하세요', lang: 'KR' },
+  { text: 'HELLO', lang: 'EN' },
+
 ];
 
 const MEMBERS = ['RUKA', 'PHARITA', 'ASA', 'AHYEON', 'RAMI', 'RORA', 'CHIQUITA'];
@@ -496,7 +497,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         {/* Dynamic Multilingual Greeting Headline (EN -> KR -> JP) with Red Glow */}
         <div className={`min-h-[4.5rem] sm:min-h-[6rem] md:min-h-[7rem] flex items-center justify-center overflow-hidden ${options.isDrip ? 'drip-collapse' : ''}`}>
           <h1
-            className="welcome-greeting-text font-['Space_Grotesk',sans-serif] text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter text-[#09090B] dark:text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.3)] dark:drop-shadow-[0_0_35px_rgba(225,29,46,0.6)] select-none will-change-transform"
+            className="welcome-greeting-text font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter text-[#09090B] dark:text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.3)] dark:drop-shadow-[0_0_35px_rgba(225,29,46,0.6)] select-none will-change-transform"
           >
             {activeGreeting}
           </h1>
@@ -552,9 +553,8 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         </div>
 
         {/* Subtitle */}
-        <div className={`flex items-center gap-2 font-mono text-xs sm:text-sm text-[#52525B] dark:text-[#71717A] ${options.isDrip ? 'drip-collapse' : ''}`}>
-          <span className="text-[#E11D2E] font-semibold">//</span>
-          <span className="tracking-wide">Juan Sterling — Software Developer</span>
+        <div className={`flex items-center gap-2 font-mono text-xs sm:text-sm text-[#27272A] dark:text-[#E4E4E7] ${options.isDrip ? 'drip-collapse' : ''}`}>
+          <span className="tracking-wide font-medium">Juan Sterling — Software Developer</span>
         </div>
 
         {/* Laser Loading Bar (Batter Up Theme) */}
@@ -659,7 +659,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none select-none text-center opacity-0 will-change-transform"
             aria-hidden="true"
           >
-            <span className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-7xl md:text-8xl font-black italic tracking-widest text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.9)]">
+            <span className="font-display text-5xl sm:text-7xl md:text-8xl font-black italic tracking-widest text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.9)]">
               SHEESH!
             </span>
           </div>
@@ -704,7 +704,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none select-none text-center opacity-0"
             aria-hidden="true"
           >
-            <span className="font-['Space_Grotesk',sans-serif] text-5xl sm:text-7xl md:text-8xl font-black uppercase tracking-widest text-[#E11D2E] drop-shadow-[0_0_20px_#FFFFFF] drop-shadow-[0_0_40px_rgba(225,29,46,0.9)]">
+            <span className="font-display text-5xl sm:text-7xl md:text-8xl font-black uppercase tracking-widest text-[#E11D2E] drop-shadow-[0_0_20px_#FFFFFF] drop-shadow-[0_0_40px_rgba(225,29,46,0.9)]">
               BATTER UP!
             </span>
           </div>
@@ -734,7 +734,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none select-none text-center opacity-0"
             aria-hidden="true"
           >
-            <span className="font-['Space_Grotesk',sans-serif] text-6xl sm:text-8xl md:text-9xl font-black italic tracking-widest text-[#E11D2E] drop-shadow-[0_0_30px_#FF3B4D] drop-shadow-[0_0_60px_#E11D2E]">
+            <span className="font-display text-6xl sm:text-8xl md:text-9xl font-black italic tracking-widest text-[#E11D2E] drop-shadow-[0_0_30px_#FF3B4D] drop-shadow-[0_0_60px_#E11D2E]">
               DRIP!
             </span>
           </div>
@@ -789,7 +789,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none select-none text-center opacity-0"
             aria-hidden="true"
           >
-            <span className="font-['Space_Grotesk',sans-serif] text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-widest text-white drop-shadow-[0_0_20px_#E11D2E] drop-shadow-[0_0_40px_#E11D2E]">
+            <span className="font-display text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-widest text-white drop-shadow-[0_0_20px_#E11D2E] drop-shadow-[0_0_40px_#E11D2E]">
               7 MONSTERS
             </span>
           </div>

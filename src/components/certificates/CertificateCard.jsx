@@ -36,7 +36,7 @@ export default function CertificateCard({ certificate, onPreview }) {
         </div>
 
         {/* Certificate Title */}
-        <h4 className="font-['Space_Grotesk',sans-serif] text-base sm:text-lg font-bold text-[#09090B] dark:text-white tracking-tight mb-3 group-hover:text-[#E11D2E] transition-colors line-clamp-2">
+        <h4 className="font-display text-base sm:text-lg font-bold text-[#09090B] dark:text-white tracking-tight mb-3 group-hover:text-[#E11D2E] transition-colors line-clamp-2">
           {title}
         </h4>
 

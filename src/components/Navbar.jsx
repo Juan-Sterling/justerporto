@@ -154,7 +154,7 @@ export default function Navbar({ activeSection = '' }) {
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="font-['Space_Grotesk',sans-serif] group-hover:text-[#E11D2E] dark:group-hover:text-white transition-colors font-bold text-sm sm:text-base">
+              <span className="font-display group-hover:text-[#E11D2E] dark:group-hover:text-white transition-colors font-bold text-sm sm:text-base">
                 Juan Sterling
               </span>
             </div>

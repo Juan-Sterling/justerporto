@@ -385,7 +385,7 @@ export default function Experience() {
             <AnimatedSection>
               <div className="flex items-end justify-between gap-4 mb-6">
                 <div className="space-y-3">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif]">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#09090B] dark:text-white font-display">
                     Other Projects &amp;{' '}
                     <span className="text-[#E11D2E]">Collaborations</span>
                   </h3>

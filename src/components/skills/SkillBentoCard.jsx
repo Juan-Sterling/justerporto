@@ -64,7 +64,7 @@ export default function SkillBentoCard({
 
       {/* Body: Title and Role */}
       <div className="relative z-10">
-        <h4 className="font-['Space_Grotesk',sans-serif] font-bold text-sm sm:text-[15px] text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors duration-200 leading-tight">
+        <h4 className="font-display font-bold text-sm sm:text-[15px] text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors duration-200 leading-tight">
           {skill.name}
         </h4>
         <p className="text-[11px] sm:text-xs text-[#71717A] dark:text-[#A1A1AA] line-clamp-2 leading-relaxed mt-1 group-hover:text-[#3F3F46] dark:group-hover:text-[#D4D4D8] transition-colors">

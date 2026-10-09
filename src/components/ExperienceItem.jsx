@@ -97,7 +97,7 @@ export default function ExperienceItem({
             )}
 
             <div className="min-w-0">
-              <h3 className="font-['Space_Grotesk',sans-serif] text-lg font-bold text-[#09090B] dark:text-white tracking-tight leading-snug">
+              <h3 className="font-display text-lg font-bold text-[#09090B] dark:text-white tracking-tight leading-snug">
                 {position}
               </h3>
               <div className="flex items-center gap-2 text-xs sm:text-sm text-[#71717A] dark:text-[#A1A1AA] mt-1 flex-wrap">

@@ -589,7 +589,7 @@ export default function Hero({ welcomeActive = false }) {
                 <div className="flex-1 space-y-1.5 sm:space-y-2.5 min-w-0">
                   <h1
                     ref={headlineRef}
-                    className="font-['Space_Grotesk',sans-serif] text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.08] tracking-tighter will-change-transform flex flex-col items-start gap-0.5 sm:gap-1"
+                    className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.08] tracking-tighter will-change-transform flex flex-col items-start gap-0.5 sm:gap-1"
                   >
                     <span className="sr-only">{personal.name}</span>
                     <span aria-hidden="true" className="block overflow-hidden py-0.5 -my-0.5">

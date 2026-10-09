@@ -97,7 +97,7 @@ export default function CertificatesSection() {
             transition: 'opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
-          <h3 className="font-['Space_Grotesk',sans-serif] text-2xl sm:text-3xl font-bold text-[#09090B] dark:text-white tracking-tight flex items-center gap-2 flex-wrap">
+          <h3 className="font-display text-2xl sm:text-3xl font-bold text-[#09090B] dark:text-white tracking-tight flex items-center gap-2 flex-wrap">
             <span>Certifications &amp;</span>
             <span className="text-[#E11D2E]">Honors</span>
           </h3>
@@ -342,7 +342,7 @@ export default function CertificatesSection() {
 
               {/* Title & Issuer */}
               <div className="mb-4">
-                <h4 className="font-['Space_Grotesk',sans-serif] text-xl sm:text-2xl font-bold text-[#09090B] dark:text-white tracking-tight leading-snug">
+                <h4 className="font-display text-xl sm:text-2xl font-bold text-[#09090B] dark:text-white tracking-tight leading-snug">
                   {activeCert.title}
                 </h4>
                 <div className="flex items-center gap-2 mt-1.5 text-xs sm:text-sm font-medium text-[#52525B] dark:text-[#A1A1AA]">

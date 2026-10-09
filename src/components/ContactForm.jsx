@@ -84,7 +84,7 @@ export default function ContactForm() {
   return (
     <div className="rounded-lg bg-[#141414] border border-[#2A2A2A] p-6 sm:p-8">
       <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#2A2A2A]">
-        <h3 className="font-['Space_Grotesk',sans-serif] text-lg font-bold text-white">
+        <h3 className="font-display text-lg font-bold text-white">
           Send a Transmission
         </h3>
         <span className="font-mono text-xs text-[#71717A] bg-[#090909] px-2 py-0.5 rounded border border-[#2A2A2A]">
@@ -98,7 +98,7 @@ export default function ContactForm() {
             <CheckCircle className="w-6 h-6" />
           </div>
           <div className="space-y-1">
-            <p className="font-['Space_Grotesk',sans-serif] font-bold text-lg text-white">
+            <p className="font-display font-bold text-lg text-white">
               Transmission Received
             </p>
             <p className="text-xs sm:text-sm text-[#A1A1AA] max-w-sm mx-auto">

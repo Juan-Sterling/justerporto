@@ -62,7 +62,7 @@ function BentoCluster({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-['Space_Grotesk',sans-serif] text-base font-bold text-[#09090B] dark:text-white leading-tight">
+              <h3 className="font-display text-base font-bold text-[#09090B] dark:text-white leading-tight">
                 {cat.label}
               </h3>
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#F4F4F5] dark:bg-[#1E1E1E] text-[#71717A] dark:text-[#A1A1AA] border border-[#E4E4E7] dark:border-[#2C2C2C]">
@@ -363,7 +363,7 @@ export default function SkillBentoGrid() {
             /* Empty Search State */
             <div className="py-12 px-4 text-center rounded-2xl bg-[#FAFAFA] dark:bg-[#101010] border border-dashed border-[#E4E4E7] dark:border-[#2A2A2A]">
               <Search className="w-8 h-8 text-[#A1A1AA] mx-auto mb-2 opacity-50" />
-              <h4 className="font-['Space_Grotesk',sans-serif] font-bold text-sm text-[#09090B] dark:text-white">
+              <h4 className="font-display font-bold text-sm text-[#09090B] dark:text-white">
                 No matching technologies found
               </h4>
               <p className="text-xs text-[#71717A] dark:text-[#A1A1AA] mt-1 max-w-sm mx-auto">

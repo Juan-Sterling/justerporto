@@ -62,7 +62,7 @@ export default function EducationItem({ edu }) {
           )}
 
           <div className="min-w-0">
-            <h3 className="font-['Space_Grotesk',sans-serif] text-xl font-bold text-[#09090B] dark:text-white tracking-tight leading-snug">
+            <h3 className="font-display text-xl font-bold text-[#09090B] dark:text-white tracking-tight leading-snug">
               {degree}
             </h3>
             <div className="flex items-center gap-2 text-sm font-medium text-[#52525B] dark:text-[#D4D4D8] mt-1 flex-wrap">

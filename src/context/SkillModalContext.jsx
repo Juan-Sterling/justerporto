@@ -254,7 +254,7 @@ export function SkillModalProvider({ children }) {
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#E11D2E] font-semibold">
                       {activeSkill.categoryLabel || activeSkill.category}
                     </span>
-                    <h3 className="font-['Space_Grotesk',sans-serif] text-xl font-bold text-[#09090B] dark:text-white leading-tight">
+                    <h3 className="font-display text-xl font-bold text-[#09090B] dark:text-white leading-tight">
                       {activeSkill.name}
                     </h3>
                   </div>

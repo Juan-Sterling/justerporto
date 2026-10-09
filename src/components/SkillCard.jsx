@@ -31,7 +31,7 @@ export default function SkillCard({ skill }) {
       </div>
 
       {/* Skill Name */}
-      <h3 className="font-['Space_Grotesk',sans-serif] text-xs sm:text-sm font-semibold text-[#09090B] dark:text-white tracking-tight group-hover:text-[#E11D2E] dark:group-hover:text-white line-clamp-1">
+      <h3 className="font-display text-xs sm:text-sm font-semibold text-[#09090B] dark:text-white tracking-tight group-hover:text-[#E11D2E] dark:group-hover:text-white line-clamp-1">
         {name}
       </h3>
     </div>

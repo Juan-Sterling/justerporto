@@ -28,7 +28,7 @@ export default function SectionTitle({
       <div>
         <h2
           aria-label={title}
-          className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#09090B] dark:text-white font-['Space_Grotesk',sans-serif] flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#09090B] dark:text-white font-display flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1"
         >
           <span className="sr-only">{title}</span>
           

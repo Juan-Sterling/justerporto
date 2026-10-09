@@ -144,7 +144,7 @@ export default function Contact() {
                   <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
                     LinkedIn
                   </span>
-                  <span className="font-['Space_Grotesk',sans-serif] text-xs sm:text-sm font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
+                  <span className="font-display text-xs sm:text-sm font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
                     Juan Sterling Martua
                   </span>
                 </div>

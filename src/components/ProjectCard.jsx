@@ -136,7 +136,7 @@ export default function ProjectCard({ project }) {
             </div>
 
             {/* Title & Description */}
-            <h4 className="font-['Space_Grotesk',sans-serif] text-base sm:text-lg font-bold text-[#E11D2E] tracking-tight mb-1.5">
+            <h4 className="font-display text-base sm:text-lg font-bold text-[#E11D2E] tracking-tight mb-1.5">
               {title}
             </h4>
             <div className="mb-3">

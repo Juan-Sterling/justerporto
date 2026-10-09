@@ -42,7 +42,7 @@ export default function Education() {
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-['Space_Grotesk',sans-serif] text-sm sm:text-base font-bold text-[#09090B] dark:text-white">
+                  <h3 className="font-display text-sm sm:text-base font-bold text-[#09090B] dark:text-white">
                     College Projects on GitHub
                   </h3>
                   <span className="font-mono text-[10px] text-[#E11D2E] bg-[#E11D2E]/10 px-2 py-0.5 rounded border border-[#E11D2E]/30">
