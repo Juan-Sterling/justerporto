@@ -19,7 +19,7 @@ export const portfolioData = {
       location: "Bandung, Indonesia",
       period: "2020 — 2024",
       gpa: "3.82 / 4.00",
-      logo: "", // Path or URL to campus logo (e.g. "/images/education/maranatha.png")
+      logo: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791910743/7d51e1d6-4dd7-4e33-a214-39e7c85e501e.png", // Path or URL to campus logo (e.g. "/images/education/maranatha.png")
       websiteUrl: "https://www.maranatha.edu/", // Campus website link
       achievements: [
         "6x Dean's List recipient for outstanding academic performance",
@@ -80,6 +80,7 @@ export const portfolioData = {
     "Flutter",
     "Github",
     "Cloudinary",
+    "Cloudflare R2",
     "Firebase",
     "AWS",
   ],
@@ -91,7 +92,7 @@ export const portfolioData = {
       organization: "Foxion Technologies",
       location: "North Jakarta, Indonesia",
       type: "Full-time",
-      logo: "", // Path or URL to company logo (e.g. "/images/experience/foxion.png")
+      logo: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791910302/572119152_17842297065610849_8356523802397087330_n.jpg", // Path or URL to company logo (e.g. "/images/experience/foxion.png")
       websiteUrl: "", // Company website link
       responsibilities: [
         "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Survey Division of PT Biro Klasifikasi Indonesia (BUMN) in managing vessel classification admission and maintenance processes.",
@@ -104,7 +105,7 @@ export const portfolioData = {
       organization: "Stafbook (YCW22)",
       location: "North Jakarta, Indonesia",
       type: "Contract",
-      logo: "", // Path or URL to company logo (e.g. "/images/experience/stafbook.png")
+      logo: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791910407/337771994_596027299089048_1317845282392533444_n.jpg", // Path or URL to company logo (e.g. "/images/experience/stafbook.png")
       websiteUrl: "", // Company website link
       responsibilities: [
         "Collaborated with the development team to build and maintain NOGS (New One Gate System), a system designed to support the Statutory Division of PT Biro Klasifikasi Indonesia (BUMN) in managing statutory certificates.",
@@ -118,7 +119,7 @@ export const portfolioData = {
       organization: "i2c Studio",
       location: "Bandung, Indonesia",
       type: "Internship",
-      logo: "", // Path or URL to company logo (e.g. "/images/experience/i2c.png")
+      logo: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791910463/18b79f47-b52c-4ea2-a996-b3f1624ebfd0.png", // Path or URL to company logo (e.g. "/images/experience/i2c.png")
       websiteUrl: "", // Company website link
       responsibilities: [
         "Being an intern and part-time software programmer who assists i2c Studio in creating a project for LPPM Maranatha called SIPPM.",
@@ -137,15 +138,15 @@ export const portfolioData = {
       description: "Developed a web-based product catalog for LOUIFOOTBALL. The website is designed to showcase available products and editions, providing visitors with an easy way to browse and explore LOUIFOOTBALL's merchandise collection.",
       technologies: ["Next.js", "React.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary", "REST API"],
       liveUrl: "https://louifootball.vercel.app/",
-      image: "",
+      image: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909210/fc6e70e8-d9c5-42d8-93a8-805ee800f4b0.png",
     },
     {
-      title: "LOUI's Portofolio",
+      title: "LOUI Portfolio",
       period: "2026",
       description: "Developed a web-based portfolio website for LOUI. The website is designed to showcase the project from LOUI.",
-      technologies: ["Next.js", "TypeScript", "React.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary", "REST API", "GSAP", "Lenis"],
+      technologies: ["Next.js", "TypeScript", "React.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary", "Cloudflare R2", "REST API", "GSAP"],
       liveUrl: "https://louiportfolio.vercel.app/",
-      image: "",
+      image: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909609/bab4c30b-d53e-4ec8-a452-f0da70a478cd.png",
     },
     {
       title: "FPS Aim Training",
@@ -153,7 +154,7 @@ export const portfolioData = {
       description: "As a fan of FPS games such as Valorant and Counter-Strike, I created a simple web-based aim trainer to practice and improve my aiming skills in FPS games.",
       technologies: ["HTML", "CSS", "JavaScript", "Netlify"],
       liveUrl: "https://aimtrainbyjuster.netlify.app/",
-      image: "",
+      image: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909681/6c2e6015-bccf-4abd-ad49-1597361fbaa0.png",
     },
     {
       title: "GAME PENALTY FOOTBALL",
@@ -179,14 +180,14 @@ export const portfolioData = {
       liveUrl: "",
       image: "",
     },
-    {
-      title: "Berita Acara IT Maranatha",
-      period: "2022-2023",
-      description: "Developed a web-based teaching activity reporting system for Maranatha University as a final course project, in collaboration with a teammate. The system enables lecturers to report teaching sessions by recording meeting dates and times, student attendance, session notes, and supporting documentation.",
-      technologies: ["PHP", "Laravel", "PostgreSQL", "Bootstrap"],
-      liveUrl: "https://github.com/MartinWidarmadi/BeritaAcara",
-      image: "",
-    },
+    // {
+    //   title: "Berita Acara IT Maranatha",
+    //   period: "2022-2023",
+    //   description: "Developed a web-based teaching activity reporting system for Maranatha University as a final course project, in collaboration with a teammate. The system enables lecturers to report teaching sessions by recording meeting dates and times, student attendance, session notes, and supporting documentation.",
+    //   technologies: ["PHP", "Laravel", "PostgreSQL", "Bootstrap"],
+    //   liveUrl: "https://github.com/MartinWidarmadi/BeritaAcara",
+    //   image: "",
+    // },
   ],
 
   certificates: [

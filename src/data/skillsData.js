@@ -279,4 +279,10 @@ export const SKILLS_DATA = [
     category: 'tools',
     role: 'End-to-end cloud image & video optimization, asset transformation & fast CDN delivery.',
   },
+  {
+    id: 'cloudflare-r2',
+    name: 'Cloudflare R2',
+    category: 'tools',
+    role: 'S3-compatible distributed object storage with zero egress fees, used for high-performance media delivery and asset caching.',
+  },
 ];

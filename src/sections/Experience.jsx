@@ -4,7 +4,7 @@ import ExperienceItem from '../components/ExperienceItem';
 import ProjectCard from '../components/ProjectCard';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
-import { ChevronDown, ChevronLeft, ChevronRight, Mouse } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -54,31 +54,19 @@ export default function Experience() {
 
   const totalProjects = personalProjects.length;
 
-  // Carousel Peek logic with 2 cloned boundary slides on each end for seamless infinite peek looping
+  // Single-card infinite carousel logic with cloned boundary slides
   const extendedProjects =
-    totalProjects > 2
+    totalProjects > 1
       ? [
-          personalProjects[totalProjects - 2],
           personalProjects[totalProjects - 1],
           ...personalProjects,
           personalProjects[0],
-          personalProjects[1],
         ]
       : personalProjects;
 
-  const [currentIndex, setCurrentIndex] = useState(totalProjects > 2 ? 2 : 0);
+  const [currentIndex, setCurrentIndex] = useState(totalProjects > 1 ? 1 : 0);
   const [withTransition, setWithTransition] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [touchStartX, setTouchStartX] = useState(null);
-  const [touchEndX, setTouchEndX] = useState(null);
-
-  // Mouse Drag state
-  const [isMouseDown, setIsMouseDown] = useState(false);
-  const [mouseStartX, setMouseStartX] = useState(null);
-  const [hasDraggedMouse, setHasDraggedMouse] = useState(false);
-
-  // Ref to the carousel peek container to attach passive:false wheel listener
-  const carouselRef = useRef(null);
   const isAnimatingRef = useRef(false);
 
   useEffect(() => {
@@ -99,8 +87,8 @@ export default function Experience() {
   }, [withTransition]);
 
   const displayIndex =
-    totalProjects > 2
-      ? (currentIndex - 2 + totalProjects) % totalProjects
+    totalProjects > 1
+      ? (currentIndex - 1 + totalProjects) % totalProjects
       : 0;
 
   const nextProject = useCallback(() => {
@@ -117,163 +105,89 @@ export default function Experience() {
     setCurrentIndex((prev) => prev - 1);
   }, [totalProjects]);
 
-  const nextProjectRef = useRef(nextProject);
-  const prevProjectRef = useRef(prevProject);
-
-  useEffect(() => {
-    nextProjectRef.current = nextProject;
-    prevProjectRef.current = prevProject;
-  }, [nextProject, prevProject]);
-
   const goToProject = (dotIndex) => {
     if (isAnimating || totalProjects <= 1) return;
     setIsAnimating(true);
     setWithTransition(true);
-    setCurrentIndex(dotIndex + 2);
+    setCurrentIndex(dotIndex + 1);
   };
 
   // When transform transition completes, instantly reset to real index if on a cloned boundary
   const handleTransitionEnd = (e) => {
-    // Crucial: Only respond to transform transition on the track container itself
     if (e.target !== e.currentTarget || e.propertyName !== 'transform') return;
 
-    if (totalProjects <= 2) {
+    if (totalProjects <= 1) {
       setIsAnimating(false);
       return;
     }
 
-    if (currentIndex >= totalProjects + 2) {
+    if (currentIndex >= totalProjects + 1) {
       // Reached cloned boundary at the end: silently jump to real first slide
       setWithTransition(false);
-      setCurrentIndex(currentIndex - totalProjects);
-    } else if (currentIndex < 2) {
+      setCurrentIndex(1);
+    } else if (currentIndex <= 0) {
       // Reached cloned boundary at the start: silently jump to real last slide
       setWithTransition(false);
-      setCurrentIndex(currentIndex + totalProjects);
+      setCurrentIndex(totalProjects);
     } else {
       setIsAnimating(false);
     }
   };
 
-  // Mouse wheel scroll navigation (works with standard vertical mouse scroll & trackpad horizontal swipe)
-  useEffect(() => {
-    const container = carouselRef.current;
-    if (!container) return;
+  // Mobile Touch Swipe handlers
+  const touchStartXRef = useRef(null);
+  const touchStartYRef = useRef(null);
+  const touchEndXRef = useRef(null);
+  const touchEndYRef = useRef(null);
 
-    let accumulatedDelta = 0;
-    let resetTimer = null;
-    let lastWheelTime = 0;
-
-    const handleWheel = (e) => {
-      // Determine dominant direction
-      const isHorizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
-      const primaryDelta = isHorizontal ? e.deltaX : e.deltaY;
-
-      // Filter out micro-jitter from sensitive touchpads
-      if (Math.abs(primaryDelta) < 3) return;
-
-      // Prevent window scroll while mouse wheel is scrolling over carousel cards
-      e.preventDefault();
-
-      const now = Date.now();
-      // If user paused scrolling for >200ms, start fresh
-      if (now - lastWheelTime > 200) {
-        accumulatedDelta = 0;
-      }
-      lastWheelTime = now;
-
-      // Ignore incoming wheel ticks while a slide animation is active to prevent runaway inertia
-      if (isAnimatingRef.current) {
-        accumulatedDelta = 0;
-        return;
-      }
-
-      accumulatedDelta += primaryDelta;
-
-      // Threshold: 30px is achieved on a single notch on standard mice (~100px) or deliberate trackpad swipe
-      const WHEEL_THRESHOLD = 30;
-
-      if (Math.abs(accumulatedDelta) >= WHEEL_THRESHOLD) {
-        if (accumulatedDelta > 0) {
-          nextProjectRef.current();
-        } else {
-          prevProjectRef.current();
-        }
-        accumulatedDelta = 0;
-      }
-
-      clearTimeout(resetTimer);
-      resetTimer = setTimeout(() => {
-        accumulatedDelta = 0;
-      }, 150);
-    };
-
-    container.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-      clearTimeout(resetTimer);
-    };
-  }, []);
-
-  // Touch handlers (Mobile swipe)
   const handleTouchStart = (e) => {
-    if (isAnimating) return;
-    setTouchEndX(null);
-    setTouchStartX(e.targetTouches[0].clientX);
+    if (isAnimatingRef.current || totalProjects <= 1) return;
+    const touch = e.touches[0];
+    touchStartXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+    touchEndXRef.current = touch.clientX;
+    touchEndYRef.current = touch.clientY;
   };
 
   const handleTouchMove = (e) => {
-    setTouchEndX(e.targetTouches[0].clientX);
+    if (touchStartXRef.current === null) return;
+    const touch = e.touches[0];
+    touchEndXRef.current = touch.clientX;
+    touchEndYRef.current = touch.clientY;
   };
 
   const handleTouchEnd = () => {
-    if (!touchStartX || !touchEndX || isAnimating) return;
-    const distance = touchStartX - touchEndX;
+    if (
+      touchStartXRef.current === null ||
+      touchEndXRef.current === null ||
+      touchStartYRef.current === null ||
+      touchEndYRef.current === null ||
+      isAnimatingRef.current
+    ) {
+      touchStartXRef.current = null;
+      touchStartYRef.current = null;
+      touchEndXRef.current = null;
+      touchEndYRef.current = null;
+      return;
+    }
+
+    const diffX = touchStartXRef.current - touchEndXRef.current;
+    const diffY = touchStartYRef.current - touchEndYRef.current;
     const minSwipeDistance = 45;
-    if (distance > minSwipeDistance) {
-      nextProject();
-    } else if (distance < -minSwipeDistance) {
-      prevProject();
-    }
-  };
 
-  // Mouse Drag handlers (Desktop click-and-drag)
-  const handleMouseDown = (e) => {
-    // Only respond to main left click
-    if (e.button !== 0 || isAnimating) return;
-    setIsMouseDown(true);
-    setMouseStartX(e.clientX);
-    setHasDraggedMouse(false);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isMouseDown || mouseStartX === null) return;
-    if (Math.abs(e.clientX - mouseStartX) > 8) {
-      setHasDraggedMouse(true);
+    // Trigger swipe only when horizontal gesture is dominant over vertical scroll
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > minSwipeDistance) {
+      if (diffX > 0) {
+        nextProject();
+      } else {
+        prevProject();
+      }
     }
-  };
 
-  const handleMouseUp = (e) => {
-    if (!isMouseDown || mouseStartX === null) return;
-    const distance = mouseStartX - e.clientX;
-    const minSwipeDistance = 45;
-    if (distance > minSwipeDistance) {
-      nextProject();
-    } else if (distance < -minSwipeDistance) {
-      prevProject();
-    }
-    setIsMouseDown(false);
-    setMouseStartX(null);
-    setTimeout(() => setHasDraggedMouse(false), 60);
-  };
-
-  const handleMouseLeave = () => {
-    if (isMouseDown) {
-      setIsMouseDown(false);
-      setMouseStartX(null);
-      setTimeout(() => setHasDraggedMouse(false), 60);
-    }
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+    touchEndXRef.current = null;
+    touchEndYRef.current = null;
   };
 
   const initialExperience = experience.slice(0, INITIAL_EXPERIENCE_COUNT);
@@ -379,7 +293,7 @@ export default function Experience() {
           </div>
         )}
 
-        {/* Sub-section: Other Projects & Collaborations (Carousel Peek) */}
+        {/* Sub-section: Other Projects & Collaborations */}
         {personalProjects && personalProjects.length > 0 && (
           <div className="mt-16 pt-12 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/80">
             <AnimatedSection>
@@ -394,163 +308,95 @@ export default function Experience() {
                   </p>
                 </div>
 
-                {/* Counter & Hint */}
-                <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-auto">
-                  <div className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[11px] text-[#71717A] dark:text-[#A1A1AA] bg-white dark:bg-[#141414] px-2.5 py-1 rounded border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs select-none">
-                    <Mouse className="w-3.5 h-3.5 text-[#E11D2E]" />
-                    <span>Scroll / Drag to browse</span>
-                  </div>
-                  <div className="flex items-center gap-2 font-mono text-xs text-[#71717A] dark:text-[#A1A1AA] bg-white dark:bg-[#141414] px-2.5 py-1 rounded border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs">
-                    <span className="text-[#E11D2E] font-semibold">{String(displayIndex + 1).padStart(2, '0')}</span>
-                    <span>/</span>
-                    <span>{String(totalProjects).padStart(2, '0')}</span>
-                  </div>
+                {/* Counter */}
+                <div className="flex items-center gap-2 font-mono text-xs text-[#71717A] dark:text-[#A1A1AA] bg-white dark:bg-[#141414] px-2.5 py-1 rounded border border-[#E4E4E7] dark:border-[#2A2A2A] shadow-xs shrink-0 self-end sm:self-auto">
+                  <span className="text-[#E11D2E] font-semibold">{String(displayIndex + 1).padStart(2, '0')}</span>
+                  <span>/</span>
+                  <span>{String(totalProjects).padStart(2, '0')}</span>
                 </div>
               </div>
             </AnimatedSection>
 
-            {/* Style block for responsive carousel peek variables */}
-            <style>{`
-              .carousel-peek-container {
-                --card-width: 76%;
-                --peek-offset: 12%;
-              }
-              @media (min-width: 640px) {
-                .carousel-peek-container {
-                  --card-width: 66%;
-                  --peek-offset: 17%;
-                }
-              }
-              @media (min-width: 1024px) {
-                .carousel-peek-container {
-                  --card-width: 62%;
-                  --peek-offset: 19%;
-                }
-              }
-            `}</style>
-
-            {/* Carousel Peek Container with Side Navigation Arrows */}
-            <div
-              ref={carouselRef}
-              className="relative group/carousel carousel-peek-container"
-            >
-              {/* Left Edge Smooth Feathering Vignette */}
-              <div
-                className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#FAFAFA]/90 dark:from-[#0f1117]/90 via-[#FAFAFA]/40 dark:via-[#0f1117]/40 to-transparent z-20 rounded-l-xl transition-opacity duration-300"
-                aria-hidden="true"
-              />
-
-              {/* Right Edge Smooth Feathering Vignette */}
-              <div
-                className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#FAFAFA]/90 dark:from-[#0f1117]/90 via-[#FAFAFA]/40 dark:via-[#0f1117]/40 to-transparent z-20 rounded-r-xl transition-opacity duration-300"
-                aria-hidden="true"
-              />
-
+            {/* Carousel Container with Side Navigation Arrows */}
+            <div className="relative group/carousel">
               {/* Left Arrow Button */}
-              <button
-                type="button"
-                onClick={prevProject}
-                className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-white/90 dark:bg-[#161b22]/90 backdrop-blur-md hover:bg-white dark:hover:bg-[#1c212a] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-white/60 dark:border-white/10 hover:border-[#E11D2E] shadow-sm hover:shadow-md transition-all cursor-pointer"
-                aria-label="Previous project"
-              >
-                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
-              </button>
+              {totalProjects > 1 && (
+                <button
+                  type="button"
+                  onClick={prevProject}
+                  className="absolute -left-2 sm:-left-4 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-white dark:bg-[#161b22] hover:bg-[#FAFAFA] dark:hover:bg-[#1c212a] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] dark:hover:border-[#E11D2E] shadow-sm hover:shadow-md transition-all cursor-pointer"
+                  aria-label="Previous project"
+                >
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
+                </button>
+              )}
 
               {/* Right Arrow Button */}
-              <button
-                type="button"
-                onClick={nextProject}
-                className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-2.5 rounded-full bg-white/90 dark:bg-[#161b22]/90 backdrop-blur-md hover:bg-white dark:hover:bg-[#1c212a] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-white/60 dark:border-white/10 hover:border-[#E11D2E] shadow-sm hover:shadow-md transition-all cursor-pointer"
-                aria-label="Next project"
-              >
-                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
-              </button>
+              {totalProjects > 1 && (
+                <button
+                  type="button"
+                  onClick={nextProject}
+                  className="absolute -right-2 sm:-right-4 top-1/2 -translate-y-1/2 z-20 p-2 sm:p-2.5 rounded-full bg-white dark:bg-[#161b22] hover:bg-[#FAFAFA] dark:hover:bg-[#1c212a] active:scale-90 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] dark:hover:border-[#E11D2E] shadow-sm hover:shadow-md transition-all cursor-pointer"
+                  aria-label="Next project"
+                >
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#E11D2E]" />
+                </button>
+              )}
 
-              {/* Carousel Track Container (Touch & Mouse Drag Swipeable, Wheel Scrollable) */}
+              {/* Carousel Track Container (Touch Swipeable on Mobile) */}
               <div
-                className={`relative overflow-hidden w-full rounded-xl py-2 ${
-                  isMouseDown ? 'cursor-grabbing select-none' : 'cursor-grab'
-                }`}
-                style={{
-                  maskImage:
-                    'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.25) 2%, rgba(0,0,0,0.85) 6%, black 12%, black 88%, rgba(0,0,0,0.85) 94%, rgba(0,0,0,0.25) 98%, transparent 100%)',
-                  WebkitMaskImage:
-                    'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.25) 2%, rgba(0,0,0,0.85) 6%, black 12%, black 88%, rgba(0,0,0,0.85) 94%, rgba(0,0,0,0.25) 98%, transparent 100%)',
-                }}
+                className="relative overflow-hidden w-full rounded-xl py-1"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseLeave}
               >
                 <div
                   className={`flex ${withTransition ? 'transition-transform duration-400 ease-out' : ''}`}
-                  style={{ transform: `translateX(calc(var(--peek-offset) - (${currentIndex} * var(--card-width))))` }}
+                  style={{ transform: `translateX(-${currentIndex * 100}%)` }}
                   onTransitionEnd={handleTransitionEnd}
                 >
-                  {extendedProjects.map((project, idx) => {
-                    const isActive = idx === currentIndex;
-                    const isPrev = idx === currentIndex - 1;
-                    const isNext = idx === currentIndex + 1;
-                    const isAdjacent = isPrev || isNext;
-
-                    return (
-                      <div
-                        key={`${project.title}-${idx}`}
-                        style={{ width: 'var(--card-width)' }}
-                        className={`shrink-0 px-2 sm:px-3 ${
-                          withTransition ? 'transition-all duration-400 ease-out' : ''
-                        } ${
-                          isActive
-                            ? 'opacity-100 scale-100 z-10 shadow-lg dark:shadow-black/70'
-                            : isAdjacent
-                            ? 'opacity-60 sm:opacity-65 scale-[0.91] sm:scale-[0.93] hover:opacity-85 hover:scale-[0.93] sm:hover:scale-[0.95] cursor-pointer select-none'
-                            : 'opacity-20 scale-[0.86] select-none pointer-events-none'
-                        }`}
-                        onClick={() => {
-                          if (hasDraggedMouse) return;
-                          if (isPrev) prevProject();
-                          else if (isNext) nextProject();
-                        }}
-                      >
-                        <ProjectCard project={project} />
-                      </div>
-                    );
-                  })}
+                  {extendedProjects.map((project, idx) => (
+                    <div
+                      key={`${project.title}-${idx}`}
+                      className="w-full shrink-0 px-1"
+                    >
+                      <ProjectCard project={project} />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Carousel Progress Bar (Minimalist & Dynamic) */}
-            <div className="flex items-center justify-center mt-6">
-              <div
-                className="relative w-36 sm:w-48 h-1 sm:h-1.5 rounded-full bg-[#E4E4E7] dark:bg-[#2A2A2A] overflow-hidden cursor-pointer group/progress transition-all"
-                onClick={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const clickX = e.clientX - rect.left;
-                  const targetIdx = Math.min(
-                    totalProjects - 1,
-                    Math.max(0, Math.floor((clickX / rect.width) * totalProjects))
-                  );
-                  goToProject(targetIdx);
-                }}
-                role="progressbar"
-                aria-valuenow={displayIndex + 1}
-                aria-valuemin={1}
-                aria-valuemax={totalProjects}
-                aria-label={`Project ${displayIndex + 1} of ${totalProjects}`}
-              >
+            {/* Carousel Progress Bar */}
+            {totalProjects > 1 && (
+              <div className="flex items-center justify-center mt-6">
                 <div
-                  className="h-full rounded-full bg-[#E11D2E] transition-all duration-300 ease-out shadow-[0_0_8px_rgba(225,29,46,0.5)]"
-                  style={{
-                    width: `${100 / totalProjects}%`,
-                    transform: `translateX(${displayIndex * 100}%)`,
+                  className="relative w-36 sm:w-48 h-1 sm:h-1.5 rounded-full bg-[#E4E4E7] dark:bg-[#2A2A2A] overflow-hidden cursor-pointer group/progress transition-all"
+                  onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const targetIdx = Math.min(
+                      totalProjects - 1,
+                      Math.max(0, Math.floor((clickX / rect.width) * totalProjects))
+                    );
+                    goToProject(targetIdx);
                   }}
-                />
+                  role="progressbar"
+                  aria-valuenow={displayIndex + 1}
+                  aria-valuemin={1}
+                  aria-valuemax={totalProjects}
+                  aria-label={`Project ${displayIndex + 1} of ${totalProjects}`}
+                >
+                  <div
+                    className="h-full rounded-full bg-[#E11D2E] transition-all duration-300 ease-out shadow-[0_0_8px_rgba(225,29,46,0.5)]"
+                    style={{
+                      width: `${100 / totalProjects}%`,
+                      transform: `translateX(${displayIndex * 100}%)`,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>

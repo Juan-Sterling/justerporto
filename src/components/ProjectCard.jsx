@@ -33,6 +33,7 @@ export default function ProjectCard({ project }) {
     githubUrl || (liveUrl && liveUrl.includes('github.com') ? liveUrl : '');
   const effectiveLiveUrl =
     liveUrl && !liveUrl.includes('github.com') ? liveUrl : '';
+  const projectLink = effectiveLiveUrl || effectiveGithubUrl || liveUrl;
 
   return (
     <div className="group relative rounded-xl bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] p-4 sm:p-5 transition-all duration-300 hover:border-[#D4D4D8] dark:hover:border-[#383838] hover:bg-[#FAFAFA] dark:hover:bg-[#181818] shadow-xs hover:shadow-md dark:hover:shadow-black/50">
@@ -40,38 +41,57 @@ export default function ProjectCard({ project }) {
         {/* Left Column: Project Preview Image Slot / Fallback */}
         <div className="w-full md:w-5/12 lg:w-[44%] shrink-0 flex flex-col">
           {image && image.trim() !== '' ? (
-            <div className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview">
-              <img
-                src={optimizeCloudinaryUrl(image)}
-                alt={`${title} preview`}
-                className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const fallback = e.currentTarget.parentElement?.querySelector('.img-fallback');
-                  if (fallback) fallback.classList.remove('hidden');
-                }}
-              />
-              {/* Fallback container if image URL fails */}
-              <div className="img-fallback hidden absolute inset-0 flex flex-col items-center justify-center p-3 bg-[#F4F4F5] dark:bg-[#181818]">
-                <ImageIcon className="w-7 h-7 text-[#A1A1AA] mb-1.5" />
-                <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA]">
-                  Image unavailable
-                </span>
+            projectLink && projectLink.trim() !== '' ? (
+              <a
+                href={projectLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Visit ${title}`}
+                className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview block cursor-pointer"
+              >
+                <img
+                  src={optimizeCloudinaryUrl(image)}
+                  alt={`${title} preview`}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const fallback = e.currentTarget.parentElement?.querySelector('.img-fallback');
+                    if (fallback) fallback.classList.remove('hidden');
+                  }}
+                />
+                {/* Fallback container if image URL fails */}
+                <div className="img-fallback hidden absolute inset-0 flex flex-col items-center justify-center p-3 bg-[#F4F4F5] dark:bg-[#181818]">
+                  <ImageIcon className="w-7 h-7 text-[#A1A1AA] mb-1.5" />
+                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA]">
+                    Image unavailable
+                  </span>
+                </div>
+              </a>
+            ) : (
+              <div className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview">
+                <img
+                  src={optimizeCloudinaryUrl(image)}
+                  alt={`${title} preview`}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const fallback = e.currentTarget.parentElement?.querySelector('.img-fallback');
+                    if (fallback) fallback.classList.remove('hidden');
+                  }}
+                />
+                {/* Fallback container if image URL fails */}
+                <div className="img-fallback hidden absolute inset-0 flex flex-col items-center justify-center p-3 bg-[#F4F4F5] dark:bg-[#181818]">
+                  <ImageIcon className="w-7 h-7 text-[#A1A1AA] mb-1.5" />
+                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA]">
+                    Image unavailable
+                  </span>
+                </div>
               </div>
-
-              {/* Quick live link chip on image */}
-              {Boolean(effectiveLiveUrl && effectiveLiveUrl.trim()) && (
-                <a
-                  href={effectiveLiveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/80 hover:bg-[#E11D2E] text-white text-[10px] font-mono backdrop-blur-xs flex items-center gap-1 transition-colors shadow-xs"
-                >
-                  <span>Open</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              )}
-            </div>
+            )
           ) : (
             /* Clean Minimal Placeholder when image is not yet provided */
             <div className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#18181A] dark:via-[#141416] dark:to-[#0D0D0E] border border-[#E4E4E7] dark:border-[#2A2A2A] p-4 flex flex-col items-center justify-center text-center select-none group/placeholder">

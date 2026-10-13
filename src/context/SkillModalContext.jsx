@@ -83,6 +83,24 @@ const KNOWN_EXTRA_SKILLS = {
     category: 'frontend',
     role: 'Component architecture, SPA development, custom hooks & reactive UI state.',
   },
+  'cloudflare r2': {
+    id: 'cloudflare-r2',
+    name: 'Cloudflare R2',
+    category: 'tools',
+    role: 'S3-compatible distributed object storage with zero egress fees, used for high-performance media delivery and asset caching.',
+  },
+  'r2': {
+    id: 'cloudflare-r2',
+    name: 'Cloudflare R2',
+    category: 'tools',
+    role: 'S3-compatible distributed object storage with zero egress fees, used for high-performance media delivery and asset caching.',
+  },
+  'cloudflare': {
+    id: 'cloudflare-r2',
+    name: 'Cloudflare R2',
+    category: 'tools',
+    role: 'S3-compatible distributed object storage with zero egress fees, used for high-performance media delivery and asset caching.',
+  },
 };
 
 function resolveSkill(input) {
