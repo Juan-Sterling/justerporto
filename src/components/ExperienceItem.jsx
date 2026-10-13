@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GitCommit, Calendar, Building2, MapPin, ExternalLink } from 'lucide-react';
 import TechBadge from './TechBadge';
 import { useInView } from '../hooks/useInView';
+import { optimizeCloudinaryUrl } from '../utils/cloudinary';
 
 export default function ExperienceItem({ 
   experience, 
@@ -68,7 +69,7 @@ export default function ExperienceItem({
               >
                 {logo && !imgError ? (
                   <img
-                    src={logo}
+                    src={optimizeCloudinaryUrl(logo)}
                     alt={organization}
                     onError={() => setImgError(true)}
                     className="w-full h-full object-contain p-1.5 transition-transform duration-300 group-hover/logo:scale-105"
@@ -83,7 +84,7 @@ export default function ExperienceItem({
               <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[#F4F4F5] dark:bg-[#1A1A1A] border border-[#E4E4E7] dark:border-[#2C2C2C] flex items-center justify-center shrink-0 overflow-hidden shadow-xs">
                 {logo && !imgError ? (
                   <img
-                    src={logo}
+                    src={optimizeCloudinaryUrl(logo)}
                     alt={organization}
                     onError={() => setImgError(true)}
                     className="w-full h-full object-contain p-1.5"

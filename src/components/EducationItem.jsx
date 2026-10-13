@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GraduationCap, Award, CheckCircle2, BookOpen, MapPin, ExternalLink } from 'lucide-react';
+import { optimizeCloudinaryUrl } from '../utils/cloudinary';
 
 export default function EducationItem({ edu }) {
   const {
@@ -33,7 +34,7 @@ export default function EducationItem({ edu }) {
             >
               {logo && !imgError ? (
                 <img
-                  src={logo}
+                  src={optimizeCloudinaryUrl(logo)}
                   alt={institution}
                   onError={() => setImgError(true)}
                   className="w-full h-full object-contain p-1.5 transition-transform duration-300 group-hover/logo:scale-105"
@@ -48,7 +49,7 @@ export default function EducationItem({ edu }) {
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#F4F4F5] dark:bg-[#1A1A1A] border border-[#E4E4E7] dark:border-[#2C2C2C] flex items-center justify-center shrink-0 overflow-hidden shadow-xs">
               {logo && !imgError ? (
                 <img
-                  src={logo}
+                  src={optimizeCloudinaryUrl(logo)}
                   alt={institution}
                   onError={() => setImgError(true)}
                   className="w-full h-full object-contain p-1.5"

@@ -6,9 +6,11 @@ import BaemonPortalO from '../components/BaemonPortalO';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import { optimizeCloudinaryUrl } from '../utils/cloudinary';
+
 gsap.registerPlugin(ScrollTrigger);
 
-const HERO_PHOTO_URL = 'https://res.cloudinary.com/og1jrvy3/image/upload/v1791215430/IMG_0996_gg.jpg';
+const HERO_PHOTO_URL = optimizeCloudinaryUrl('https://res.cloudinary.com/og1jrvy3/image/upload/f_auto,q_auto/v1791215430/IMG_0996_gg.jpg');
 
 const ROLES = [
   "Full Stack Developer",

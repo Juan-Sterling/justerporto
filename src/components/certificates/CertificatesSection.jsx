@@ -15,6 +15,7 @@ import {
 import { portfolioData } from '../../data/portfolioData';
 import TechBadge from '../TechBadge';
 import { useInView } from '../../hooks/useInView';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinary';
 
 export default function CertificatesSection() {
   const certificates = portfolioData.certificates || [];
@@ -219,7 +220,7 @@ export default function CertificatesSection() {
                       {cert.image && cert.image.trim() !== '' ? (
                         <>
                           <img
-                            src={cert.image}
+                            src={optimizeCloudinaryUrl(cert.image)}
                             alt={`${cert.title} preview`}
                             className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105 cursor-pointer"
                             onClick={() => handleOpenPreview(cert)}
@@ -352,7 +353,7 @@ export default function CertificatesSection() {
                 {activeCert.image && activeCert.image.trim() !== '' ? (
                   <>
                     <img
-                      src={activeCert.image}
+                      src={optimizeCloudinaryUrl(activeCert.image)}
                       alt={`${activeCert.title} preview`}
                       className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105 cursor-pointer"
                       onClick={() => handleOpenPreview(activeCert)}
@@ -485,7 +486,7 @@ export default function CertificatesSection() {
               <div className="p-3 sm:p-5 flex items-center justify-center bg-[#09090B] overflow-auto flex-1 min-h-[300px]">
                 {previewCert.image ? (
                   <img
-                    src={previewCert.image}
+                    src={optimizeCloudinaryUrl(previewCert.image)}
                     alt={previewCert.title}
                     className="max-h-[65vh] w-auto object-contain rounded-lg border border-[#26262B] shadow-lg"
                   />

@@ -1,5 +1,6 @@
 import { Award, ExternalLink, Maximize2, FileCheck } from 'lucide-react';
 import TechBadge from '../TechBadge';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinary';
 
 export default function CertificateCard({ certificate, onPreview }) {
   const {
@@ -45,7 +46,7 @@ export default function CertificateCard({ certificate, onPreview }) {
           {image && image.trim() !== '' ? (
             <>
               <img
-                src={image}
+                src={optimizeCloudinaryUrl(image)}
                 alt={`${title} certificate preview`}
                 className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105 cursor-pointer"
                 onClick={() => onPreview && onPreview(certificate)}

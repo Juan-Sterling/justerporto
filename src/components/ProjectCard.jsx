@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ExternalLink, ImageIcon, ChevronDown } from 'lucide-react';
 import TechBadge from './TechBadge';
+import { optimizeCloudinaryUrl } from '../utils/cloudinary';
 
 function GithubIcon({ className = 'w-4 h-4' }) {
   return (
@@ -41,7 +42,7 @@ export default function ProjectCard({ project }) {
           {image && image.trim() !== '' ? (
             <div className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview">
               <img
-                src={image}
+                src={optimizeCloudinaryUrl(image)}
                 alt={`${title} preview`}
                 className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105"
                 onError={(e) => {
