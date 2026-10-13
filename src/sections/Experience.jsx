@@ -196,9 +196,9 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative z-10 py-12 sm:py-20 px-4 sm:px-6 lg:px-8"
+      className="relative z-10 py-16 sm:py-24 px-4 sm:px-6 lg:px-8"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="relative z-10 max-w-4xl mx-auto">
         <SectionTitle
           title="Work History & Experience"
           subtitle="Chronological breakdown of engineering roles, software projects, and core contributions."

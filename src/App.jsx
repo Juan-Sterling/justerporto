@@ -9,6 +9,7 @@ import Experience from './sections/Experience';
 import Contact from './sections/Contact';
 import Footer from './components/Footer';
 import BaemonBackground from './components/BaemonBackground';
+// import WorkBackground from './components/WorkBackground';
 import ReactiveAmbientGlow from './components/ReactiveAmbientGlow';
 import LaserSectionDivider from './components/LaserSectionDivider';
 import { SkillModalProvider } from './context/SkillModalContext';
@@ -89,6 +90,9 @@ export default function App() {
 
           {/* Atmospheric BABYMONSTER Ambient Background Canvas */}
           <BaemonBackground />
+
+          {/* Section-Specific Background: Work Section Wallpaper (Geometric Shapes) - Pending future development */}
+          {/* <WorkBackground /> */}
 
           {/* GSAP Scroll-Driven Reactive Ambient Lighting Atmosphere */}
           <ReactiveAmbientGlow />
