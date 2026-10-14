@@ -1,18 +1,18 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+gsap.registerPlugin(ScrollTrigger);
 
 const SmoothScrollContext = createContext({
-  smoother: null,
+  lenis: null,
   scrollTo: () => {},
 });
 
 export function SmoothScrollProvider({ children, isLocked = false }) {
-  const [smootherInstance, setSmootherInstance] = useState(null);
-  const smootherRef = useRef(null);
+  const [lenisInstance, setLenisInstance] = useState(null);
+  const lenisRef = useRef(null);
 
   useEffect(() => {
     // Check if user prefers reduced motion
@@ -21,56 +21,71 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
       return;
     }
 
-    const wrapper = document.getElementById('smooth-wrapper');
-    const content = document.getElementById('smooth-content');
-    if (!wrapper || !content) return;
-
-    // Create GSAP ScrollSmoother with effects: true to enable data-speed & data-lag
-    const smoother = ScrollSmoother.create({
-      wrapper: '#smooth-wrapper',
-      content: '#smooth-content',
-      smooth: 1.15, // Silky smooth inertia damping matching modern luxury portfolios
-      effects: true, // Enables data-speed & data-lag
-      smoothTouch: 0.1, // Native feeling touch responsiveness
-      normalizeScroll: false,
-      ignoreMobileResize: true,
+    const lenis = new Lenis({
+      duration: 1.05,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1.0,
+      autoRaf: false, // GSAP ticker drives the RAF loop directly
+      syncTouch: false, // Let mobile touch scrolling run with native 120Hz hardware momentum
+      infinite: false,
     });
 
-    smootherRef.current = smoother;
-    setSmootherInstance(smoother);
+    lenisRef.current = lenis;
+    setLenisInstance(lenis);
 
-    // Refresh effects on initial render
-    ScrollTrigger.refresh();
+    // Synchronize Lenis scroll with GSAP ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
 
-    // Expose smoother globally for debugging or direct access if needed
-    window.__smoother = smoother;
+    // Hook Lenis RAF into GSAP's master ticker for 0-jitter, single-loop performance
+    const tickerUpdate = (time) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(tickerUpdate);
+    // Disable lagSmoothing so GSAP does not clamp time or stutter when crossing sections
+    gsap.ticker.lagSmoothing(0);
+
+    // Expose lenis globally for debugging or direct access if needed
+    window.__lenis = lenis;
 
     return () => {
-      smoother.kill();
-      smootherRef.current = null;
-      setSmootherInstance(null);
-      delete window.__smoother;
+      lenis.destroy();
+      gsap.ticker.remove(tickerUpdate);
+      lenisRef.current = null;
+      setLenisInstance(null);
+      delete window.__lenis;
     };
   }, []);
 
   // Handle dynamic locking/unlocking (e.g. welcome screen or modals)
   useEffect(() => {
-    if (!smootherRef.current) return;
-    smootherRef.current.paused(isLocked);
+    if (!lenisRef.current) return;
+    if (isLocked) {
+      lenisRef.current.stop();
+    } else {
+      lenisRef.current.start();
+    }
   }, [isLocked]);
 
   const scrollTo = (target, options = {}) => {
-    if (smootherRef.current) {
+    if (lenisRef.current) {
       const isTop = target === 0 || target === '#hero' || target === 'top';
-      if (isTop) {
-        smootherRef.current.scrollTo(0, true);
-      } else {
-        const offset = options.offset !== undefined ? options.offset : -70;
-        const position = offset < 0 ? `top ${Math.abs(offset)}px` : 'top top';
-        smootherRef.current.scrollTo(target, true, position);
-      }
+      const defaultOffset = isTop ? 0 : -70;
+      const offset = options.offset !== undefined ? options.offset : defaultOffset;
+      const duration = options.duration ?? (isTop ? 1.4 : 1.2);
+
+      lenisRef.current.scrollTo(target, {
+        offset,
+        duration,
+        easing: options.easing ?? ((t) => Math.min(1, 1.001 - Math.pow(2, -8 * t))),
+        immediate: options.immediate ?? false,
+      });
     } else {
-      // Fallback if ScrollSmoother is disabled or not initialized
+      // Fallback if Lenis is disabled or not initialized
       const selector = typeof target === 'string' ? target : '';
       const element = selector.startsWith('#')
         ? document.getElementById(selector.slice(1))
@@ -87,7 +102,7 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
   };
 
   return (
-    <SmoothScrollContext.Provider value={{ smoother: smootherInstance, scrollTo }}>
+    <SmoothScrollContext.Provider value={{ lenis: lenisInstance, scrollTo }}>
       {children}
     </SmoothScrollContext.Provider>
   );
@@ -96,4 +111,3 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
 export function useSmoothScroll() {
   return useContext(SmoothScrollContext);
 }
-
