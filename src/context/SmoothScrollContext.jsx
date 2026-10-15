@@ -1,18 +1,18 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const SmoothScrollContext = createContext({
-  lenis: null,
+  smoother: null,
   scrollTo: () => {},
 });
 
 export function SmoothScrollProvider({ children, isLocked = false }) {
-  const [lenisInstance, setLenisInstance] = useState(null);
-  const lenisRef = useRef(null);
+  const [smootherInstance, setSmootherInstance] = useState(null);
+  const smootherRef = useRef(null);
 
   useEffect(() => {
     // Check if user prefers reduced motion
@@ -21,71 +21,64 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
       return;
     }
 
-    const lenis = new Lenis({
-      duration: 1.05,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1.0,
-      autoRaf: false, // GSAP ticker drives the RAF loop directly
-      syncTouch: false, // Let mobile touch scrolling run with native 120Hz hardware momentum
-      infinite: false,
+    const wrapper = document.getElementById('smooth-wrapper');
+    const content = document.getElementById('smooth-content');
+    if (!wrapper || !content) return;
+
+    // Detect if device is touch-based (mobile/tablet)
+    const isTouchDevice =
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(pointer: coarse)').matches ||
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0);
+
+    // Create GSAP ScrollSmoother
+    // CRITICAL: smoothTouch: 0 guarantees that mobile/touch devices use 100% native hardware momentum (120Hz/60Hz compositor thread)
+    // Desktop mouse wheels get luxurious smooth damping (1.0s)
+    const smoother = ScrollSmoother.create({
+      wrapper: '#smooth-wrapper',
+      content: '#smooth-content',
+      smooth: isTouchDevice ? 0 : 1.0, // Native 0-lag on mobile, smooth on desktop
+      smoothTouch: 0, // Never hijack native touch momentum scrolling
+      effects: true, // Enables data-speed & data-lag
+      normalizeScroll: false,
+      ignoreMobileResize: true,
     });
 
-    lenisRef.current = lenis;
-    setLenisInstance(lenis);
+    smootherRef.current = smoother;
+    setSmootherInstance(smoother);
 
-    // Synchronize Lenis scroll with GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
+    // Refresh ScrollTrigger calculations
+    ScrollTrigger.refresh();
 
-    // Hook Lenis RAF into GSAP's master ticker for 0-jitter, single-loop performance
-    const tickerUpdate = (time) => {
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(tickerUpdate);
-    // Disable lagSmoothing so GSAP does not clamp time or stutter when crossing sections
-    gsap.ticker.lagSmoothing(0);
-
-    // Expose lenis globally for debugging or direct access if needed
-    window.__lenis = lenis;
+    window.__smoother = smoother;
 
     return () => {
-      lenis.destroy();
-      gsap.ticker.remove(tickerUpdate);
-      lenisRef.current = null;
-      setLenisInstance(null);
-      delete window.__lenis;
+      smoother.kill();
+      smootherRef.current = null;
+      setSmootherInstance(null);
+      delete window.__smoother;
     };
   }, []);
 
   // Handle dynamic locking/unlocking (e.g. welcome screen or modals)
   useEffect(() => {
-    if (!lenisRef.current) return;
-    if (isLocked) {
-      lenisRef.current.stop();
-    } else {
-      lenisRef.current.start();
-    }
+    if (!smootherRef.current) return;
+    smootherRef.current.paused(isLocked);
   }, [isLocked]);
 
   const scrollTo = (target, options = {}) => {
-    if (lenisRef.current) {
+    if (smootherRef.current) {
       const isTop = target === 0 || target === '#hero' || target === 'top';
-      const defaultOffset = isTop ? 0 : -70;
-      const offset = options.offset !== undefined ? options.offset : defaultOffset;
-      const duration = options.duration ?? (isTop ? 1.4 : 1.2);
-
-      lenisRef.current.scrollTo(target, {
-        offset,
-        duration,
-        easing: options.easing ?? ((t) => Math.min(1, 1.001 - Math.pow(2, -8 * t))),
-        immediate: options.immediate ?? false,
-      });
+      if (isTop) {
+        smootherRef.current.scrollTo(0, true);
+      } else {
+        const offset = options.offset !== undefined ? options.offset : -70;
+        const position = offset < 0 ? `top ${Math.abs(offset)}px` : 'top top';
+        smootherRef.current.scrollTo(target, true, position);
+      }
     } else {
-      // Fallback if Lenis is disabled or not initialized
+      // Fallback
       const selector = typeof target === 'string' ? target : '';
       const element = selector.startsWith('#')
         ? document.getElementById(selector.slice(1))
@@ -102,7 +95,7 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
   };
 
   return (
-    <SmoothScrollContext.Provider value={{ lenis: lenisInstance, scrollTo }}>
+    <SmoothScrollContext.Provider value={{ smoother: smootherInstance, scrollTo }}>
       {children}
     </SmoothScrollContext.Provider>
   );

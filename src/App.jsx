@@ -8,10 +8,9 @@ import Skills from './sections/Skills';
 import Experience from './sections/Experience';
 import Contact from './sections/Contact';
 import Footer from './components/Footer';
-import BaemonBackground from './components/BaemonBackground';
-// [SAVED FOR FUTURE USE] Geometric & Rain Backgrounds:
-// import BaemonGeometricBackground from './components/BaemonGeometricBackground';
-// import BaemonRainBackground from './components/BaemonRainBackground';
+// import BaemonBackground from './components/BaemonBackground';
+import BaemonGeometricBackground from './components/BaemonGeometricBackground';
+import BaemonRainBackground from './components/BaemonRainBackground';
 // import WorkBackground from './components/WorkBackground';
 import ReactiveAmbientGlow from './components/ReactiveAmbientGlow';
 import LaserSectionDivider from './components/LaserSectionDivider';
@@ -91,32 +90,38 @@ export default function App() {
           {/* Sticky Header Navigation */}
           <Navbar activeSection={activeSection} />
 
-          {/* Atmospheric BABYMONSTER Ambient Background Canvas */}
-          <BaemonBackground />
+          {/* Procedural Geometric Shapes Background (Zero-Blur High-Performance Edition) */}
+          <BaemonGeometricBackground />
 
-          {/* [SAVED FOR FUTURE USE] Alternative Background Components: */}
-          {/* <BaemonGeometricBackground /> */}
-          {/* <BaemonRainBackground /> */}
-          {/* <WorkBackground /> */}
+          {/* Fallback Ribbon Canvas (Commented out) */}
+          {/* <BaemonBackground /> */}
 
           {/* GSAP Scroll-Driven Reactive Ambient Lighting Atmosphere */}
           <ReactiveAmbientGlow />
 
-          {/* Main Content Sections with Laser Horizon Transitions */}
-          <main className="flex-1 w-full relative z-10">
-            {/* Hero Portal Zooms directly into Experience */}
-            <Hero welcomeActive={showWelcome && !welcomeExiting} />
-            <Experience />
-            <LaserSectionDivider />
-            <Skills />
-            <LaserSectionDivider />
-            <Education />
-            <LaserSectionDivider />
-            <Contact />
-          </main>
+          {/* GSAP ScrollSmoother Master Containers */}
+          <div id="smooth-wrapper" className="w-full">
+            <div id="smooth-content" className="w-full relative min-h-screen flex flex-col">
+              {/* BABYMONSTER Concept B Parallax Rain (Zero-Blur High-Performance Edition) */}
+              <BaemonRainBackground />
 
-          {/* Semantic Footer */}
-          <Footer />
+              {/* Main Content Sections with Laser Horizon Transitions */}
+              <main className="flex-1 w-full relative z-10">
+                {/* Hero Portal Zooms directly into Experience */}
+                <Hero welcomeActive={showWelcome && !welcomeExiting} />
+                <Experience />
+                <LaserSectionDivider />
+                <Skills />
+                <LaserSectionDivider />
+                <Education />
+                <LaserSectionDivider />
+                <Contact />
+              </main>
+
+              {/* Semantic Footer */}
+              <Footer />
+            </div>
+          </div>
         </div>
       </SkillModalProvider>
     </SmoothScrollProvider>
