@@ -9,9 +9,9 @@ export default function SectionTitle({
   highlightLastWord = true,
 }) {
   const [containerRef, isInView] = useInView({
-    threshold: 0.05,
-    triggerOnce: true,
-    rootMargin: '120px 0px 0px 0px',
+    threshold: 0.08,
+    triggerOnce: false,
+    rootMargin: '20px 0px -30px 0px',
   });
 
   // Split title into words for staggered slide-up mask animation
