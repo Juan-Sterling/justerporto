@@ -233,6 +233,11 @@ export default function Hero({ welcomeActive = false }) {
       // 2. Seamless Portal Zoom Timeline with pinSpacing: false
       // Explicitly locks all properties at timeline time 0 so that on SCROLL UP,
       // the Stage Aurora & Crimson Fog and all elements return 100% to their full opacity
+      ScrollTrigger.config({ ignoreMobileResize: true });
+
+      const isTouch = typeof window !== 'undefined' && 
+        (window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768);
+
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: heroRef.current,
@@ -240,7 +245,7 @@ export default function Hero({ welcomeActive = false }) {
           end: 'bottom top', // Exactly 100vh scroll: connects directly to Experience with zero dead space
           pin: true,
           pinSpacing: false, // Eliminates the 800px gap completely!
-          scrub: 0.65, // Silky smooth inertial damping matching Lenis scroll momentum
+          scrub: isTouch ? 0.08 : 0.65, // Instant 1:1 direct touch on mobile, smooth inertial damping on desktop
           fastScrollEnd: false, // CRITICAL: NEVER force to progress 1 on rapid scroll-up!
           preventOverlaps: true,
           anticipatePin: 1,
@@ -506,7 +511,7 @@ export default function Hero({ welcomeActive = false }) {
       ref={heroRef}
       id="hero"
       style={{ opacity: 0 }}
-      className={`relative w-full h-screen min-h-[620px] flex items-center justify-center overflow-hidden select-none will-change-transform z-10 ${
+      className={`relative w-full h-screen h-[100svh] min-h-[620px] flex items-center justify-center overflow-hidden select-none will-change-transform z-10 ${
         welcomeActive ? 'pointer-events-none' : ''
       }`}
     >
