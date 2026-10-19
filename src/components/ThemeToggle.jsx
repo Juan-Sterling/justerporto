@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Sun, Moon, Laptop } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -15,8 +16,10 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
           </span>
         </div>
         <div className="grid grid-cols-3 gap-1.5 p-1 rounded-lg bg-white/70 dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A]">
-          <button
+          <motion.button
             type="button"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.95 }}
             onClick={(e) => resetToSystem(e)}
             className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-all cursor-pointer ${
               isSystem
@@ -26,10 +29,12 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
           >
             <Laptop className="w-3.5 h-3.5" />
             <span>Auto</span>
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             type="button"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.95 }}
             onClick={(e) => setThemeExplicit('dark', e)}
             className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-all cursor-pointer ${
               !isSystem && isDark
@@ -39,10 +44,12 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
           >
             <Moon className="w-3.5 h-3.5" />
             <span>Dark</span>
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             type="button"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.95 }}
             onClick={(e) => setThemeExplicit('light', e)}
             className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-all cursor-pointer ${
               !isSystem && !isDark
@@ -52,33 +59,42 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
           >
             <Sun className="w-3.5 h-3.5" />
             <span>Light</span>
-          </button>
+          </motion.button>
         </div>
       </div>
     );
   }
 
   return (
-    <button
+    <motion.button
       type="button"
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.88, rotate: 15 }}
+      transition={{ type: 'spring', stiffness: 450, damping: 22 }}
       onClick={(e) => toggleTheme(e)}
-      className={`relative p-2 rounded-full border border-white/60 dark:border-white/10 bg-white/60 dark:bg-white/[0.06] backdrop-blur-md text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/60 dark:hover:border-[#E11D2E]/60 shadow-xs hover:shadow-sm active:scale-90 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E11D2E] group/theme overflow-hidden ${className}`}
+      className={`relative p-2 rounded-full border border-white/60 dark:border-white/10 bg-white/60 dark:bg-white/[0.06] backdrop-blur-md text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:border-[#E11D2E]/60 dark:hover:border-[#E11D2E]/60 shadow-xs hover:shadow-sm transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E11D2E] group/theme overflow-hidden ${className}`}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isSystem ? `Auto (Device: ${isDark ? 'Dark' : 'Light'}) - Click to toggle manual` : isDark ? "Dark Mode - Click to switch" : "Light Mode - Click to switch"}
     >
-      <div className="relative w-4 h-4 sm:w-4.5 sm:h-4.5 flex items-center justify-center">
+      <motion.div
+        key={isDark ? 'dark' : 'light'}
+        initial={{ scale: 0.5, rotate: -60, opacity: 0 }}
+        animate={{ scale: 1, rotate: 0, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 24 }}
+        className="relative w-4 h-4 sm:w-4.5 sm:h-4.5 flex items-center justify-center"
+      >
         {isDark ? (
           <Sun className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
         ) : (
           <Moon className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-indigo-500 dark:text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
         )}
-      </div>
+      </motion.div>
       {isSystem && (
         <span 
           className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#E11D2E] ring-2 ring-white dark:ring-[#141414]" 
           title="Following system theme" 
         />
       )}
-    </button>
+    </motion.button>
   );
 }

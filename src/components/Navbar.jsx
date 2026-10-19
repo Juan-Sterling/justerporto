@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { Menu, X, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
@@ -13,12 +14,10 @@ const NAV_ITEMS = [
 export default function Navbar({ activeSection = '' }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const navRef = useRef(null);
-  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const [clickedSection, setClickedSection] = useState(null);
   const { scrollTo } = useSmoothScroll();
 
-  const effectiveActive = clickedSection || activeSection;
+  const effectiveActive = clickedSection && clickedSection !== activeSection ? clickedSection : activeSection;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,46 +26,6 @@ export default function Navbar({ activeSection = '' }) {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Smooth sliding pill indicator tracking active section tab
-  useEffect(() => {
-    const updatePill = () => {
-      if (!navRef.current) return;
-      if (!effectiveActive) {
-        setPillStyle((prev) => ({ ...prev, opacity: 0 }));
-        return;
-      }
-
-      const activeEl = navRef.current.querySelector(`[data-nav-id="${effectiveActive}"]`);
-      if (activeEl) {
-        const navRect = navRef.current.getBoundingClientRect();
-        const elRect = activeEl.getBoundingClientRect();
-        setPillStyle({
-          left: elRect.left - navRect.left,
-          width: elRect.width,
-          opacity: 1,
-        });
-      } else {
-        setPillStyle((prev) => ({ ...prev, opacity: 0 }));
-      }
-    };
-
-    updatePill();
-    window.addEventListener('resize', updatePill);
-
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(updatePill);
-    }
-
-    return () => window.removeEventListener('resize', updatePill);
-  }, [effectiveActive]);
-
-  // When activeSection prop catches up to clickedSection, clear clickedSection
-  useEffect(() => {
-    if (clickedSection && activeSection === clickedSection) {
-      setClickedSection(null);
-    }
-  }, [activeSection, clickedSection]);
 
   // Close mobile drawer on Escape key or desktop resize
   useEffect(() => {
@@ -163,21 +122,9 @@ export default function Navbar({ activeSection = '' }) {
           {/* Desktop Navigation Capsule */}
           <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
             <nav
-              ref={navRef}
               className="relative flex items-center gap-1 p-1 rounded-full bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.05] dark:border-white/[0.08]"
               aria-label="Main Navigation"
             >
-              {/* Smooth Sliding Active Pill Indicator */}
-              <div
-                className="absolute left-0 top-1 bottom-1 rounded-full bg-white dark:bg-white/[0.14] border border-black/[0.06] dark:border-white/20 shadow-xs backdrop-blur-md transition-all duration-350 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none will-change-transform"
-                style={{
-                  transform: `translateX(${pillStyle.left}px)`,
-                  width: `${pillStyle.width}px`,
-                  opacity: pillStyle.opacity,
-                }}
-                aria-hidden="true"
-              />
-
               {NAV_ITEMS.map((item) => {
                 const isActive = effectiveActive === item.id;
                 return (
@@ -189,13 +136,21 @@ export default function Navbar({ activeSection = '' }) {
                       e.preventDefault();
                       handleNavClick(item.id);
                     }}
-                    className={`relative z-10 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center select-none ${
+                    className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center select-none ${
                       isActive
                         ? 'text-[#09090B] dark:text-white font-semibold'
                         : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-white/30 dark:hover:bg-white/[0.04]'
                     }`}
                   >
-                    <span>{item.label}</span>
+                    {/* Motion Liquid Pill Indicator */}
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNavPill"
+                        className="absolute inset-0 rounded-full bg-white dark:bg-white/[0.14] border border-black/[0.06] dark:border-white/20 shadow-xs backdrop-blur-md pointer-events-none"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{item.label}</span>
                   </a>
                 );
               })}
@@ -212,16 +167,17 @@ export default function Navbar({ activeSection = '' }) {
             {/* Quick Theme Toggle on mobile pill */}
             <ThemeToggle />
 
-            {/* Mobile Hamburger Button */}
-            <button
+            {/* Mobile Hamburger Button with Tap Animation */}
+            <motion.button
               type="button"
+              whileTap={{ scale: 0.92 }}
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-full text-[#52525B] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white bg-white/60 dark:bg-white/[0.06] backdrop-blur-md hover:bg-white/80 dark:hover:bg-white/[0.12] border border-white/60 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-[#E11D2E] cursor-pointer transition-all shadow-xs"
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
             >
               {isOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </button>
+            </motion.button>
           </div>
         </div>
 

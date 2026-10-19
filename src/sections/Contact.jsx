@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import SectionTitle from '../components/SectionTitle';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
@@ -44,113 +45,143 @@ export default function Contact() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Email Card */}
           <AnimatedSection delay={100}>
-            <div className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-200 shadow-xs h-full min-h-[72px]">
-              <a
-                href={`mailto:${contact.email}`}
-                className="flex items-center gap-3 min-w-0 flex-1"
-                title={`Send email to ${contact.email}`}
-              >
-                <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
-                    Email
-                  </span>
-                  <span className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
-                    {contact.email}
-                  </span>
-                </div>
-              </a>
-              <button
-                type="button"
-                onClick={handleCopyEmail}
-                title="Copy email address"
-                className="p-1.5 ml-2 rounded-md text-[#71717A] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#090909] border border-transparent hover:border-[#E4E4E7] dark:border-[#2A2A2A] transition-all cursor-pointer shrink-0"
-                aria-label="Copy email address"
-              >
-                {copiedEmail ? (
-                  <Check className="w-4 h-4 text-[#E11D2E] animate-in fade-in" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </button>
-            </div>
+            <motion.div
+              whileHover={{ y: -3, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 25 }}
+              className="h-full"
+            >
+              <div className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-colors duration-200 shadow-xs h-full min-h-[72px]">
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="flex items-center gap-3 min-w-0 flex-1"
+                  title={`Send email to ${contact.email}`}
+                >
+                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
+                      Email
+                    </span>
+                    <span className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
+                      {contact.email}
+                    </span>
+                  </div>
+                </a>
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.15 }}
+                  whileTap={{ scale: 0.85 }}
+                  onClick={handleCopyEmail}
+                  title="Copy email address"
+                  className="p-1.5 ml-2 rounded-md text-[#71717A] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#090909] border border-transparent hover:border-[#E4E4E7] dark:border-[#2A2A2A] transition-all cursor-pointer shrink-0"
+                  aria-label="Copy email address"
+                >
+                  {copiedEmail ? (
+                    <Check className="w-4 h-4 text-[#E11D2E] animate-in fade-in" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </motion.button>
+              </div>
+            </motion.div>
           </AnimatedSection>
 
           {/* GitHub 1 Card */}
           <AnimatedSection delay={150}>
-            <a
-              href={contact.github || "https://github.com/Juan-Sterling"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-200 shadow-xs h-full min-h-[72px]"
+            <motion.div
+              whileHover={{ y: -3, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 25 }}
+              className="h-full"
             >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
-                  <GithubIcon className="w-5 h-5" />
+              <a
+                href={contact.github || "https://github.com/Juan-Sterling"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-colors duration-200 shadow-xs h-full min-h-[72px]"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
+                    <GithubIcon className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
+                      GitHub 1
+                    </span>
+                    <span className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
+                      @Juan-Sterling
+                    </span>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
-                    GitHub 1
-                  </span>
-                  <span className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
-                    @Juan-Sterling
-                  </span>
-                </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-2" />
-            </a>
+                <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-2" />
+              </a>
+            </motion.div>
           </AnimatedSection>
 
           {/* GitHub 2 Card */}
           <AnimatedSection delay={200}>
-            <a
-              href={contact.github2 || "https://github.com/juansterling"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-200 shadow-xs h-full min-h-[72px]"
+            <motion.div
+              whileHover={{ y: -3, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 25 }}
+              className="h-full"
             >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
-                  <GithubIcon className="w-5 h-5" />
+              <a
+                href={contact.github2 || "https://github.com/juansterling"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-colors duration-200 shadow-xs h-full min-h-[72px]"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
+                    <GithubIcon className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
+                      GitHub 2
+                    </span>
+                    <span className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
+                      @juansterling
+                    </span>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
-                    GitHub 2
-                  </span>
-                  <span className="font-mono text-xs sm:text-sm font-medium text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
-                    @juansterling
-                  </span>
-                </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-2" />
-            </a>
+                <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-2" />
+              </a>
+            </motion.div>
           </AnimatedSection>
 
           {/* LinkedIn Card */}
           <AnimatedSection delay={250}>
-            <a
-              href={contact.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-all duration-200 shadow-xs h-full min-h-[72px]"
+            <motion.div
+              whileHover={{ y: -3, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 25 }}
+              className="h-full"
             >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
-                  <LinkedinIcon className="w-5 h-5" />
+              <a
+                href={contact.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex items-center justify-between p-4 rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 transition-colors duration-200 shadow-xs h-full min-h-[72px]"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] text-[#E11D2E] group-hover:border-[#E11D2E]/40 shrink-0">
+                    <LinkedinIcon className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
+                      LinkedIn
+                    </span>
+                    <span className="font-display text-xs sm:text-sm font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
+                      Juan Sterling Martua
+                    </span>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA] block">
-                    LinkedIn
-                  </span>
-                  <span className="font-display text-xs sm:text-sm font-bold text-[#09090B] dark:text-white group-hover:text-[#E11D2E] transition-colors truncate block">
-                    Juan Sterling Martua
-                  </span>
-                </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-2" />
-            </a>
+                <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-2" />
+              </a>
+            </motion.div>
           </AnimatedSection>
         </div>
       </div>

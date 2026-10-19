@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { getTechIconUrl } from '../utils/techIcons';
 import { useSkillModal } from '../context/SkillModalContext';
 
@@ -37,11 +38,14 @@ export default function TechBadge({ name, size = 'default' }) {
       tabIndex={0}
       aria-label={`View architectural details for ${name}`}
     >
-      {/* Icon Badge */}
-      <div
-        className={`${containerSize} rounded-md border transition-all duration-200 flex items-center justify-center p-1.5 cursor-pointer select-none active:scale-90 ${
+      {/* Icon Badge with Motion Spring */}
+      <motion.div
+        whileHover={{ scale: 1.1, y: -2 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: 'spring', stiffness: 450, damping: 22 }}
+        className={`${containerSize} rounded-md border transition-colors duration-200 flex items-center justify-center p-1.5 cursor-pointer select-none ${
           isHovered
-            ? 'border-[#E11D2E] bg-white dark:bg-[#1C1C1C] -translate-y-0.5 shadow-md shadow-black/20 dark:shadow-black/70 ring-1 ring-[#E11D2E]/30'
+            ? 'border-[#E11D2E] bg-white dark:bg-[#1C1C1C] shadow-md shadow-black/20 dark:shadow-black/70 ring-1 ring-[#E11D2E]/30'
             : 'bg-[#F4F4F5] dark:bg-[#090909] border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E]/60'
         }`}
         title={`Click to view details for ${name}`}
@@ -61,7 +65,7 @@ export default function TechBadge({ name, size = 'default' }) {
             {name.slice(0, 2)}
           </span>
         )}
-      </div>
+      </motion.div>
 
       {/* Floating Hover Tooltip */}
       <div

@@ -100,7 +100,7 @@ export const portfolioData = {
       technologies: ["Laravel", "PHP", "PostgreSQL", "JavaScript", "REST API", "Bootstrap", "GitLab"],
     },
     {
-      period: "Jul 2024 — Nov 2024",
+      period: "Jul 2024 — Nov 2025",
       position: "Full Stack Developer",
       organization: "Stafbook (YCW22)",
       location: "North Jakarta, Indonesia",

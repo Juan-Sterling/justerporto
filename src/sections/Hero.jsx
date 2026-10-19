@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { motion } from 'motion/react';
 import { ArrowDown, FileText, ExternalLink, Mail, Code2, MapPin } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
@@ -570,19 +571,27 @@ export default function Hero({ welcomeActive = false }) {
               {/* Top Row: Live Availability Beacon + Location Badge */}
               <div ref={badgesRef} className="flex flex-wrap items-center justify-start gap-2 sm:gap-2.5 w-full">
                 {/* Development Status Badge */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform">
+                <motion.div
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform cursor-default"
+                >
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500 dark:bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.6)] dark:shadow-[0_0_8px_rgba(251,191,36,0.8)]"></span>
                   </span>
                   <span className="font-medium">{personal.availability}</span>
-                </div>
+                </motion.div>
 
                 {/* Current Location Badge */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform">
+                <motion.div
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform cursor-default"
+                >
                   <MapPin className="w-3.5 h-3.5 text-[#E11D2E]" />
                   <span className="font-medium">{personal.location || "North Jakarta, Indonesia"}</span>
-                </div>
+                </motion.div>
               </div>
 
               {/* Identity Row: On mobile, Name + Typewriter on Left, Photo Card on Right (Level with Name!) */}
@@ -675,40 +684,49 @@ export default function Hero({ welcomeActive = false }) {
                 </p>
               </div>
 
-              {/* CTAs with Micro-Animations */}
+              {/* CTAs with Motion Micro-Animations */}
               <div ref={ctaRef} className="pt-1 sm:pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 w-full max-w-[420px]">
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.03, y: -1 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   onClick={() => scrollToSection('experience')}
-                  className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 h-10 sm:h-12 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] active:scale-95 text-white font-medium text-xs sm:text-sm transition-all duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer overflow-hidden whitespace-nowrap will-change-transform"
+                  className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 h-10 sm:h-12 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] text-white font-medium text-xs sm:text-sm transition-colors duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer overflow-hidden whitespace-nowrap will-change-transform"
                 >
                   {/* Shimmer sweep effect */}
                   <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                   <span>View Experience</span>
                   <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-y-0.5 transition-transform shrink-0" />
-                </button>
+                </motion.button>
 
-                <a
+                <motion.a
                   href={personal.resumeUrl || "https://drive.google.com/file/d/1g20NBQXWuKxJ4v7qwXC4Py855tLvzRNJ/view?usp=sharing"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 sm:flex-initial group inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 h-10 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] active:scale-95 text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform"
+                  whileHover={{ scale: 1.03, y: -1 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="flex-1 sm:flex-initial group inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 h-10 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-colors duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform"
                   aria-label="View CV Juan Sterling"
                 >
                   <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
                   <span>View CV</span>
                   <ExternalLink className="w-3 h-3 text-zinc-400 dark:text-zinc-500 group-hover:text-[#E11D2E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0" />
-                </a>
+                </motion.a>
 
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.03, y: -1 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   onClick={() => scrollToSection('contact')}
-                  className="flex-1 sm:flex-initial group inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 h-10 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] active:scale-95 text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-all duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform"
+                  className="flex-1 sm:flex-initial group inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 h-10 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-colors duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform"
                 >
                   <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
                   <span>Contact Me</span>
                   <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] group-hover:translate-y-0.5 transition-all duration-200 shrink-0" />
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
