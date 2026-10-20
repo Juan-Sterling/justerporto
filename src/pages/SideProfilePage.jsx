@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import SideProfileNavbar from '../components/sideprofile/SideProfileNavbar';
+import ViperHeroDossier from '../components/sideprofile/ViperHeroDossier';
 import GamingBattleStation from '../components/sideprofile/GamingBattleStation';
 import SportsFeed from '../components/sideprofile/SportsFeed';
 import SpotifySoundstage from '../components/sideprofile/SpotifySoundstage';
@@ -25,8 +26,6 @@ const pageContainerVariants = {
   },
   exit: {
     opacity: 0,
-    y: 20,
-    scale: 0.98,
     transition: {
       duration: 0.28,
       ease: [0.32, 0, 0.67, 0],
@@ -37,9 +36,6 @@ const pageContainerVariants = {
 /**
  * GPU-Accelerated Scroll-Driven Entrance & Exit Animation Variants
  * Triggered dynamically as elements scroll into and out of view (whileInView with once: false).
- * - Scroll Down: Smooth slide-up entrance (y: 45 -> 0, opacity: 0 -> 1, scale: 0.98 -> 1)
- * - Scroll Away: Smooth exit (y: 20, opacity: 0, scale: 0.98)
- * - Click Back: Immediate crisp exit sequence
  */
 const scrollSectionVariants = {
   hidden: {
@@ -57,7 +53,7 @@ const scrollSectionVariants = {
     scale: 1,
     transition: {
       duration: 0.55,
-      ease: [0.22, 1, 0.36, 1], // Buttery cubic bezier
+      ease: [0.22, 1, 0.36, 1],
     },
   },
   exit: {
@@ -73,11 +69,18 @@ const scrollSectionVariants = {
 
 /**
  * SideProfilePage (/sideprofile)
- * Halaman khusus eksplorasi personal bertema Tactical HUD
- * Dilengkapi animasi Entrance & Exit yang muncul secara dinamis saat melakukan scroll.
+ * Tactical personal dossier themed after Viper from VALORANT.
+ * 
+ * Key Features:
+ * - 100% English, strictly zero '//' and zero emoticons.
+ * - Interactive Toxin deployment system with live fuel depletion/regeneration.
+ * - Locked 60 FPS across Mobile, Tablet, and Desktop.
+ * - Compatible with both Toxic Lab (Dark) and Sterile Lab (Light) modes.
  */
 export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
   const [isExiting, setIsExiting] = useState(false);
+  const [fuel, setFuel] = useState(100);
+  const [isToxinActive, setIsToxinActive] = useState(false);
 
   useEffect(() => {
     // Scroll to top on mount
@@ -89,10 +92,37 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
     };
   }, []);
 
+  // Live Fuel Depletion and Regeneration loop
+  useEffect(() => {
+    let interval = null;
+    if (isToxinActive) {
+      interval = setInterval(() => {
+        setFuel((prev) => {
+          if (prev <= 1) {
+            setIsToxinActive(false);
+            return 0;
+          }
+          return Math.max(0, prev - 1);
+        });
+      }, 120); // ~12 seconds of active deployment
+    } else if (fuel < 100) {
+      interval = setInterval(() => {
+        setFuel((prev) => Math.min(100, prev + 2)); // ~6 seconds recharge
+      }, 120);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isToxinActive, fuel]);
+
+  const handleToggleToxin = () => {
+    if (!isToxinActive && fuel < 15) return;
+    setIsToxinActive((prev) => !prev);
+  };
+
   const handleBack = () => {
     if (isExiting) return;
     setIsExiting(true);
-    // Berikan jeda 100ms agar user dapat melihat animasi exit halaman sebelum tirai racun menutup penuh
     setTimeout(() => {
       if (onBackToPortfolio) {
         onBackToPortfolio();
@@ -107,43 +137,66 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
       variants={pageContainerVariants}
       initial="hidden"
       animate={animationState}
-      className="min-h-screen bg-[#f0fdf4] dark:bg-[#090d0b] text-[#09090b] dark:text-white transition-colors duration-300 relative selection:bg-[#00f59b]/30 selection:text-white overflow-x-hidden w-full max-w-full transform-gpu"
+      className={`min-h-screen ${
+        isToxinActive ? 'bg-[#cce6d6]' : 'bg-[#dcefe3]'
+      } dark:bg-[#090d0b] text-[#09090b] dark:text-white transition-colors duration-700 relative selection:bg-[#00f59b]/30 selection:text-white overflow-x-hidden w-full max-w-full`}
     >
       {/* Subtle Tactical Toxic Ambient Glows */}
-      <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-[#10b981]/10 dark:bg-[#00f59b]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-[#059669]/10 dark:bg-[#10b981]/5 rounded-full blur-[160px] pointer-events-none -z-10" />
+      <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-[#059669]/15 dark:bg-[#00f59b]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-[#047857]/15 dark:bg-[#10b981]/5 rounded-full blur-[160px] pointer-events-none -z-10" />
 
-      {/* Sticky Tactical Navbar */}
-      <SideProfileNavbar onBack={handleBack} isExiting={isExiting} isReady={isReady} />
+      {/* Active Toxic Screen: Anchored to Page Edges (Kanan, Kiri, Atas, Bawah Halaman) */}
+      <div
+        className={`absolute inset-0 pointer-events-none z-20 transition-all duration-700 overflow-hidden ${
+          isToxinActive ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        {/* Page Perimeter Toxic Border & Chemical Edge Glow */}
+        <div className="absolute inset-0 border-4 sm:border-8 border-[#047857] dark:border-[#00f59b] shadow-[inset_0_0_80px_rgba(4,120,87,0.35)] dark:shadow-[inset_0_0_80px_rgba(0,245,155,0.25)]" />
+
+        {/* Top Edge of Page: Toxic Chemical Mist */}
+        <div className="absolute top-0 left-0 right-0 h-28 sm:h-40 bg-gradient-to-b from-[#047857]/45 via-[#059669]/15 to-transparent dark:from-[#00f59b]/35 dark:via-[#00f59b]/10 dark:to-transparent" />
+
+        {/* Bottom Edge of Page: Toxic Chemical Mist & Emitter Line */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 sm:h-48 bg-gradient-to-t from-[#047857]/55 via-[#059669]/20 to-transparent dark:from-[#00f59b]/40 dark:via-[#00f59b]/15 dark:to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[#047857] dark:bg-[#00f59b] shadow-[0_0_20px_#047857] dark:shadow-[0_0_20px_#00f59b]" />
+
+        {/* Left Edge of Page: Toxic Screen Wall Curtain */}
+        <div className="absolute top-0 bottom-0 left-0 w-6 sm:w-12 bg-gradient-to-r from-[#047857]/40 via-[#059669]/10 to-transparent dark:from-[#00f59b]/30 dark:to-transparent" />
+
+        {/* Right Edge of Page: Toxic Screen Wall Curtain */}
+        <div className="absolute top-0 bottom-0 right-0 w-6 sm:w-12 bg-gradient-to-l from-[#047857]/40 via-[#059669]/10 to-transparent dark:from-[#00f59b]/30 dark:to-transparent" />
+      </div>
+
+      {/* Floating Tactical Navbar with Live Fuel Meter & Screen Action */}
+      <SideProfileNavbar
+        onBack={handleBack}
+        isExiting={isExiting}
+        isReady={isReady}
+        fuel={fuel}
+        isToxinActive={isToxinActive}
+        onToggleToxin={handleToggleToxin}
+      />
 
       {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12">
-        {/* Tactical Banner / Identity Intro */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-12 sm:pb-16 space-y-12">
+        {/* Tactical Hero Banner: Viper Protocol Dossier */}
         <motion.section
           initial="hidden"
           whileInView={isExiting ? 'exit' : 'visible'}
-          viewport={{ once: false, amount: 0.2, margin: '-20px 0px -40px 0px' }}
+          viewport={{ once: false, amount: 0.15, margin: '-20px 0px -40px 0px' }}
           variants={scrollSectionVariants}
-          className="relative rounded-lg p-6 sm:p-8 bg-white dark:bg-[#0c120e] border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_30px_rgba(16,185,129,0.1)] dark:shadow-[0_0_35px_rgba(0,245,155,0.1)] overflow-hidden transition-colors duration-300 transform-gpu"
+          className="transform-gpu"
         >
-          {/* Angular corner cut accents */}
-          <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#10b981] dark:border-[#00f59b] opacity-80" />
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#10b981] dark:border-[#00f59b] opacity-80" />
-
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="max-w-2xl">
-              <h1 className="font-display font-black text-3xl sm:text-4xl lg:text-5xl text-[#064e3b] dark:text-white tracking-tight uppercase">
-                BEYOND THE CODE
-              </h1>
-
-              <p className="mt-3 text-sm sm:text-base font-mono text-zinc-600 dark:text-gray-300 leading-relaxed">
-                {sideProfileData.profile.bio}
-              </p>
-            </div>
-          </div>
+          <ViperHeroDossier
+            profile={sideProfileData.profile}
+            fuel={fuel}
+            isToxinActive={isToxinActive}
+            onToggleToxin={handleToggleToxin}
+          />
         </motion.section>
 
-        {/* Section 1: Gaming Universe (Gaming Battle Station) */}
+        {/* Section 1: Combat Simulation Protocols (Gaming Universe) */}
         <motion.section
           initial="hidden"
           whileInView={isExiting ? 'exit' : 'visible'}
@@ -151,7 +204,19 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
           variants={scrollSectionVariants}
           className="space-y-6 transform-gpu"
         >
-          <GamingBattleStation gamingData={sideProfileData.gaming} />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-2.5 h-6 bg-[#10b981] dark:bg-[#00f59b] rounded-xs" />
+              <h2 className="font-display font-black text-2xl sm:text-3xl tracking-wide uppercase text-[#064e3b] dark:text-white">
+                SECTION 01: COMBAT SIMULATION PROTOCOLS
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-zinc-500 dark:text-gray-400 hidden sm:inline">
+              CLUTCH FIELD REPORT AND SIGNATURE ROSTER
+            </span>
+          </div>
+
+          <GamingBattleStation gamingData={sideProfileData.gaming} isToxinActive={isToxinActive} />
         </motion.section>
 
         {/* Section 2: Athletic Feed & Workout Log */}
@@ -166,15 +231,15 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
             <div className="flex items-center gap-2.5">
               <div className="w-2.5 h-6 bg-[#10b981] dark:bg-[#00f59b] rounded-xs" />
               <h2 className="font-display font-black text-2xl sm:text-3xl tracking-wide uppercase text-[#064e3b] dark:text-white">
-                PILLAR 02 — ATHLETIC FEED
+                SECTION 02: PHYSICAL BIO-METRICS AND ENDURANCE
               </h2>
             </div>
             <span className="text-xs font-mono text-zinc-500 dark:text-gray-400 hidden sm:inline">
-              PHYSICAL ENDURANCE & DRILLS
+              ATHLETIC DRILLS AND CARDIOVASCULAR CONDITIONING
             </span>
           </div>
 
-          <SportsFeed sports={sideProfileData.sports} />
+          <SportsFeed sports={sideProfileData.sports} isToxinActive={isToxinActive} />
         </motion.section>
 
         {/* Section 3: Soundstage & Audio Frequency */}
@@ -189,15 +254,15 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
             <div className="flex items-center gap-2.5">
               <div className="w-2.5 h-6 bg-[#10b981] dark:bg-[#00f59b] rounded-xs" />
               <h2 className="font-display font-black text-2xl sm:text-3xl tracking-wide uppercase text-[#064e3b] dark:text-white">
-                PILLAR 03 — MUSIC SOUNDSTAGE
+                SECTION 03: NEURAL AUDIO FREQUENCY
               </h2>
             </div>
             <span className="text-xs font-mono text-zinc-500 dark:text-gray-400 hidden sm:inline">
-              SPOTIFY SOUNDSTAGE
+              SPOTIFY SOUNDSTAGE AND SOUNDTRACK ROTATION
             </span>
           </div>
 
-          <SpotifySoundstage musicData={sideProfileData.music} />
+          <SpotifySoundstage musicData={sideProfileData.music} isToxinActive={isToxinActive} />
         </motion.section>
 
         {/* Bottom Navigation Return */}
@@ -226,6 +291,9 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
           </div>
         </motion.div>
       </main>
+
+
     </motion.div>
   );
 }
+

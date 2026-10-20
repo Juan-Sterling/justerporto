@@ -235,7 +235,7 @@ function LightboxModal({
                 style={{ backgroundColor: accentColor }}
               />
               <span className="font-display font-black tracking-wider uppercase text-sm sm:text-base">
-                {title} // HIGHLIGHTS
+                {title} — HIGHLIGHTS
               </span>
               <span className="text-xs font-mono text-zinc-400">
                 ({currIdx + 1} of {images.length})
@@ -295,7 +295,7 @@ function LightboxModal({
  * - Beberapa gambar (carousel interaktif)
  * - 3 Agent yang sering dimainkan (visual agent cards)
  */
-function ValorantHighlightCard({ valorant, onOpenLightbox }) {
+function ValorantHighlightCard({ valorant = {}, onOpenLightbox, isToxinActive = false }) {
   const [copied, setCopied] = useState(false);
   const cardRef = useRef(null);
 
@@ -354,8 +354,16 @@ function ValorantHighlightCard({ valorant, onOpenLightbox }) {
   return (
     <div
       ref={cardRef}
-      className="relative rounded-lg p-5 sm:p-6 bg-white/95 dark:bg-[#0c120e]/95 backdrop-blur-md border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_30px_rgba(0,245,155,0.08)] transition-all duration-300 overflow-hidden flex flex-col justify-between"
+      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden flex flex-col justify-between ${
+        isToxinActive
+          ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
+          : 'bg-[#e7f4eb]/95 dark:bg-[#0c120e]/95 border border-[#059669]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(5,150,105,0.12)] dark:shadow-[0_0_30px_rgba(0,245,155,0.08)]'
+      }`}
     >
+      {/* Angular tactical corner cut brackets */}
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+
       {/* Top Accent Stripe */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10b981] via-[#00f59b] to-[#38bdf8]" />
 
@@ -431,7 +439,7 @@ function ValorantHighlightCard({ valorant, onOpenLightbox }) {
                 key={agent.name}
                 whileHover={{ y: -3, scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                className="group relative rounded-lg p-2 sm:p-2.5 bg-[#f8fafc] dark:bg-[#131c17] border border-[#10b981]/25 dark:border-[#00f59b]/25 hover:border-[#059669] dark:hover:border-[#00f59b] transition-all duration-300 flex flex-col items-center text-center overflow-hidden"
+                className="group relative rounded-lg p-2 sm:p-2.5 bg-[#d9ece1] dark:bg-[#131c17] border border-[#059669]/30 dark:border-[#00f59b]/25 hover:border-[#047857] dark:hover:border-[#00f59b] transition-all duration-300 flex flex-col items-center text-center overflow-hidden"
               >
                 {/* Agent Ambient Glow */}
                 <div
@@ -481,7 +489,7 @@ function ValorantHighlightCard({ valorant, onOpenLightbox }) {
  * - Beberapa gambar (carousel interaktif)
  * - Role utama saja
  */
-function MlbbHighlightCard({ mlbb, onOpenLightbox }) {
+function MlbbHighlightCard({ mlbb = {}, onOpenLightbox, isToxinActive = false }) {
   const [copied, setCopied] = useState(false);
   const cardRef = useRef(null);
 
@@ -540,8 +548,16 @@ function MlbbHighlightCard({ mlbb, onOpenLightbox }) {
   return (
     <div
       ref={cardRef}
-      className="relative rounded-lg p-5 sm:p-6 bg-white/95 dark:bg-[#0c120e]/95 backdrop-blur-md border border-amber-500/30 dark:border-amber-400/35 shadow-[0_4px_25px_rgba(245,158,11,0.08)] dark:shadow-[0_0_30px_rgba(245,158,11,0.08)] transition-all duration-300 overflow-hidden flex flex-col justify-between"
+      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden flex flex-col justify-between ${
+        isToxinActive
+          ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
+          : 'bg-white/95 dark:bg-[#0c120e]/95 border border-amber-500/30 dark:border-amber-400/35 shadow-[0_4px_25px_rgba(245,158,11,0.08)] dark:shadow-[0_0_30px_rgba(245,158,11,0.08)]'
+      }`}
     >
+      {/* Angular tactical corner cut brackets */}
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+
       {/* Top Accent Stripe */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600" />
 
@@ -632,7 +648,7 @@ function MlbbHighlightCard({ mlbb, onOpenLightbox }) {
  * Menampilkan game sisanya HANYA dengan nama dan gambar!
  * Tanpa teks deskripsi yang kaku dan panjang.
  */
-function OtherGamesVault({ games = [] }) {
+function OtherGamesVault({ games = [], isToxinActive = false }) {
   const scrollContainerRef = useRef(null);
 
   const scroll = (direction) => {
@@ -648,9 +664,19 @@ function OtherGamesVault({ games = [] }) {
   if (!games || games.length === 0) return null;
 
   return (
-    <div className="space-y-4 pt-3">
+    <div
+      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden space-y-4 ${
+        isToxinActive
+          ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
+          : 'bg-[#e7f4eb]/95 dark:bg-[#0c120e]/95 border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)]'
+      }`}
+    >
+      {/* Angular tactical corner cut brackets */}
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+
       {/* Header Bar */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pb-3 border-b border-[#10b981]/20 dark:border-[#00f59b]/20">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xs bg-[#10b981]/15 dark:bg-[#00f59b]/15 text-[#059669] dark:text-[#00f59b] flex items-center justify-center">
             <Gamepad2 className="w-4 h-4" />
@@ -701,7 +727,11 @@ function OtherGamesVault({ games = [] }) {
               key={game.id || index}
               whileHover={{ y: -5, scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className="group relative flex-none w-[170px] sm:w-[210px] aspect-[3/4] rounded-lg overflow-hidden bg-zinc-900 border border-black/10 dark:border-white/10 hover:border-[#10b981] dark:hover:border-[#00f59b] shadow-[0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.4)] snap-start transition-all duration-300 select-none cursor-pointer"
+              className={`group relative flex-none w-[170px] sm:w-[210px] aspect-[3/4] rounded-lg overflow-hidden bg-zinc-900 snap-start transition-all duration-300 select-none cursor-pointer ${
+                isToxinActive
+                  ? 'border-2 border-[#047857] dark:border-[#00f59b] shadow-[0_0_20px_rgba(4,120,87,0.3)] dark:shadow-[0_0_25px_rgba(0,245,155,0.3)]'
+                  : 'border border-black/10 dark:border-white/10 hover:border-[#10b981] dark:hover:border-[#00f59b] shadow-[0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.4)]'
+              }`}
             >
               {/* Cover Artwork */}
               <img
@@ -743,7 +773,7 @@ function OtherGamesVault({ games = [] }) {
  * - Emblem rank dihapus di kedua game
  * - Other Games Vault (hanya nama dan gambar)
  */
-export default function GamingBattleStation({ gamingData }) {
+export default function GamingBattleStation({ gamingData, isToxinActive = false }) {
   const [lightbox, setLightbox] = useState(null);
 
   const { valorant = {}, mlbb = {}, otherGames = [] } = gamingData || {};
@@ -771,7 +801,17 @@ export default function GamingBattleStation({ gamingData }) {
       )}
 
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-lg bg-white/90 dark:bg-[#0c120e]/90 backdrop-blur-md border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)]">
+      <div
+        className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-lg backdrop-blur-md transition-all duration-500 overflow-hidden ${
+          isToxinActive
+            ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
+            : 'bg-white/90 dark:bg-[#0c120e]/90 border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)]'
+        }`}
+      >
+        {/* Angular tactical corner cut brackets */}
+        <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-sm bg-[#10b981]/15 dark:bg-[#00f59b]/15 border border-[#10b981]/30 dark:border-[#00f59b]/40 flex items-center justify-center text-[#059669] dark:text-[#00f59b]">
             <Radio className="w-5 h-5 animate-pulse" />
@@ -790,7 +830,6 @@ export default function GamingBattleStation({ gamingData }) {
             </h2>
           </div>
         </div>
-
       </div>
 
       {/* Dual View: 1 Column on Mobile & Tablet, 2 Columns on Desktop */}
@@ -805,6 +844,7 @@ export default function GamingBattleStation({ gamingData }) {
           <ValorantHighlightCard
             valorant={valorant}
             onOpenLightbox={openLightbox}
+            isToxinActive={isToxinActive}
           />
         </motion.div>
         <motion.div
@@ -817,6 +857,7 @@ export default function GamingBattleStation({ gamingData }) {
           <MlbbHighlightCard
             mlbb={activeMlbb}
             onOpenLightbox={openLightbox}
+            isToxinActive={isToxinActive}
           />
         </motion.div>
       </div>
@@ -829,7 +870,7 @@ export default function GamingBattleStation({ gamingData }) {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="transform-gpu"
       >
-        <OtherGamesVault games={otherGames} />
+        <OtherGamesVault games={otherGames} isToxinActive={isToxinActive} />
       </motion.div>
     </div>
   );

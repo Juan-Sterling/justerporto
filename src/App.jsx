@@ -37,6 +37,7 @@ export default function App() {
   const [transitionActive, setTransitionActive] = useState(false);
   const [transitionTarget, setTransitionTarget] = useState('SIDE PROFILE');
   const [pendingRoute, setPendingRoute] = useState(null);
+  const [portalEntranceTrigger, setPortalEntranceTrigger] = useState(null);
   const [sideProfileEntranceReady, setSideProfileEntranceReady] = useState(
     () => getInitialRoute() === '/sideprofile'
   );
@@ -95,6 +96,9 @@ export default function App() {
       if (isReturningToMain) {
         // PERMINTAAN USER: Buka halaman HERO (top: 0), tapi JANGAN KELIHATAN LOMPAT!
         // Rahasia zero-jump: Matikan scrub lag, reset scroll & refresh ScrollTrigger SEKARANG di 280ms di balik tirai tertutup.
+        // Prime BaemonPortalO and CTA into hidden pre-entrance state behind closed curtain
+        setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
+
         if (window.__lenis) {
           window.__lenis.stop();
           window.__lenis.scrollTo(0, { immediate: true, force: true });
@@ -145,9 +149,13 @@ export default function App() {
 
   const handleOpenStart = useCallback(() => {
     // Dipanggil tepat pada 520ms saat tirai mulai terbuka:
-    // Memicu animasi Entrance Side Profile mengalir tepat di depan mata pengguna!
+    // 1. Memicu animasi Entrance Side Profile mengalir tepat di depan mata pengguna
     setSideProfileEntranceReady(true);
-  }, []);
+    // 2. Memicu animasi BaemonPortalO & CTA Hero mengalir tepat saat tirai terbuka dan selesai
+    if (pendingRoute === '/' || currentRoute === '/') {
+      setPortalEntranceTrigger({ phase: 'animate', timestamp: Date.now() });
+    }
+  }, [pendingRoute, currentRoute]);
 
   const handleTransitionComplete = useCallback(() => {
     setTransitionActive(false);
@@ -167,6 +175,10 @@ export default function App() {
       } else {
         setCurrentRoute('/');
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
+        setTimeout(() => {
+          setPortalEntranceTrigger({ phase: 'animate', timestamp: Date.now() });
+        }, 40);
         requestAnimationFrame(() => {
           ScrollTrigger.refresh();
           if (window.__lenis) {
@@ -265,7 +277,10 @@ export default function App() {
           {/* Main Content Sections with Laser Horizon Transitions */}
           <main className="flex-1 w-full relative z-10">
             {/* Hero Portal Zooms directly into Experience */}
-            <Hero welcomeActive={showWelcome && !welcomeExiting} />
+            <Hero
+              welcomeActive={showWelcome && !welcomeExiting}
+              portalEntranceTrigger={portalEntranceTrigger}
+            />
             <Experience />
             <LaserSectionDivider />
             <Skills />

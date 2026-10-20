@@ -62,7 +62,7 @@ function getRawSpotifyUrl(url) {
  * - Direct "Open in Spotify App" button for the currently selected playlist
  * - Clean 100% English tactical HUD layout without redundant cards or broken track listeners
  */
-export default function SpotifySoundstage({ musicData = {} }) {
+export default function SpotifySoundstage({ musicData = {}, isToxinActive = false }) {
   // Normalize playlists list
   const playlists = musicData.playlists && musicData.playlists.length > 0
     ? musicData.playlists
@@ -93,7 +93,17 @@ export default function SpotifySoundstage({ musicData = {} }) {
   };
 
   return (
-    <div className="relative rounded-lg p-5 sm:p-7 bg-white/95 dark:bg-[#0c120e]/95 backdrop-blur-md border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)] overflow-hidden transition-all duration-300">
+    <div
+      className={`relative rounded-lg p-5 sm:p-7 backdrop-blur-md transition-all duration-500 overflow-hidden ${
+        isToxinActive
+          ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
+          : 'bg-[#e7f4eb]/95 dark:bg-[#0c120e]/95 border border-[#059669]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(5,150,105,0.12)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)]'
+      }`}
+    >
+      {/* Angular tactical corner cut brackets */}
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+
       {/* Tactical Top Bar Accent */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10b981] via-[#00f59b] to-[#1db954]" />
 
@@ -170,7 +180,13 @@ export default function SpotifySoundstage({ musicData = {} }) {
       </div>
 
       {/* Active Playlist Details Strip */}
-      <div className="mt-2 mb-4 p-4 rounded-lg bg-zinc-50 dark:bg-[#121c16] border border-[#10b981]/20 dark:border-[#00f59b]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+      <div
+        className={`mt-2 mb-4 p-4 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs transition-all duration-300 ${
+          isToxinActive
+            ? 'bg-[#d2eadb] dark:bg-[#121c16] border border-[#047857] dark:border-[#00f59b] ring-1 ring-[#047857]/40 dark:ring-[#00f59b]/40 shadow-[0_0_20px_rgba(4,120,87,0.25)] dark:shadow-[0_0_20px_rgba(0,245,155,0.25)]'
+            : 'bg-[#d9ece1] dark:bg-[#121c16] border border-[#059669]/25 dark:border-[#00f59b]/20'
+        }`}
+      >
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono uppercase tracking-widest text-[#059669] dark:text-[#00f59b] font-bold">
@@ -205,7 +221,13 @@ export default function SpotifySoundstage({ musicData = {} }) {
       </div>
 
       {/* Full-Width Interactive Spotify Embed Player */}
-      <div className="relative w-full rounded-lg overflow-hidden border border-black/15 dark:border-white/10 bg-black/5 dark:bg-black/60 shadow-lg min-h-[440px] sm:min-h-[460px]">
+      <div
+        className={`relative w-full rounded-lg overflow-hidden bg-black/5 dark:bg-black/60 shadow-lg min-h-[440px] sm:min-h-[460px] transition-all duration-300 ${
+          isToxinActive
+            ? 'border-2 border-[#047857] dark:border-[#00f59b] ring-1 ring-[#047857]/50 dark:ring-[#00f59b]/50 shadow-[0_0_30px_rgba(4,120,87,0.3)] dark:shadow-[0_0_30px_rgba(0,245,155,0.35)]'
+            : 'border border-black/15 dark:border-white/10'
+        }`}
+      >
         {/* Loading Skeleton */}
         {iframeLoading && (
           <div className="absolute inset-0 bg-zinc-100 dark:bg-[#0c120e] flex flex-col items-center justify-center gap-3 z-10 transition-opacity duration-300">

@@ -43,7 +43,7 @@ function useMasonryColumns() {
  * Sesuai instruksi: CUKUP TAMPILKAN FOTO DAN NAMA OLAHRAGANYA DI BADGES
  * Tanpa teks paragraf panjang, deskripsi, atau catatan berlebih.
  */
-export default function SportsFeed({ sports = [] }) {
+export default function SportsFeed({ sports = [], isToxinActive = false }) {
   const columnCount = useMasonryColumns();
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
@@ -118,7 +118,17 @@ export default function SportsFeed({ sports = [] }) {
   const currentSport = lightboxIndex !== null ? sports[lightboxIndex] : null;
 
   return (
-    <div className="relative rounded-lg p-5 sm:p-6 bg-white/95 dark:bg-[#0c120e]/95 backdrop-blur-md border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)] overflow-hidden transition-all duration-300">
+    <div
+      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden ${
+        isToxinActive
+          ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
+          : 'bg-[#e7f4eb]/95 dark:bg-[#0c120e]/95 border border-[#059669]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(5,150,105,0.12)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)]'
+      }`}
+    >
+      {/* Angular tactical corner cut brackets */}
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+
       {/* Tactical Top Bar Accent */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10b981] via-[#00f59b] to-[#34d399]" />
 
@@ -169,7 +179,11 @@ export default function SportsFeed({ sports = [] }) {
                   whileHover={{ y: -5, scale: 1.015 }}
                   transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                   onClick={() => openLightbox(item)}
-                  className="group relative cursor-pointer rounded-lg overflow-hidden bg-zinc-950 border border-[#10b981]/25 dark:border-[#00f59b]/25 hover:border-[#059669] dark:hover:border-[#00f59b] transition-all duration-300 shadow-sm hover:shadow-lg dark:shadow-none dark:hover:shadow-[0_0_25px_rgba(0,245,155,0.22)] select-none transform-gpu"
+                  className={`group relative cursor-pointer rounded-lg overflow-hidden bg-zinc-950 transition-all duration-300 select-none transform-gpu ${
+                    isToxinActive
+                      ? 'border-2 border-[#047857] dark:border-[#00f59b] shadow-[0_0_20px_rgba(4,120,87,0.35)] dark:shadow-[0_0_25px_rgba(0,245,155,0.35)]'
+                      : 'border border-[#10b981]/25 dark:border-[#00f59b]/25 hover:border-[#059669] dark:hover:border-[#00f59b] shadow-sm hover:shadow-lg dark:shadow-none dark:hover:shadow-[0_0_25px_rgba(0,245,155,0.22)]'
+                  }`}
                 >
                   {/* Photo Container with Dynamic Aspect Ratio */}
                   <div

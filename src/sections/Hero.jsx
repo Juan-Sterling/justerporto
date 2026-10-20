@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { ArrowDown, FileText, ExternalLink, Mail, Code2, MapPin } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
@@ -18,7 +18,7 @@ const ROLES = [
   "Software Developer",
 ];
 
-export default function Hero({ welcomeActive = false }) {
+export default function Hero({ welcomeActive = false, portalEntranceTrigger = null }) {
   const { personal } = portfolioData;
   const { scrollTo } = useSmoothScroll();
 
@@ -58,6 +58,200 @@ export default function Hero({ welcomeActive = false }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
 
+  // 0. Synchronously prime all initial hidden states for ALL Hero elements
+  const primeAllHeroElements = useCallback(() => {
+    // Kill existing tweens on hero entrance elements
+    const elementsToKill = [
+      auroraCenterRef.current,
+      fogLeftRef.current,
+      fogRightRef.current,
+      portalContainerRef.current,
+      portalAuraRef.current,
+      badgesRef.current?.children,
+      emblemRef.current,
+      roleRef.current,
+      taglineRef.current,
+      ctaRef.current?.children,
+      photoCardRef.current,
+      mobilePhotoRef.current,
+    ].filter(Boolean);
+    gsap.killTweensOf(elementsToKill);
+    if (heroRef.current) {
+      gsap.killTweensOf(heroRef.current.querySelectorAll('.hero-word-inner'));
+    }
+
+    if (auroraContainerRef.current) gsap.set(auroraContainerRef.current, { opacity: 1 });
+    if (auroraCenterRef.current) gsap.set(auroraCenterRef.current, { scale: 0.85, opacity: 0 });
+    if (fogLeftRef.current) gsap.set(fogLeftRef.current, { scale: 0.9, opacity: 0 });
+    if (fogRightRef.current) gsap.set(fogRightRef.current, { scale: 0.9, opacity: 0 });
+
+    if (portalContainerRef.current) {
+      gsap.set(portalContainerRef.current, {
+        scale: 0.82,
+        rotation: -90,
+        opacity: 0,
+        transformOrigin: '50% 50%',
+        force3D: true,
+      });
+    }
+    if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1, transformOrigin: '50% 50%', force3D: true });
+    if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
+    if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
+    if (portalAuraRef.current) gsap.set(portalAuraRef.current, { scale: 0.8, opacity: 0, force3D: true });
+
+    if (contentWrapperRef.current) {
+      gsap.set(contentWrapperRef.current, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        opacity: 1,
+        filter: 'none',
+      });
+    }
+    if (leftColRef.current) gsap.set(leftColRef.current, { opacity: 1, x: 0, y: 0 });
+    if (headlineRef.current) gsap.set(headlineRef.current, { scale: 1, opacity: 1 });
+    if (badgesRef.current?.children) gsap.set(badgesRef.current.children, { y: -24, opacity: 0, scale: 0.95 });
+    if (heroRef.current) {
+      const words = heroRef.current.querySelectorAll('.hero-word-inner');
+      if (words.length > 0) gsap.set(words, { yPercent: 125, opacity: 0 });
+    }
+    if (emblemRef.current) gsap.set(emblemRef.current, { scale: 0, rotation: -25, opacity: 0 });
+    if (roleRef.current) gsap.set(roleRef.current, { x: -20, opacity: 0 });
+    if (taglineRef.current) gsap.set(taglineRef.current, { y: 22, opacity: 0 });
+    if (ctaRef.current?.children) gsap.set(ctaRef.current.children, { y: 22, opacity: 0, scale: 0.96 });
+    if (photoCardRef.current) {
+      gsap.set(photoCardRef.current, {
+        scale: 0.88,
+        opacity: 0,
+        x: 35,
+        y: 15,
+        rotation: 2,
+      });
+    }
+    if (mobilePhotoRef.current) {
+      gsap.set(mobilePhotoRef.current, {
+        scale: 0.86,
+        opacity: 0,
+        x: 18,
+        y: 12,
+        rotation: 2,
+      });
+    }
+
+    if (heroRef.current) gsap.set(heroRef.current, { opacity: 1 });
+  }, []);
+
+  // 1. Entrance Timeline for ALL Hero elements
+  const playFullHeroEntrance = useCallback(() => {
+    const entranceTl = gsap.timeline({
+      defaults: { ease: 'power3.out' },
+      delay: 0.05,
+    });
+
+    // A. Stage Aurora & Crimson Fog Atmosphere blooms and expands
+    if (auroraCenterRef.current) {
+      entranceTl.to(auroraCenterRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0);
+    }
+    if (fogLeftRef.current) {
+      entranceTl.to(fogLeftRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.08);
+    }
+    if (fogRightRef.current) {
+      entranceTl.to(fogRightRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.08);
+    }
+
+    // B. BaemonPortalO in Center Stage Scales in with 90° rotation into upright alignment
+    if (portalContainerRef.current) {
+      entranceTl.to(portalContainerRef.current, {
+        scale: 1,
+        rotation: 0,
+        opacity: 1,
+        duration: 1.25,
+        ease: 'power3.out',
+      }, 0.05);
+    }
+    if (portalAuraRef.current) {
+      entranceTl.to(portalAuraRef.current, { scale: 1, opacity: 0.85, duration: 0.9, ease: 'power2.out' }, 0.1);
+    }
+
+    // C. Top Row: Availability Beacon + Location Badge slide down
+    if (badgesRef.current?.children) {
+      entranceTl.to(badgesRef.current.children, { y: 0, opacity: 1, scale: 1, duration: 0.6, stagger: 0.1 }, 0.15);
+    }
+
+    // D. Staggered clip reveal for headline words ("Juan Sterling")
+    if (heroRef.current) {
+      const words = heroRef.current.querySelectorAll('.hero-word-inner');
+      if (words.length > 0) {
+        entranceTl.to(words, {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: 'power4.out',
+        }, 0.22);
+      }
+    }
+
+    // E. BABYMONSTER Devil Emblem spring bounce
+    if (emblemRef.current) {
+      entranceTl.to(emblemRef.current, {
+        scale: 1,
+        rotation: 0,
+        opacity: 1,
+        duration: 0.85,
+        ease: 'back.out(2.2)',
+      }, 0.45);
+    }
+
+    // F. Dynamic Typewriter Role bar slide in
+    if (roleRef.current) {
+      entranceTl.to(roleRef.current, { x: 0, opacity: 1, duration: 0.55 }, 0.55);
+    }
+
+    // G. Professional Tagline fade & float up
+    if (taglineRef.current) {
+      entranceTl.to(taglineRef.current, { y: 0, opacity: 1, duration: 0.65 }, 0.65);
+    }
+
+    // H. CTAs with spring stagger
+    if (ctaRef.current?.children) {
+      entranceTl.to(ctaRef.current.children, {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.55,
+        stagger: 0.08,
+        ease: 'back.out(1.4)',
+      }, 0.75);
+    }
+
+    // I. Portrait Photo Card entrance (Desktop & Mobile)
+    if (photoCardRef.current) {
+      entranceTl.to(photoCardRef.current, {
+        scale: 1,
+        opacity: 1,
+        x: 0,
+        y: 0,
+        rotation: 0,
+        duration: 1.05,
+        ease: 'power3.out',
+      }, 0.30);
+    }
+    if (mobilePhotoRef.current) {
+      entranceTl.to(mobilePhotoRef.current, {
+        scale: 1,
+        opacity: 1,
+        x: 0,
+        y: 0,
+        rotation: 0,
+        duration: 0.95,
+        ease: 'power3.out',
+      }, 0.30);
+    }
+
+    return entranceTl;
+  }, []);
+
   // GSAP Entrance & Scroll-Driven Portal Zoom Timeline
   useLayoutEffect(() => {
     // If welcome screen is still covering the screen, keep hero invisible
@@ -70,164 +264,10 @@ export default function Hero({ welcomeActive = false }) {
 
     const ctx = gsap.context(() => {
       // 0. Synchronously prime all initial hidden states BEFORE browser paints
-      if (auroraContainerRef.current) gsap.set(auroraContainerRef.current, { opacity: 1 });
-      if (auroraCenterRef.current) gsap.set(auroraCenterRef.current, { scale: 0.85, opacity: 0 });
-      if (fogLeftRef.current) gsap.set(fogLeftRef.current, { scale: 0.9, opacity: 0 });
-      if (fogRightRef.current) gsap.set(fogRightRef.current, { scale: 0.9, opacity: 0 });
-
-      if (portalContainerRef.current) {
-        gsap.set(portalContainerRef.current, {
-          scale: 0.82,
-          rotation: -90,
-          opacity: 0,
-          transformOrigin: '50% 50%',
-        });
-      }
-      if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1, transformOrigin: '50% 50%', force3D: true });
-      if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
-      if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
-      if (portalAuraRef.current) gsap.set(portalAuraRef.current, { scale: 0.8, opacity: 0, force3D: true });
-
-      if (contentWrapperRef.current) {
-        gsap.set(contentWrapperRef.current, {
-          scale: 1,
-          x: 0,
-          y: 0,
-          opacity: 1,
-          filter: 'none',
-        });
-      }
-      if (leftColRef.current) gsap.set(leftColRef.current, { opacity: 1, x: 0, y: 0 });
-      if (headlineRef.current) gsap.set(headlineRef.current, { scale: 1, opacity: 1 });
-      if (badgesRef.current) gsap.set(badgesRef.current.children, { y: -24, opacity: 0, scale: 0.95 });
-      gsap.set('.hero-word-inner', { yPercent: 125, opacity: 0 });
-      if (emblemRef.current) gsap.set(emblemRef.current, { scale: 0, rotation: -25, opacity: 0 });
-      if (roleRef.current) gsap.set(roleRef.current, { x: -20, opacity: 0 });
-      if (taglineRef.current) gsap.set(taglineRef.current, { y: 22, opacity: 0 });
-      if (ctaRef.current) gsap.set(ctaRef.current.children, { y: 22, opacity: 0, scale: 0.96 });
-      if (photoCardRef.current) {
-        gsap.set(photoCardRef.current, {
-          scale: 0.88,
-          opacity: 0,
-          x: 35,
-          y: 15,
-          rotation: 2,
-        });
-      }
-      if (mobilePhotoRef.current) {
-        gsap.set(mobilePhotoRef.current, {
-          scale: 0.86,
-          opacity: 0,
-          x: 18,
-          y: 12,
-          rotation: 2,
-        });
-      }
-
-      // Reveal hero section container
-      gsap.set(heroRef.current, { opacity: 1 });
+      primeAllHeroElements();
 
       // 1. Entrance Timeline (Plays once welcome screen dismisses)
-      const entranceTl = gsap.timeline({
-        defaults: { ease: 'power3.out' },
-        delay: 0.05,
-      });
-
-      // A. Stage Aurora & Crimson Fog Atmosphere blooms and expands
-      if (auroraCenterRef.current) {
-        entranceTl.to(auroraCenterRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0);
-      }
-      if (fogLeftRef.current) {
-        entranceTl.to(fogLeftRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.08);
-      }
-      if (fogRightRef.current) {
-        entranceTl.to(fogRightRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.08);
-      }
-
-      // B. BaemonPortalO in Center Stage Scales in with 90° rotation into upright alignment
-      if (portalContainerRef.current) {
-        entranceTl.to(portalContainerRef.current, {
-          scale: 1,
-          rotation: 0,
-          opacity: 1,
-          duration: 1.25,
-          ease: 'power3.out',
-        }, 0.05);
-      }
-      if (portalAuraRef.current) {
-        entranceTl.to(portalAuraRef.current, { scale: 1, opacity: 0.85, duration: 0.9, ease: 'power2.out' }, 0.1);
-      }
-
-      // C. Top Row: Availability Beacon + Location Badge slide down
-      if (badgesRef.current) {
-        entranceTl.to(badgesRef.current.children, { y: 0, opacity: 1, scale: 1, duration: 0.6, stagger: 0.1 }, 0.15);
-      }
-
-      // D. Staggered clip reveal for headline words ("Juan Sterling")
-      entranceTl.to('.hero-word-inner', {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.9,
-        stagger: 0.12,
-        ease: 'power4.out',
-      }, 0.22);
-
-      // E. BABYMONSTER Devil Emblem spring bounce
-      if (emblemRef.current) {
-        entranceTl.to(emblemRef.current, {
-          scale: 1,
-          rotation: 0,
-          opacity: 1,
-          duration: 0.85,
-          ease: 'back.out(2.2)',
-        }, 0.45);
-      }
-
-      // F. Dynamic Typewriter Role bar slide in
-      if (roleRef.current) {
-        entranceTl.to(roleRef.current, { x: 0, opacity: 1, duration: 0.55 }, 0.55);
-      }
-
-      // G. Professional Tagline fade & float up
-      if (taglineRef.current) {
-        entranceTl.to(taglineRef.current, { y: 0, opacity: 1, duration: 0.65 }, 0.65);
-      }
-
-      // H. CTAs with spring stagger
-      if (ctaRef.current) {
-        entranceTl.to(ctaRef.current.children, {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.55,
-          stagger: 0.08,
-          ease: 'back.out(1.4)',
-        }, 0.75);
-      }
-
-      // I. Portrait Photo Card entrance (Desktop & Mobile)
-      if (photoCardRef.current) {
-        entranceTl.to(photoCardRef.current, {
-          scale: 1,
-          opacity: 1,
-          x: 0,
-          y: 0,
-          rotation: 0,
-          duration: 1.05,
-          ease: 'power3.out',
-        }, 0.30);
-      }
-      if (mobilePhotoRef.current) {
-        entranceTl.to(mobilePhotoRef.current, {
-          scale: 1,
-          opacity: 1,
-          x: 0,
-          y: 0,
-          rotation: 0,
-          duration: 0.95,
-          ease: 'power3.out',
-        }, 0.30);
-      }
+      playFullHeroEntrance();
 
       // 2. Seamless Portal Zoom Timeline with pinSpacing: false
       // Explicitly locks all properties at timeline time 0 so that on SCROLL UP,
@@ -453,6 +493,18 @@ export default function Hero({ welcomeActive = false }) {
 
     return () => ctx.revert();
   }, [welcomeActive]);
+
+  // Handle ALL Hero Components Entrance Animation on return from Side Profile (via ToxicScreenTransition)
+  useEffect(() => {
+    if (!portalEntranceTrigger || !portalEntranceTrigger.phase) return;
+
+    if (portalEntranceTrigger.phase === 'prime') {
+      primeAllHeroElements();
+    } else if (portalEntranceTrigger.phase === 'animate') {
+      primeAllHeroElements();
+      playFullHeroEntrance();
+    }
+  }, [portalEntranceTrigger, primeAllHeroElements, playFullHeroEntrance]);
 
   // Role typewriter logic
   useEffect(() => {

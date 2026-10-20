@@ -7,15 +7,17 @@ export const sideProfileData = {
   profile: {
     name: "Juan Sterling",
     callsign: "OFF-DUTY PROTOCOL",
-    status: "SYSTEM ACTIVE",
-    clearanceLevel: "LEVEL-04 TACTICAL",
-    bio: "Coding is part of the story, not the whole story",
+    status: "TOXIN CAPACITY STABLE",
+    clearanceLevel: "LEVEL-04 TACTICAL CLEARANCE",
+    protocolCode: "KINGDOM RADIANT DOSSIER 02",
+    labLocation: "SEATTLE TOXICOLOGY FACILITY",
+    bio: "Coding is part of the story, not the whole story. Operating at the intersection of clean software architecture, tactical clutch play, and disciplined physical conditioning.",
   },
 
   gaming: {
     valorant: {
       riotId: "Jestergen",
-      tagline: "Juans",
+      tagline: "juans",
       highestRank: "Diamond 1",
       // Enter Valorant gameplay / screenshot URLs below:
       images: [
@@ -23,17 +25,8 @@ export const sideProfileData = {
         "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
         "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1200&q=80",
       ],
-      // 3 Most played signature agents:
+      // 3 Most played signature agents (Viper highlighted as primary):
       signatureAgents: [
-        {
-          name: "SOVA",
-          role: "Initiator",
-          image: "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/displayicon.png",
-          fullPortrait: "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/fullportrait.png",
-          iconUrl: "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/displayicon.png",
-          color: "#3b82f6",
-          accentColor: "#60a5fa",
-        },
         {
           name: "VIPER",
           role: "Controller",
@@ -42,6 +35,15 @@ export const sideProfileData = {
           iconUrl: "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/displayicon.png",
           color: "#10b981",
           accentColor: "#00f59b",
+        },
+        {
+          name: "SOVA",
+          role: "Initiator",
+          image: "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/displayicon.png",
+          fullPortrait: "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/fullportrait.png",
+          iconUrl: "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/displayicon.png",
+          color: "#3b82f6",
+          accentColor: "#60a5fa",
         },
         {
           name: "SAGE",
