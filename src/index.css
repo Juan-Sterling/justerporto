@@ -23,6 +23,8 @@
 html {
   color-scheme: light dark;
   scroll-padding-top: 5.5rem;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* Lenis smooth scrolling rules */

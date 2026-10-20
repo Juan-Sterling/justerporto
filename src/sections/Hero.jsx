@@ -80,8 +80,6 @@ export default function Hero({ welcomeActive = false }) {
           scale: 0.82,
           rotation: -90,
           opacity: 0,
-          xPercent: -50,
-          yPercent: -50,
           transformOrigin: '50% 50%',
         });
       }
@@ -253,7 +251,7 @@ export default function Hero({ welcomeActive = false }) {
             if (fogRightRef.current) gsap.set(fogRightRef.current, { opacity: 1, scale: 1 });
             if (contentWrapperRef.current) gsap.set(contentWrapperRef.current, { opacity: 1, scale: 1, x: 0, y: 0, visibility: 'visible' });
             if (leftColRef.current) gsap.set(leftColRef.current, { opacity: 1, x: 0, y: 0, visibility: 'visible' });
-            if (portalContainerRef.current) gsap.set(portalContainerRef.current, { opacity: 1, scale: 1, rotation: 0, xPercent: -50, yPercent: -50, visibility: 'visible' });
+            if (portalContainerRef.current) gsap.set(portalContainerRef.current, { opacity: 1, scale: 1, rotation: 0, visibility: 'visible' });
             if (photoCardRef.current) gsap.set(photoCardRef.current, { opacity: 1, scale: 1, rotation: 0, x: 0, y: 0, visibility: 'visible' });
             if (mobilePhotoRef.current) gsap.set(mobilePhotoRef.current, { opacity: 1, scale: 1, rotation: 0, x: 0, y: 0, visibility: 'visible' });
             if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1 });
@@ -542,10 +540,10 @@ export default function Hero({ welcomeActive = false }) {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 to-transparent dark:from-[#0f1117] dark:via-[#0f1117]/60 pointer-events-none" />
       </div>
 
-      {/* 2. BaemonPortalO Emblem: Positioned in the exact CENTER of the screen */}
+      {/* 2. BaemonPortalO Emblem: Positioned in the exact CENTER of the screen via bulletproof inset-0 flex centering */}
       <div
         ref={portalContainerRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center will-change-transform opacity-0 transform-gpu"
+        className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center will-change-transform opacity-0"
       >
         <BaemonPortalO
           ringScaleRef={ringScaleRef}
