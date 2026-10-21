@@ -101,8 +101,8 @@ export default function SpotifySoundstage({ musicData = {}, isToxinActive = fals
       }`}
     >
       {/* Angular tactical corner cut brackets */}
-      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-bl-lg m-0 z-10" />
 
       {/* Tactical Top Bar Accent */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10b981] via-[#00f59b] to-[#1db954]" />

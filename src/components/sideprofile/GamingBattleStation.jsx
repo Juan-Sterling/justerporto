@@ -361,8 +361,8 @@ function ValorantHighlightCard({ valorant = {}, onOpenLightbox, isToxinActive = 
       }`}
     >
       {/* Angular tactical corner cut brackets */}
-      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-bl-lg m-0 z-10" />
 
       {/* Top Accent Stripe */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10b981] via-[#00f59b] to-[#38bdf8]" />
@@ -555,8 +555,8 @@ function MlbbHighlightCard({ mlbb = {}, onOpenLightbox, isToxinActive = false })
       }`}
     >
       {/* Angular tactical corner cut brackets */}
-      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-bl-lg m-0 z-10" />
 
       {/* Top Accent Stripe */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600" />
@@ -665,15 +665,15 @@ function OtherGamesVault({ games = [], isToxinActive = false }) {
 
   return (
     <div
-      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden space-y-4 ${
+      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden ${
         isToxinActive
           ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
           : 'bg-[#e7f4eb]/95 dark:bg-[#0c120e]/95 border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)]'
       }`}
     >
       {/* Angular tactical corner cut brackets */}
-      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />
+      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-bl-lg m-0 z-10" />
 
       {/* Header Bar */}
       <div className="flex items-center justify-between pb-3 border-b border-[#10b981]/20 dark:border-[#00f59b]/20">
@@ -715,46 +715,82 @@ function OtherGamesVault({ games = [], isToxinActive = false }) {
       {/* Responsive Poster Gallery */}
       <div
         ref={scrollContainerRef}
-        className="flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scrollbar-none"
+        className="flex items-stretch gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scrollbar-none mt-4"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {games.map((game, index) => {
           const gameTitle = game.name || game.title || 'Game';
           const gameImg = game.image || game.coverUrl;
+          const accentColor = game.accentColor || '#00f59b';
 
           return (
             <motion.div
               key={game.id || index}
-              whileHover={{ y: -5, scale: 1.02 }}
+              whileHover={{ y: -6, scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className={`group relative flex-none w-[170px] sm:w-[210px] aspect-[3/4] rounded-lg overflow-hidden bg-zinc-900 snap-start transition-all duration-300 select-none cursor-pointer ${
+              className={`group relative flex-none w-[175px] sm:w-[215px] aspect-[3/4] rounded-lg overflow-hidden flex flex-col justify-between bg-gradient-to-b from-[#111c16] via-[#0b130e] to-[#070c09] snap-start transition-all duration-300 select-none cursor-pointer ${
                 isToxinActive
                   ? 'border-2 border-[#047857] dark:border-[#00f59b] shadow-[0_0_20px_rgba(4,120,87,0.3)] dark:shadow-[0_0_25px_rgba(0,245,155,0.3)]'
-                  : 'border border-black/10 dark:border-white/10 hover:border-[#10b981] dark:hover:border-[#00f59b] shadow-[0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.4)]'
+                  : 'border border-[#10b981]/25 dark:border-[#00f59b]/25 hover:border-[#10b981] dark:hover:border-[#00f59b] shadow-[0_4px_15px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.5)]'
               }`}
             >
-              {/* Cover Artwork */}
-              <img
-                src={gameImg}
-                alt={gameTitle}
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.src =
-                    'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80';
+              {/* Tactical Corner Brackets */}
+              <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t border-l border-[#00f59b]/40 group-hover:border-[#00f59b] transition-colors pointer-events-none" />
+              <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t border-r border-[#00f59b]/40 group-hover:border-[#00f59b] transition-colors pointer-events-none" />
+              <div className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b border-l border-[#00f59b]/40 group-hover:border-[#00f59b] transition-colors pointer-events-none" />
+              <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b border-r border-[#00f59b]/40 group-hover:border-[#00f59b] transition-colors pointer-events-none" />
+
+              {/* Ambient Radial Spotlight (Backlight Glow) */}
+              <div
+                className="absolute inset-0 opacity-25 group-hover:opacity-60 transition-opacity duration-500 pointer-events-none"
+                style={{
+                  background: `radial-gradient(circle at 50% 45%, ${accentColor} 0%, transparent 70%)`,
                 }}
               />
 
-              {/* Gradient Scrim */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+              {/* Tactical Tech Grid Texture Overlay */}
+              <div
+                className="absolute inset-0 opacity-15 group-hover:opacity-25 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)',
+                  backgroundSize: '16px 16px',
+                }}
+              />
 
-              {/* Game Name Badge (Only Name and Image) */}
-              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-3.5">
-                <span className="block font-display font-black text-sm sm:text-base text-white tracking-wide drop-shadow-md group-hover:text-[#00f59b] transition-colors duration-200">
+              {/* Top Meta Header */}
+              <div className="relative z-10 px-3.5 pt-3 flex items-center justify-between">
+                <span className="text-[9px] font-mono tracking-widest text-[#00f59b] bg-[#00f59b]/10 border border-[#00f59b]/25 px-1.5 py-0.5 rounded-xs font-bold">
+                  VAULT 0{index + 1}
+                </span>
+                {game.genre && (
+                  <span className="text-[9px] font-mono text-zinc-400 truncate max-w-[90px] uppercase">
+                    {game.genre}
+                  </span>
+                )}
+              </div>
+
+              {/* Center Game Logo Showcase */}
+              <div className="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-5">
+                <img
+                  src={gameImg}
+                  alt={gameTitle}
+                  className="max-w-[85%] max-h-[95px] sm:max-h-[115px] object-contain drop-shadow-[0_6px_18px_rgba(0,0,0,0.8)] transition-transform duration-500 ease-out group-hover:scale-110"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80';
+                  }}
+                />
+              </div>
+
+              {/* Game Name Badge (Bottom Bar) */}
+              <div className="relative z-10 p-3 sm:p-3.5 bg-black/60 backdrop-blur-md border-t border-white/5">
+                <span className="block font-display font-black text-xs sm:text-sm text-white tracking-wide truncate drop-shadow-md group-hover:text-[#00f59b] transition-colors duration-200">
                   {gameTitle}
                 </span>
-                <span className="inline-block text-[10px] font-mono text-zinc-300 opacity-80 group-hover:opacity-100 transition-opacity">
-                  TITLE 0{index + 1}
+                <span className="block text-[9px] font-mono text-zinc-400 tracking-wider mt-0.5">
+                  STATUS: VERIFIED
                 </span>
               </div>
             </motion.div>
@@ -809,8 +845,8 @@ export default function GamingBattleStation({ gamingData, isToxinActive = false 
         }`}
       >
         {/* Angular tactical corner cut brackets */}
-        <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />
+        <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-bl-lg m-0 z-10" />
 
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-sm bg-[#10b981]/15 dark:bg-[#00f59b]/15 border border-[#10b981]/30 dark:border-[#00f59b]/40 flex items-center justify-center text-[#059669] dark:text-[#00f59b]">

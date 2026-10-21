@@ -15,11 +15,12 @@ import { Zap, Radio } from 'lucide-react';
 export default function ToxicScreenTransition({
   isActive,
   targetName = 'SIDE PROFILE',
+  initialClosed = false,
   onMidpoint,
   onOpenStart,
   onComplete,
 }) {
-  const [stage, setStage] = useState('idle'); // idle | entering | midpoint | exiting
+  const [stage, setStage] = useState(() => (isActive && initialClosed ? 'midpoint' : 'idle'));
 
   // Simpan callback dalam ref untuk mencegah re-trigger effect saat state route berubah di midpoint
   const onMidpointRef = useRef(onMidpoint);
@@ -34,6 +35,28 @@ export default function ToxicScreenTransition({
 
   useEffect(() => {
     if (isActive) {
+      if (initialClosed) {
+        setStage('midpoint');
+
+        // Mode Refresh/Direct Load: Dimulai dalam keadaan tertutup rapat.
+        // Beri waktu 850ms untuk membaca HUD alert & bar fuel mengisi 0% -> 100%
+        const exitTimer = setTimeout(() => {
+          setStage('exiting');
+          if (onOpenStartRef.current) onOpenStartRef.current();
+        }, 850);
+
+        // Tirai membuka penuh pada 1250ms
+        const finishTimer = setTimeout(() => {
+          setStage('idle');
+          if (onCompleteRef.current) onCompleteRef.current();
+        }, 1250);
+
+        return () => {
+          clearTimeout(exitTimer);
+          clearTimeout(finishTimer);
+        };
+      }
+
       setStage('entering');
 
       // 1. Snappy closing: mencapai posisi penuh pada 320ms
@@ -62,7 +85,7 @@ export default function ToxicScreenTransition({
     } else {
       setStage('idle');
     }
-  }, [isActive]);
+  }, [isActive, initialClosed]);
 
   if (!isActive && stage === 'idle') return null;
 
@@ -71,9 +94,9 @@ export default function ToxicScreenTransition({
       <div className="fixed inset-0 z-[9999] pointer-events-none flex flex-col justify-between overflow-hidden">
         {/* Layer 1: Split Tactical Toxic Curtain (Top Half) */}
         <motion.div
-          initial={{ y: '-100%' }}
+          initial={{ y: initialClosed ? '0%' : '-100%' }}
           animate={{ y: stage === 'exiting' ? '-100%' : '0%' }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-[calc(50%+2px)] bg-[#090d0b] border-b-2 border-[#00f59b] relative shadow-[0_0_50px_rgba(0,245,155,0.4)] transform-gpu will-change-transform"
         >
           {/* Subtle diagonal hazard lines */}
@@ -88,7 +111,7 @@ export default function ToxicScreenTransition({
 
         {/* Center HUD Telemetry Alert */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
+          initial={{ opacity: initialClosed ? 1 : 0, scale: initialClosed ? 1 : 0.94 }}
           animate={{
             opacity: stage === 'midpoint' ? 1 : 0,
             scale: stage === 'midpoint' ? 1 : 0.96,
@@ -116,7 +139,7 @@ export default function ToxicScreenTransition({
               <motion.div
                 initial={{ width: '0%' }}
                 animate={{ width: stage === 'midpoint' || stage === 'exiting' ? '100%' : '0%' }}
-                transition={{ duration: 0.65, ease: 'easeOut' }}
+                transition={{ duration: initialClosed ? 0.7 : 0.65, ease: 'easeOut' }}
                 className="h-full bg-gradient-to-r from-[#10b981] via-[#00f59b] to-[#34d399] shadow-[0_0_10px_#00f59b]"
               />
             </div>
@@ -125,7 +148,7 @@ export default function ToxicScreenTransition({
 
         {/* Layer 2: Split Tactical Toxic Curtain (Bottom Half) */}
         <motion.div
-          initial={{ y: '100%' }}
+          initial={{ y: initialClosed ? '0%' : '100%' }}
           animate={{ y: stage === 'exiting' ? '100%' : '0%' }}
           transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-[calc(50%+2px)] bg-[#090d0b] border-t-2 border-[#00f59b] relative shadow-[0_0_50px_rgba(0,245,155,0.4)] transform-gpu will-change-transform"

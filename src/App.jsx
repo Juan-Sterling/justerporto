@@ -33,26 +33,18 @@ export default function App() {
     return '/';
   };
 
+  const isInitialSideProfile = getInitialRoute() === '/sideprofile';
+
   const [currentRoute, setCurrentRoute] = useState(getInitialRoute);
-  const [transitionActive, setTransitionActive] = useState(false);
+  const [transitionActive, setTransitionActive] = useState(isInitialSideProfile);
+  const [transitionInitialClosed, setTransitionInitialClosed] = useState(isInitialSideProfile);
   const [transitionTarget, setTransitionTarget] = useState('SIDE PROFILE');
   const [pendingRoute, setPendingRoute] = useState(null);
   const [portalEntranceTrigger, setPortalEntranceTrigger] = useState(null);
-  const [sideProfileEntranceReady, setSideProfileEntranceReady] = useState(
-    () => getInitialRoute() === '/sideprofile'
-  );
+  const [sideProfileEntranceReady, setSideProfileEntranceReady] = useState(false);
 
   // If directly accessing /sideprofile, skip opening welcome screen
-  const [showWelcome, setShowWelcome] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname.toLowerCase();
-      if (path === '/sideprofile' || path.startsWith('/sideprofile')) {
-        return false;
-      }
-    }
-    return true;
-  });
-
+  const [showWelcome, setShowWelcome] = useState(() => !isInitialSideProfile);
   const [welcomeExiting, setWelcomeExiting] = useState(false);
 
   // Mode animasi exit BABYMONSTER yang aktif: 'sheesh' (Diagonal Laser Claw Slash & Split Wipe)
@@ -62,23 +54,65 @@ export default function App() {
 
   const handleStartExit = useCallback(() => {
     setWelcomeExiting(true);
+    setPortalEntranceTrigger({ phase: 'animate', timestamp: Date.now() });
   }, []);
 
   const handleComplete = useCallback(() => {
     setShowWelcome(false);
+    if (window.__lenis) {
+      window.__lenis.resize();
+      window.__lenis.start();
+    }
     // Refresh ScrollTriggers once the welcome screen overlay is removed
     setTimeout(() => {
       ScrollTrigger.refresh();
     }, 60);
   }, []);
 
-  // Client-Side Routing with Toxic Screen Transition
+  // Client-Side Routing:
+  // - Ke Side Profile: Menggunakan Toxic Screen Transition
+  // - Kembali ke Main Portfolio: Menggunakan Baemon Welcome Screen (per permintaan user)
   const navigateTo = useCallback((targetRoute) => {
-    const isEnteringSideProfile = targetRoute === '/sideprofile';
-    if (isEnteringSideProfile) {
-      setSideProfileEntranceReady(false);
+    if (targetRoute === '/') {
+      // Kembali ke Main Portfolio: Jangan pakai ToxicScreenTransition, pakai Baemon Welcome Screen!
+      setTransitionActive(false);
+      setPendingRoute(null);
+      window.history.pushState({}, '', '/');
+
+      // Scroll ke paling atas seketika di balik WelcomeScreen
+      if (window.__lenis) {
+        window.__lenis.stop();
+        window.__lenis.scrollTo(0, { immediate: true, force: true });
+      }
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Prime BaemonPortalO & Hero elements
+      setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
+
+      // Ganti route ke '/' dan nyalakan Baemon WelcomeScreen
+      flushSync(() => {
+        setCurrentRoute('/');
+        setWelcomeExiting(false);
+        setShowWelcome(true);
+      });
+
+      // Reset & refresh ScrollTrigger
+      ScrollTrigger.getAll().forEach((st) => {
+        const isHeroTrigger = st.trigger === document.getElementById('hero') || st.vars?.trigger === '#hero' || st.vars?.id === 'hero';
+        if (isHeroTrigger && st.animation) {
+          st.animation.progress(0);
+        }
+      });
+      ScrollTrigger.refresh();
+      return;
     }
-    setTransitionTarget(isEnteringSideProfile ? 'SIDE PROFILE' : 'MAIN PORTFOLIO');
+
+    // Masuk ke Side Profile: Gunakan Toxic Screen Transition
+    setSideProfileEntranceReady(false);
+    setTransitionTarget('SIDE PROFILE');
+    setTransitionInitialClosed(false);
     setPendingRoute(targetRoute);
     setTransitionActive(true);
   }, []);
@@ -86,82 +120,33 @@ export default function App() {
   const handleTransitionMidpoint = useCallback(() => {
     if (pendingRoute) {
       window.history.pushState({}, '', pendingRoute);
-      const isReturningToMain = pendingRoute === '/';
 
       // Sinkronisasikan perubahan DOM seketika di balik tirai 100% tertutup
       flushSync(() => {
         setCurrentRoute(pendingRoute);
       });
 
-      if (isReturningToMain) {
-        // PERMINTAAN USER: Buka halaman HERO (top: 0), tapi JANGAN KELIHATAN LOMPAT!
-        // Rahasia zero-jump: Matikan scrub lag, reset scroll & refresh ScrollTrigger SEKARANG di 280ms di balik tirai tertutup.
-        // Prime BaemonPortalO and CTA into hidden pre-entrance state behind closed curtain
-        setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
-
-        if (window.__lenis) {
-          window.__lenis.stop();
-          window.__lenis.scrollTo(0, { immediate: true, force: true });
-        }
-
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-
-        // Reset ScrollTrigger animation progress pada Hero agar tidak lerping dari scroll sebelumnya
-        ScrollTrigger.getAll().forEach((st) => {
-          const isHeroTrigger = st.trigger === document.getElementById('hero') || st.vars?.trigger === '#hero' || st.vars?.id === 'hero';
-          if (isHeroTrigger && st.animation) {
-            st.animation.progress(0);
-          }
-        });
-
-        // Recalculate ScrollTrigger saat viewport tertutup tirai gelap
-        ScrollTrigger.refresh();
-
-        if (window.__lenis) {
-          window.__lenis.resize();
-          window.__lenis.start();
-        }
-
-        // Konfirmasi kepastian posisi 0 pada frame berikutnya (masih ~200ms sebelum tirai membuka di 520ms)
-        requestAnimationFrame(() => {
-          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-          if (window.__lenis) {
-            window.__lenis.scrollTo(0, { immediate: true, force: true });
-            window.__lenis.resize();
-          }
-          ScrollTrigger.refresh();
-        });
-      } else {
-        // Masuk ke Side Profile: siapkan scroll paling atas di balik tirai tertutup
-        setSideProfileEntranceReady(false);
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-        if (window.__lenis) {
-          window.__lenis.scrollTo(0, { immediate: true, force: true });
-          window.__lenis.resize();
-        }
+      // Masuk ke Side Profile: siapkan scroll paling atas di balik tirai tertutup
+      setSideProfileEntranceReady(false);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      if (window.__lenis) {
+        window.__lenis.scrollTo(0, { immediate: true, force: true });
+        window.__lenis.resize();
       }
     }
   }, [pendingRoute]);
 
   const handleOpenStart = useCallback(() => {
-    // Dipanggil tepat pada 520ms saat tirai mulai terbuka:
-    // 1. Memicu animasi Entrance Side Profile mengalir tepat di depan mata pengguna
+    // Dipanggil saat tirai toxic mulai terbuka:
     setSideProfileEntranceReady(true);
-    // 2. Memicu animasi BaemonPortalO & CTA Hero mengalir tepat saat tirai terbuka dan selesai
-    if (pendingRoute === '/' || currentRoute === '/') {
-      setPortalEntranceTrigger({ phase: 'animate', timestamp: Date.now() });
-    }
-  }, [pendingRoute, currentRoute]);
+  }, []);
 
   const handleTransitionComplete = useCallback(() => {
     setTransitionActive(false);
+    setTransitionInitialClosed(false);
     setPendingRoute(null);
-    // Note: Jangan panggil ScrollTrigger.refresh() di sini!
-    // Semua posisi Hero sudah stabil di 280ms di balik tirai sehingga saat tirai membuka, Hero sudah statis sempurna tanpa loncatan.
   }, []);
 
   // Listen to browser back/forward buttons (popstate)
@@ -173,19 +158,20 @@ export default function App() {
         setCurrentRoute('/sideprofile');
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       } else {
-        setCurrentRoute('/');
+        if (window.__lenis) {
+          window.__lenis.stop();
+          window.__lenis.scrollTo(0, { immediate: true, force: true });
+        }
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
         setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
-        setTimeout(() => {
-          setPortalEntranceTrigger({ phase: 'animate', timestamp: Date.now() });
-        }, 40);
-        requestAnimationFrame(() => {
-          ScrollTrigger.refresh();
-          if (window.__lenis) {
-            window.__lenis.scrollTo(0, { immediate: true, force: true });
-            window.__lenis.resize();
-          }
+        flushSync(() => {
+          setCurrentRoute('/');
+          setWelcomeExiting(false);
+          setShowWelcome(true);
         });
+        ScrollTrigger.refresh();
       }
     };
 
@@ -241,6 +227,7 @@ export default function App() {
         <ToxicScreenTransition
           isActive={transitionActive}
           targetName={transitionTarget}
+          initialClosed={transitionInitialClosed}
           onMidpoint={handleTransitionMidpoint}
           onOpenStart={handleOpenStart}
           onComplete={handleTransitionComplete}

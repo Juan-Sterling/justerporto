@@ -69,44 +69,55 @@ export const sideProfileData = {
       ],
     },
 
-    // Other Games: Title and cover artwork only
+    // Other Games: Title and official game logo
     otherGames: [
       {
         id: "honkai-star-rail",
         name: "Honkai Star Rail",
         title: "Honkai Star Rail",
-        image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80",
-        coverUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80",
+        genre: "Space Fantasy RPG",
+        image: "/images/games/honkai-star-rail.png",
+        coverUrl: "/images/games/honkai-star-rail.png",
+        accentColor: "#38bdf8",
       },
       {
         id: "delta-force",
         name: "Delta Force: Hawk Ops",
         title: "Delta Force: Hawk Ops",
-        image: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80",
-        coverUrl: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=800&q=80",
+        genre: "Tactical Military FPS",
+        image: "/images/games/delta-force.svg",
+        coverUrl: "/images/games/delta-force.svg",
+        accentColor: "#00f59b",
       },
       {
         id: "apex-legends",
         name: "Apex Legends",
         title: "Apex Legends",
-        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
-        coverUrl: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80",
+        genre: "Battle Royale",
+        image: "/images/games/apex-legends.svg",
+        coverUrl: "/images/games/apex-legends.svg",
+        accentColor: "#ef4444",
       },
       {
         id: "cs2",
         name: "Counter Strike 2",
         title: "Counter Strike 2",
-        image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80",
-        coverUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80",
+        genre: "Tactical FPS",
+        image: "/images/games/cs2.svg",
+        coverUrl: "/images/games/cs2.svg",
+        accentColor: "#f59e0b",
       },
       {
         id: "simcity-build-it",
         name: "Simcity Build It",
         title: "Simcity Build It",
-        image: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80",
-        coverUrl: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=80",
+        genre: "City Builder & Sim",
+        image: "/images/games/simcity-build-it.png",
+        coverUrl: "/images/games/simcity-build-it.png",
+        accentColor: "#06b6d4",
       },
     ],
+
   },
 
   sports: [

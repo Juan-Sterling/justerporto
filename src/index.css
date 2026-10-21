@@ -173,6 +173,24 @@ textarea:focus-visible {
   animation: heroRedBarExpand 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* GPU-Accelerated Viper Marquee Animation (Runs Off-Main-Thread for 60/120fps smoothness) */
+@keyframes viperMarqueeScroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-viper-marquee {
+  animation: viperMarqueeScroll 26s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 
 /* Smooth motion respect */
 @media (prefers-reduced-motion: reduce) {

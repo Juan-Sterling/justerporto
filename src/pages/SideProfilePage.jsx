@@ -5,6 +5,7 @@ import ViperHeroDossier from '../components/sideprofile/ViperHeroDossier';
 import GamingBattleStation from '../components/sideprofile/GamingBattleStation';
 import SportsFeed from '../components/sideprofile/SportsFeed';
 import SpotifySoundstage from '../components/sideprofile/SpotifySoundstage';
+import ViperSectionDivider from '../components/sideprofile/ViperSectionDivider';
 import { sideProfileData } from '../data/sideProfileData';
 import { ArrowLeft } from 'lucide-react';
 
@@ -219,6 +220,17 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
           <GamingBattleStation gamingData={sideProfileData.gaming} isToxinActive={isToxinActive} />
         </motion.section>
 
+        {/* Tactical Section Divider 01: Combat to Bio-Metrics */}
+        <ViperSectionDivider
+          isToxinActive={isToxinActive}
+          lineCode="CONDUIT-01"
+          fromSection="SECTION 01: COMBAT PROTOCOLS"
+          toSection="SECTION 02: ATHLETIC FEED"
+          tickerText="ACTIVE COMBAT SIMULATION COMPLETE • ADVANCING TO CARDIOVASCULAR TELEMETRY • RADIANITE SYSTEM PURGE NOMINAL"
+          pressure="102.4 kPa"
+          flow="86.4 L/S"
+        />
+
         {/* Section 2: Athletic Feed & Workout Log */}
         <motion.section
           initial="hidden"
@@ -241,6 +253,17 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
 
           <SportsFeed sports={sideProfileData.sports} isToxinActive={isToxinActive} />
         </motion.section>
+
+        {/* Tactical Section Divider 02: Bio-Metrics to Soundstage */}
+        <ViperSectionDivider
+          isToxinActive={isToxinActive}
+          lineCode="CONDUIT-02"
+          fromSection="SECTION 02: PHYSICAL BIO-METRICS"
+          toSection="SECTION 03: AUDIO FREQUENCY"
+          tickerText="BIOMETRIC ENDURANCE CYCLE LOGGED • SYNCHRONIZING SPOTIFY SOUNDSTAGE OSCILLATION • ACOUSTIC RESONANCE STABLE"
+          pressure="98.7 kPa"
+          flow="79.1 L/S"
+        />
 
         {/* Section 3: Soundstage & Audio Frequency */}
         <motion.section
@@ -291,7 +314,6 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
           </div>
         </motion.div>
       </main>
-
 
     </motion.div>
   );
