@@ -54,15 +54,15 @@ export default function Footer({ onNavigateToSideProfile }) {
   return (
     <footer className="relative z-10 rounded-t-[1.75rem] sm:rounded-t-[2.5rem] border border-b-0 border-[#E4E4E7] dark:border-[#1F1F23] bg-[#FFFFFF] dark:bg-[#000000] shadow-[0_-8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-4xl mx-auto flex flex-col items-center justify-center text-center space-y-4">
-        {/* Tactical Side Profile Portal Entry Button (Dark & Light Mode Supported) */}
+        {/* Tactical Side Profile Portal Entry Button (Compact & Proportional) */}
         {onNavigateToSideProfile && (
-          <div className="w-full max-w-md mx-auto my-2">
+          <div className="my-1">
             <button
               onClick={onNavigateToSideProfile}
               type="button"
               id="footer-sideprofile-trigger"
               aria-label="Access Side Profile: There's Another Side That You Don't Know"
-              className="group w-full relative flex items-center justify-between p-3.5 rounded-sm bg-[#f0fdf4] dark:bg-[#090d0b] border border-[#10b981]/35 dark:border-[#00f59b]/40 hover:border-[#059669] dark:hover:border-[#00f59b] shadow-[0_4px_20px_rgba(16,185,129,0.12)] dark:shadow-[0_0_20px_rgba(0,245,155,0.15)] hover:shadow-[0_6px_25px_rgba(16,185,129,0.22)] dark:hover:shadow-[0_0_30px_rgba(0,245,155,0.35)] transition-all duration-300 cursor-pointer overflow-hidden text-left"
+              className="group relative inline-flex items-center gap-3 px-3.5 py-2 rounded-xs bg-[#f0fdf4] dark:bg-[#090d0b] border border-[#10b981]/30 dark:border-[#00f59b]/35 hover:border-[#059669] dark:hover:border-[#00f59b] shadow-2xs hover:shadow-[0_0_15px_rgba(0,245,155,0.2)] transition-all duration-300 cursor-pointer overflow-hidden text-left"
             >
               {/* Tactical diagonal hazard lines background */}
               <div
@@ -74,28 +74,23 @@ export default function Footer({ onNavigateToSideProfile }) {
                 }}
               />
 
-              <div className="relative z-10 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xs bg-[#10b981]/15 dark:bg-[#00f59b]/20 border border-[#10b981]/30 dark:border-[#00f59b]/50 flex items-center justify-center text-[#059669] dark:text-[#00f59b] shadow-[0_2px_10px_rgba(16,185,129,0.2)] dark:shadow-[0_0_12px_rgba(0,245,155,0.4)] group-hover:scale-105 transition-transform">
-                  <Compass className="w-4 h-4" />
+              <div className="relative z-10 flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-xs bg-[#10b981]/15 dark:bg-[#00f59b]/20 border border-[#10b981]/30 dark:border-[#00f59b]/50 flex items-center justify-center text-[#059669] dark:text-[#00f59b] group-hover:scale-105 transition-transform shrink-0">
+                  <Compass className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono tracking-widest uppercase px-1.5 py-0.2 rounded-xs bg-[#10b981]/15 dark:bg-[#00f59b]/20 text-[#065f46] dark:text-[#00f59b] font-bold">
-                      OFF-DUTY
-                    </span>
-                    <span className="text-[11px] font-mono text-[#059669] dark:text-[#6ee7b7]">
-                      PERSONAL SIDE
-                    </span>
+                  <div className="text-[10px] font-mono text-[#059669] dark:text-[#6ee7b7] font-semibold tracking-wider">
+                    PERSONAL SIDE
                   </div>
-                  <div className="font-display font-black text-sm sm:text-base text-[#064e3b] dark:text-white tracking-wide group-hover:text-[#059669] dark:group-hover:text-[#00f59b] transition-colors mt-0.5">
+                  <div className="font-display font-bold text-xs sm:text-[13px] text-[#064e3b] dark:text-white tracking-wide group-hover:text-[#059669] dark:group-hover:text-[#00f59b] transition-colors leading-tight">
                     There's Another Side That You Don't Know
                   </div>
                 </div>
               </div>
 
-              <div className="relative z-10 hidden sm:flex items-center gap-1.5 text-xs font-mono font-bold text-[#059669] dark:text-[#00f59b] group-hover:translate-x-1 transition-transform">
+              <div className="relative z-10 hidden sm:flex items-center gap-1 pl-2.5 text-[11px] font-mono font-bold text-[#059669] dark:text-[#00f59b] group-hover:translate-x-0.5 transition-transform border-l border-[#10b981]/25 dark:border-[#00f59b]/25 shrink-0">
                 <span>EXPLORE</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3 h-3" />
               </div>
             </button>
           </div>
@@ -143,7 +138,8 @@ export default function Footer({ onNavigateToSideProfile }) {
           Design inspired by{' '}
           <a
             id="footer-babymonster-link"
-            href="https://www.google.com/search?q=BABYMONSTER"
+            // href="https://www.google.com/search?q=BABYMONSTER"
+            href="https://ygfamily.com/en/artists/babymonster/main"
             target="_blank"
             rel="noopener noreferrer"
             title="BABYMONSTER (Google Search)"

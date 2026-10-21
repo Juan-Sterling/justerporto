@@ -11,7 +11,7 @@ export const sideProfileData = {
     clearanceLevel: "LEVEL-04 TACTICAL CLEARANCE",
     protocolCode: "KINGDOM RADIANT DOSSIER 02",
     labLocation: "SEATTLE TOXICOLOGY FACILITY",
-    bio: "Coding is part of the story, not the whole story. Operating at the intersection of clean software architecture, tactical clutch play, and disciplined physical conditioning.",
+    bio: "Coding is part of the story, not the whole story.",
   },
 
   gaming: {

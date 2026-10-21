@@ -182,30 +182,26 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-12 sm:pb-16 space-y-12">
         {/* Tactical Hero Banner: Viper Protocol Dossier */}
-        <motion.section
-          initial="hidden"
-          whileInView={isExiting ? 'exit' : 'visible'}
-          viewport={{ once: false, amount: 0.15, margin: '-20px 0px -40px 0px' }}
-          variants={scrollSectionVariants}
-          className="transform-gpu"
-        >
+        <section className="transform-gpu">
           <ViperHeroDossier
             profile={sideProfileData.profile}
             fuel={fuel}
             isToxinActive={isToxinActive}
             onToggleToxin={handleToggleToxin}
+            isReady={isReady}
+            isExiting={isExiting}
           />
-        </motion.section>
+        </section>
 
         {/* Section 1: Combat Simulation Protocols (Gaming Universe) */}
-        <motion.section
-          initial="hidden"
-          whileInView={isExiting ? 'exit' : 'visible'}
-          viewport={{ once: false, amount: 0.1, margin: '-20px 0px -40px 0px' }}
-          variants={scrollSectionVariants}
-          className="space-y-6 transform-gpu"
-        >
-          <div className="flex items-center justify-between">
+        <section className="space-y-6">
+          <motion.div
+            initial="hidden"
+            whileInView={isExiting ? 'exit' : 'visible'}
+            viewport={{ once: false, amount: 0.4 }}
+            variants={scrollSectionVariants}
+            className="flex items-center justify-between transform-gpu"
+          >
             <div className="flex items-center gap-2.5">
               <div className="w-2.5 h-6 bg-[#10b981] dark:bg-[#00f59b] rounded-xs" />
               <h2 className="font-display font-black text-2xl sm:text-3xl tracking-wide uppercase text-[#064e3b] dark:text-white">
@@ -215,31 +211,39 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
             <span className="text-xs font-mono text-zinc-500 dark:text-gray-400 hidden sm:inline">
               CLUTCH FIELD REPORT AND SIGNATURE ROSTER
             </span>
-          </div>
+          </motion.div>
 
           <GamingBattleStation gamingData={sideProfileData.gaming} isToxinActive={isToxinActive} />
-        </motion.section>
+        </section>
 
         {/* Tactical Section Divider 01: Combat to Bio-Metrics */}
-        <ViperSectionDivider
-          isToxinActive={isToxinActive}
-          lineCode="CONDUIT-01"
-          fromSection="SECTION 01: COMBAT PROTOCOLS"
-          toSection="SECTION 02: ATHLETIC FEED"
-          tickerText="ACTIVE COMBAT SIMULATION COMPLETE • ADVANCING TO CARDIOVASCULAR TELEMETRY • RADIANITE SYSTEM PURGE NOMINAL"
-          pressure="102.4 kPa"
-          flow="86.4 L/S"
-        />
-
-        {/* Section 2: Athletic Feed & Workout Log */}
-        <motion.section
+        <motion.div
           initial="hidden"
           whileInView={isExiting ? 'exit' : 'visible'}
-          viewport={{ once: false, amount: 0.1, margin: '-20px 0px -40px 0px' }}
+          viewport={{ once: false, amount: 0.25 }}
           variants={scrollSectionVariants}
-          className="space-y-6 transform-gpu"
+          className="transform-gpu"
         >
-          <div className="flex items-center justify-between">
+          <ViperSectionDivider
+            isToxinActive={isToxinActive}
+            lineCode="CONDUIT-01"
+            fromSection="SECTION 01: COMBAT PROTOCOLS"
+            toSection="SECTION 02: ATHLETIC FEED"
+            tickerText="ACTIVE COMBAT SIMULATION COMPLETE • ADVANCING TO CARDIOVASCULAR TELEMETRY • RADIANITE SYSTEM PURGE NOMINAL"
+            pressure="102.4 kPa"
+            flow="86.4 L/S"
+          />
+        </motion.div>
+
+        {/* Section 2: Athletic Feed & Workout Log */}
+        <section className="space-y-6">
+          <motion.div
+            initial="hidden"
+            whileInView={isExiting ? 'exit' : 'visible'}
+            viewport={{ once: false, amount: 0.4 }}
+            variants={scrollSectionVariants}
+            className="flex items-center justify-between transform-gpu"
+          >
             <div className="flex items-center gap-2.5">
               <div className="w-2.5 h-6 bg-[#10b981] dark:bg-[#00f59b] rounded-xs" />
               <h2 className="font-display font-black text-2xl sm:text-3xl tracking-wide uppercase text-[#064e3b] dark:text-white">
@@ -249,31 +253,47 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
             <span className="text-xs font-mono text-zinc-500 dark:text-gray-400 hidden sm:inline">
               ATHLETIC DRILLS AND CARDIOVASCULAR CONDITIONING
             </span>
-          </div>
+          </motion.div>
 
-          <SportsFeed sports={sideProfileData.sports} isToxinActive={isToxinActive} />
-        </motion.section>
+          <motion.div
+            initial="hidden"
+            whileInView={isExiting ? 'exit' : 'visible'}
+            viewport={{ once: false, amount: 0.08 }}
+            variants={scrollSectionVariants}
+            className="transform-gpu"
+          >
+            <SportsFeed sports={sideProfileData.sports} isToxinActive={isToxinActive} />
+          </motion.div>
+        </section>
 
         {/* Tactical Section Divider 02: Bio-Metrics to Soundstage */}
-        <ViperSectionDivider
-          isToxinActive={isToxinActive}
-          lineCode="CONDUIT-02"
-          fromSection="SECTION 02: PHYSICAL BIO-METRICS"
-          toSection="SECTION 03: AUDIO FREQUENCY"
-          tickerText="BIOMETRIC ENDURANCE CYCLE LOGGED • SYNCHRONIZING SPOTIFY SOUNDSTAGE OSCILLATION • ACOUSTIC RESONANCE STABLE"
-          pressure="98.7 kPa"
-          flow="79.1 L/S"
-        />
-
-        {/* Section 3: Soundstage & Audio Frequency */}
-        <motion.section
+        <motion.div
           initial="hidden"
           whileInView={isExiting ? 'exit' : 'visible'}
-          viewport={{ once: false, amount: 0.1, margin: '-20px 0px -40px 0px' }}
+          viewport={{ once: false, amount: 0.25 }}
           variants={scrollSectionVariants}
-          className="space-y-6 transform-gpu"
+          className="transform-gpu"
         >
-          <div className="flex items-center justify-between">
+          <ViperSectionDivider
+            isToxinActive={isToxinActive}
+            lineCode="CONDUIT-02"
+            fromSection="SECTION 02: PHYSICAL BIO-METRICS"
+            toSection="SECTION 03: AUDIO FREQUENCY"
+            tickerText="BIOMETRIC ENDURANCE CYCLE LOGGED • SYNCHRONIZING SPOTIFY SOUNDSTAGE OSCILLATION • ACOUSTIC RESONANCE STABLE"
+            pressure="98.7 kPa"
+            flow="79.1 L/S"
+          />
+        </motion.div>
+
+        {/* Section 3: Soundstage & Audio Frequency */}
+        <section className="space-y-6">
+          <motion.div
+            initial="hidden"
+            whileInView={isExiting ? 'exit' : 'visible'}
+            viewport={{ once: false, amount: 0.4 }}
+            variants={scrollSectionVariants}
+            className="flex items-center justify-between transform-gpu"
+          >
             <div className="flex items-center gap-2.5">
               <div className="w-2.5 h-6 bg-[#10b981] dark:bg-[#00f59b] rounded-xs" />
               <h2 className="font-display font-black text-2xl sm:text-3xl tracking-wide uppercase text-[#064e3b] dark:text-white">
@@ -283,10 +303,18 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
             <span className="text-xs font-mono text-zinc-500 dark:text-gray-400 hidden sm:inline">
               SPOTIFY SOUNDSTAGE AND SOUNDTRACK ROTATION
             </span>
-          </div>
+          </motion.div>
 
-          <SpotifySoundstage musicData={sideProfileData.music} isToxinActive={isToxinActive} />
-        </motion.section>
+          <motion.div
+            initial="hidden"
+            whileInView={isExiting ? 'exit' : 'visible'}
+            viewport={{ once: false, amount: 0.12 }}
+            variants={scrollSectionVariants}
+            className="transform-gpu"
+          >
+            <SpotifySoundstage musicData={sideProfileData.music} isToxinActive={isToxinActive} />
+          </motion.div>
+        </section>
 
         {/* Bottom Navigation Return */}
         <motion.div
@@ -309,9 +337,19 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
             <span>Return to Main Portfolio</span>
           </button>
 
-          <div className="text-[11px] font-mono text-zinc-500 dark:text-gray-500">
-            Design Inspired by VIPER of VALORANT
-          </div>
+          <p className="text-[11px] font-mono text-zinc-500 dark:text-gray-400">
+            Design inspired by{' '}
+            <a
+              id="footer-viper-link"
+              href="https://playvalorant.com/en-us/agents/viper/"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="VIPER of VALORANT (Official Agent Dossier)"
+              className="text-[#047857] dark:text-[#00f59b] font-semibold underline-offset-4 decoration-[#047857]/60 dark:decoration-[#00f59b]/60 hover:underline hover:text-[#065f46] dark:hover:text-[#6ee7b7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#047857]/50 dark:focus-visible:ring-[#00f59b]/50 rounded-xs transition-colors duration-200 cursor-pointer"
+            >
+              VIPER of VALORANT
+            </a>
+          </p>
         </motion.div>
       </main>
 

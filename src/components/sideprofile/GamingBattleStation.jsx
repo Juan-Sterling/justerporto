@@ -837,7 +837,11 @@ export default function GamingBattleStation({ gamingData, isToxinActive = false 
       )}
 
       {/* Section Header */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 35, scale: 0.98 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-lg backdrop-blur-md transition-all duration-500 overflow-hidden ${
           isToxinActive
             ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
@@ -866,7 +870,7 @@ export default function GamingBattleStation({ gamingData, isToxinActive = false 
             </h2>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Dual View: 1 Column on Mobile & Tablet, 2 Columns on Desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">

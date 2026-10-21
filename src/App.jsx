@@ -144,6 +144,7 @@ export default function App() {
   }, []);
 
   const handleTransitionComplete = useCallback(() => {
+    setSideProfileEntranceReady(true);
     setTransitionActive(false);
     setTransitionInitialClosed(false);
     setPendingRoute(null);
