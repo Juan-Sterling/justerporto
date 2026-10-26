@@ -164,8 +164,8 @@ function ScreenshotCarousel({
                 }}
                 aria-label={`Jump to screenshot ${idx + 1}`}
                 className={`transition-all duration-300 rounded-full cursor-pointer ${idx === imageIndex
-                    ? 'w-5 h-1.5'
-                    : 'w-1.5 h-1.5 opacity-50 hover:opacity-100'
+                  ? 'w-5 h-1.5'
+                  : 'w-1.5 h-1.5 opacity-50 hover:opacity-100'
                   }`}
                 style={{
                   backgroundColor: idx === imageIndex ? accentColor : '#ffffff',
@@ -354,11 +354,10 @@ function ValorantHighlightCard({ valorant = {}, onOpenLightbox, isToxinActive = 
   return (
     <div
       ref={cardRef}
-      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden flex flex-col justify-between ${
-        isToxinActive
+      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden flex flex-col justify-between ${isToxinActive
           ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
           : 'bg-[#e7f4eb]/95 dark:bg-[#0c120e]/95 border border-[#059669]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(5,150,105,0.12)] dark:shadow-[0_0_30px_rgba(0,245,155,0.08)]'
-      }`}
+        }`}
     >
       {/* Angular tactical corner cut brackets */}
       <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />
@@ -548,11 +547,10 @@ function MlbbHighlightCard({ mlbb = {}, onOpenLightbox, isToxinActive = false })
   return (
     <div
       ref={cardRef}
-      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden flex flex-col justify-between ${
-        isToxinActive
+      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden flex flex-col justify-between ${isToxinActive
           ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
           : 'bg-white/95 dark:bg-[#0c120e]/95 border border-amber-500/30 dark:border-amber-400/35 shadow-[0_4px_25px_rgba(245,158,11,0.08)] dark:shadow-[0_0_30px_rgba(245,158,11,0.08)]'
-      }`}
+        }`}
     >
       {/* Angular tactical corner cut brackets */}
       <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />
@@ -575,7 +573,7 @@ function MlbbHighlightCard({ mlbb = {}, onOpenLightbox, isToxinActive = false })
               </span>
             </div>
             <h3 className="font-display font-black text-2xl sm:text-3xl text-zinc-900 dark:text-white tracking-wide mt-1">
-              MOBILE LEGENDS
+              MOBILE LEGENDS: BANG BANG
             </h3>
           </div>
 
@@ -665,11 +663,10 @@ function OtherGamesVault({ games = [], isToxinActive = false }) {
 
   return (
     <div
-      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden ${
-        isToxinActive
+      className={`relative rounded-lg p-5 sm:p-6 backdrop-blur-md transition-all duration-500 overflow-hidden ${isToxinActive
           ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
           : 'bg-[#e7f4eb]/95 dark:bg-[#0c120e]/95 border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)]'
-      }`}
+        }`}
     >
       {/* Angular tactical corner cut brackets */}
       <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />
@@ -728,11 +725,10 @@ function OtherGamesVault({ games = [], isToxinActive = false }) {
               key={game.id || index}
               whileHover={{ y: -6, scale: 1.02 }}
               transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className={`group relative flex-none w-[175px] sm:w-[215px] aspect-[3/4] rounded-lg overflow-hidden flex flex-col justify-between bg-gradient-to-b from-[#111c16] via-[#0b130e] to-[#070c09] snap-start transition-all duration-300 select-none cursor-pointer ${
-                isToxinActive
+              className={`group relative flex-none w-[175px] sm:w-[215px] aspect-[3/4] rounded-lg overflow-hidden flex flex-col justify-between bg-gradient-to-b from-[#111c16] via-[#0b130e] to-[#070c09] snap-start transition-all duration-300 select-none cursor-pointer ${isToxinActive
                   ? 'border-2 border-[#047857] dark:border-[#00f59b] shadow-[0_0_20px_rgba(4,120,87,0.3)] dark:shadow-[0_0_25px_rgba(0,245,155,0.3)]'
                   : 'border border-[#10b981]/25 dark:border-[#00f59b]/25 hover:border-[#10b981] dark:hover:border-[#00f59b] shadow-[0_4px_15px_rgba(0,0,0,0.2)] dark:shadow-[0_4px_25px_rgba(0,0,0,0.5)]'
-              }`}
+                }`}
             >
               {/* Tactical Corner Brackets */}
               <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t border-l border-[#00f59b]/40 group-hover:border-[#00f59b] transition-colors pointer-events-none" />
@@ -842,11 +838,10 @@ export default function GamingBattleStation({ gamingData, isToxinActive = false 
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: false, amount: 0.2 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-lg backdrop-blur-md transition-all duration-500 overflow-hidden ${
-          isToxinActive
+        className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-5 rounded-lg backdrop-blur-md transition-all duration-500 overflow-hidden ${isToxinActive
             ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
             : 'bg-white/90 dark:bg-[#0c120e]/90 border border-[#10b981]/30 dark:border-[#00f59b]/35 shadow-[0_4px_25px_rgba(16,185,129,0.08)] dark:shadow-[0_0_25px_rgba(0,245,155,0.08)]'
-        }`}
+          }`}
       >
         {/* Angular tactical corner cut brackets */}
         <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10" />

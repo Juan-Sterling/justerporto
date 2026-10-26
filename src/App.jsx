@@ -10,7 +10,8 @@ import Experience from './sections/Experience';
 import Contact from './sections/Contact';
 import Footer from './components/Footer';
 import BaemonBackground from './components/BaemonBackground';
-// [SAVED FOR FUTURE USE] Geometric & Rain Backgrounds:
+// [SAVED FOR FUTURE USE] Wave, Geometric & Rain Backgrounds:
+// import BaemonCrimsonWaveBackground from './components/BaemonCrimsonWaveBackground';
 // import BaemonGeometricBackground from './components/BaemonGeometricBackground';
 // import BaemonRainBackground from './components/BaemonRainBackground';
 // import WorkBackground from './components/WorkBackground';
