@@ -68,34 +68,107 @@ body {
   }
 }
 
-/* Subtle scrollbar */
+/* ==========================================================================
+   Dynamic Route-Specific Scrollbars (Main: Crimson Red | Side: Toxic Green)
+   ========================================================================== */
+
+/* Universal Scrollbar Dimensions */
 ::-webkit-scrollbar {
   width: 7px;
+  height: 7px;
 }
 
-::-webkit-scrollbar-track {
+/* Scrollbar hiding utilities */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* --- 1. MAIN PROFILE SCROLLBAR (Signature BABYMONSTER Crimson Red) --- */
+html,
+html.route-main {
+  scrollbar-color: #E11D2E #F1F5F9;
+}
+
+html ::-webkit-scrollbar-track,
+html.route-main ::-webkit-scrollbar-track {
   background: #F1F5F9;
 }
 
-html.dark ::-webkit-scrollbar-track {
-  background: #0f1117;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+html ::-webkit-scrollbar-thumb,
+html.route-main ::-webkit-scrollbar-thumb {
+  background: #E11D2E;
   border-radius: 4px;
 }
 
-html.dark ::-webkit-scrollbar-thumb {
-  background: #262c36;
+html ::-webkit-scrollbar-thumb:hover,
+html.route-main ::-webkit-scrollbar-thumb:hover {
+  background: #B91C1C;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+/* Dark Mode Main Profile */
+html.dark,
+html.dark.route-main {
+  scrollbar-color: #E11D2E #0f1117;
 }
 
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #384152;
+html.dark ::-webkit-scrollbar-track,
+html.dark.route-main ::-webkit-scrollbar-track {
+  background: #0f1117;
+}
+
+html.dark ::-webkit-scrollbar-thumb,
+html.dark.route-main ::-webkit-scrollbar-thumb {
+  background: #E11D2E;
+  border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover,
+html.dark.route-main ::-webkit-scrollbar-thumb:hover {
+  background: #FF3B4D;
+  box-shadow: 0 0 10px rgba(225, 29, 46, 0.6);
+}
+
+/* --- 2. SIDE PROFILE SCROLLBAR (Signature Tactical Toxic Green) --- */
+html.route-sideprofile {
+  scrollbar-color: #059669 #DCEFE3;
+}
+
+html.route-sideprofile ::-webkit-scrollbar-track {
+  background: #DCEFE3;
+}
+
+html.route-sideprofile ::-webkit-scrollbar-thumb {
+  background: #059669;
+  border-radius: 4px;
+}
+
+html.route-sideprofile ::-webkit-scrollbar-thumb:hover {
+  background: #047857;
+}
+
+/* Dark Mode Side Profile */
+html.dark.route-sideprofile {
+  scrollbar-color: #00f59b #090d0b;
+}
+
+html.dark.route-sideprofile ::-webkit-scrollbar-track {
+  background: #090d0b;
+}
+
+html.dark.route-sideprofile ::-webkit-scrollbar-thumb {
+  background: #00f59b;
+  border-radius: 4px;
+}
+
+html.dark.route-sideprofile ::-webkit-scrollbar-thumb:hover {
+  background: #34d399;
+  box-shadow: 0 0 12px rgba(0, 245, 155, 0.7);
 }
 
 /* Accessibility focus rings */

@@ -233,6 +233,17 @@ export default function App() {
 
   const isSideProfile = currentRoute === '/sideprofile';
 
+  // Synchronize route class on document.documentElement for route-specific palette styling (Scrollbars, accents)
+  useEffect(() => {
+    if (isSideProfile) {
+      document.documentElement.classList.add('route-sideprofile');
+      document.documentElement.classList.remove('route-main');
+    } else {
+      document.documentElement.classList.add('route-main');
+      document.documentElement.classList.remove('route-sideprofile');
+    }
+  }, [isSideProfile]);
+
   return (
     <SmoothScrollProvider isLocked={showWelcome}>
       <SkillModalProvider>
@@ -290,7 +301,7 @@ export default function App() {
             <Contact />
           </main>
 
-          {/* Semantic Footer with Tactical /sideprofile Trigger Button */}
+          {/* Semantic Footer with Balanced Left-Right Layout */}
           <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
         </div>
 
