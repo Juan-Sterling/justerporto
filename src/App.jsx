@@ -38,11 +38,11 @@ export default function App() {
 
   const [currentRoute, setCurrentRoute] = useState(getInitialRoute);
   const [transitionActive, setTransitionActive] = useState(isInitialSideProfile);
-  const [transitionInitialClosed, setTransitionInitialClosed] = useState(isInitialSideProfile);
+  const [transitionInitialClosed, setTransitionInitialClosed] = useState(false);
   const [transitionTarget, setTransitionTarget] = useState('SIDE PROFILE');
   const [pendingRoute, setPendingRoute] = useState(null);
   const [portalEntranceTrigger, setPortalEntranceTrigger] = useState(null);
-  const [sideProfileEntranceReady, setSideProfileEntranceReady] = useState(false);
+  const [sideProfileEntranceReady, setSideProfileEntranceReady] = useState(isInitialSideProfile);
 
   // If directly accessing /sideprofile, skip opening welcome screen
   const [showWelcome, setShowWelcome] = useState(() => !isInitialSideProfile);
@@ -128,6 +128,17 @@ export default function App() {
       });
 
       // Masuk ke Side Profile: siapkan scroll paling atas di balik tirai tertutup
+      setSideProfileEntranceReady(false);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      if (window.__lenis) {
+        window.__lenis.scrollTo(0, { immediate: true, force: true });
+        window.__lenis.resize();
+      }
+    } else {
+      // Refresh langsung pada /sideprofile (pendingRoute null):
+      // Siapkan scroll paling atas dan reset entrance di balik tirai tertutup
       setSideProfileEntranceReady(false);
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       document.documentElement.scrollTop = 0;

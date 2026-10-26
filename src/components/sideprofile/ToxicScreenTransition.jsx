@@ -20,7 +20,7 @@ export default function ToxicScreenTransition({
   onOpenStart,
   onComplete,
 }) {
-  const [stage, setStage] = useState(() => (isActive && initialClosed ? 'midpoint' : 'idle'));
+  const [stage, setStage] = useState(() => (isActive ? (initialClosed ? 'midpoint' : 'open') : 'idle'));
 
   // Simpan callback dalam ref untuk mencegah re-trigger effect saat state route berubah di midpoint
   const onMidpointRef = useRef(onMidpoint);
@@ -34,60 +34,69 @@ export default function ToxicScreenTransition({
   });
 
   useEffect(() => {
-    if (isActive) {
-      if (initialClosed) {
-        setStage('midpoint');
+    if (!isActive) {
+      setStage('idle');
+      return;
+    }
 
-        // Mode Refresh/Direct Load: Dimulai dalam keadaan tertutup rapat.
-        // Beri waktu 850ms untuk membaca HUD alert & bar fuel mengisi 0% -> 100%
-        const exitTimer = setTimeout(() => {
-          setStage('exiting');
-          if (onOpenStartRef.current) onOpenStartRef.current();
-        }, 850);
+    if (initialClosed) {
+      setStage('midpoint');
 
-        // Tirai membuka penuh pada 1250ms
-        const finishTimer = setTimeout(() => {
-          setStage('idle');
-          if (onCompleteRef.current) onCompleteRef.current();
-        }, 1250);
-
-        return () => {
-          clearTimeout(exitTimer);
-          clearTimeout(finishTimer);
-        };
-      }
-
-      setStage('entering');
-
-      // 1. Snappy closing: mencapai posisi penuh pada 320ms
-      const midTimer = setTimeout(() => {
-        setStage('midpoint');
-        if (onMidpointRef.current) onMidpointRef.current();
-      }, 320);
-
-      // 2. Membuka kembali secara natural pada 1100ms (memberi waktu ~780ms agar tulisan terbaca jelas tanpa terburu-buru)
+      // Mode Direct Load Tertutup (jika dipanggil eksplisit):
       const exitTimer = setTimeout(() => {
         setStage('exiting');
         if (onOpenStartRef.current) onOpenStartRef.current();
-      }, 1100);
+      }, 850);
 
-      // 3. Selesai transisi penuh tepat pada 1450ms
       const finishTimer = setTimeout(() => {
         setStage('idle');
         if (onCompleteRef.current) onCompleteRef.current();
-      }, 1450);
+      }, 1350);
 
       return () => {
-        clearTimeout(midTimer);
         clearTimeout(exitTimer);
         clearTimeout(finishTimer);
       };
-    } else {
-      setStage('idle');
     }
+
+    // FULL TRANSITION: OPEN -> CLOSING -> MIDPOINT (HUD) -> EXITING -> IDLE
+    setStage('open');
+
+    // Beri jeda 80ms agar browser sempat me-render frame terbuka sebelum tirai menutup
+    const startClosingTimer = setTimeout(() => {
+      setStage('closing');
+    }, 80);
+
+    // 1. Tirai menutup secara mantap & terbaca jelas (durasi 540ms): mencapai posisi tengah pada 620ms
+    const midTimer = setTimeout(() => {
+      setStage('midpoint');
+      if (onMidpointRef.current) onMidpointRef.current();
+    }, 620);
+
+    // 2. Membuka kembali secara natural setelah HUD alert terbaca jelas (~750ms di midpoint) pada 1370ms
+    const exitTimer = setTimeout(() => {
+      setStage('exiting');
+      if (onOpenStartRef.current) onOpenStartRef.current();
+    }, 1370);
+
+    // 3. Selesai transisi penuh tepat pada 1870ms
+    const finishTimer = setTimeout(() => {
+      setStage('idle');
+      if (onCompleteRef.current) onCompleteRef.current();
+    }, 1870);
+
+    return () => {
+      clearTimeout(startClosingTimer);
+      clearTimeout(midTimer);
+      clearTimeout(exitTimer);
+      clearTimeout(finishTimer);
+    };
   }, [isActive, initialClosed]);
 
-  if (!isActive && stage === 'idle') return null;
+  if (!isActive && (stage === 'idle' || stage === 'open')) return null;
+
+  const topCurtainY = stage === 'open' ? '-100%' : stage === 'exiting' ? '-100%' : '0%';
+  const bottomCurtainY = stage === 'open' ? '100%' : stage === 'exiting' ? '100%' : '0%';
 
   return (
     <AnimatePresence>
@@ -95,8 +104,11 @@ export default function ToxicScreenTransition({
         {/* Layer 1: Split Tactical Toxic Curtain (Top Half) */}
         <motion.div
           initial={{ y: initialClosed ? '0%' : '-100%' }}
-          animate={{ y: stage === 'exiting' ? '-100%' : '0%' }}
-          transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          animate={{ y: topCurtainY }}
+          transition={{
+            duration: stage === 'exiting' ? 0.48 : 0.54,
+            ease: stage === 'exiting' ? [0.16, 1, 0.3, 1] : [0.22, 1, 0.36, 1],
+          }}
           className="w-full h-[calc(50%+2px)] bg-[#090d0b] border-b-2 border-[#00f59b] relative shadow-[0_0_50px_rgba(0,245,155,0.4)] transform-gpu will-change-transform"
         >
           {/* Subtle diagonal hazard lines */}
@@ -116,7 +128,7 @@ export default function ToxicScreenTransition({
             opacity: stage === 'midpoint' ? 1 : 0,
             scale: stage === 'midpoint' ? 1 : 0.96,
           }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
+          transition={{ duration: 0.22, ease: 'easeOut' }}
           className="absolute inset-0 flex items-center justify-center p-4 transform-gpu pointer-events-none"
         >
           <div className="bg-[#090d0b]/95 border border-[#00f59b]/70 backdrop-blur-md px-6 py-4 rounded-xs shadow-[0_0_40px_rgba(0,245,155,0.4)] flex flex-col items-center text-center max-w-sm">
@@ -149,8 +161,11 @@ export default function ToxicScreenTransition({
         {/* Layer 2: Split Tactical Toxic Curtain (Bottom Half) */}
         <motion.div
           initial={{ y: initialClosed ? '0%' : '100%' }}
-          animate={{ y: stage === 'exiting' ? '100%' : '0%' }}
-          transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          animate={{ y: bottomCurtainY }}
+          transition={{
+            duration: stage === 'exiting' ? 0.48 : 0.54,
+            ease: stage === 'exiting' ? [0.16, 1, 0.3, 1] : [0.22, 1, 0.36, 1],
+          }}
           className="w-full h-[calc(50%+2px)] bg-[#090d0b] border-t-2 border-[#00f59b] relative shadow-[0_0_50px_rgba(0,245,155,0.4)] transform-gpu will-change-transform"
         >
           <div
