@@ -70,7 +70,7 @@ export default function BaemonBackground() {
 
         // Angle around center for natural ambient dispersion
         const angle = random(0, Math.PI * 2);
-        
+
         // Distribution: Some close to center portal, others spread throughout the viewport
         const distanceRatio = Math.pow(random(0.15, 1.0), 0.85);
         const maxDist = Math.max(width, height) * 0.65;
@@ -107,8 +107,6 @@ export default function BaemonBackground() {
         const rotSpeed = random(-0.008, 0.008) * (0.5 + z * 0.5);
         const floatSpeed = random(0.0008, 0.002);
         const floatPhase = random(0, Math.PI * 2);
-        const glintPhase = random(0, Math.PI * 2);
-        const glintSpeed = random(0.015, 0.04);
 
         shards.push({
           baseX,
@@ -124,8 +122,6 @@ export default function BaemonBackground() {
           rotSpeed,
           floatSpeed,
           floatPhase,
-          glintPhase,
-          glintSpeed,
         });
       }
     };
@@ -419,30 +415,6 @@ export default function BaemonBackground() {
               : `rgba(225, 29, 46, ${(baseAlpha * 0.75).toFixed(2)})`;
           }
           ctx.fill();
-        }
-
-        // 3. Specular Glint (Occasional cinematic sparkle on foreground shards)
-        if (s.z > 0.65) {
-          const glintVal = Math.sin(time * 3.5 + s.glintPhase);
-          if (glintVal > 0.88) {
-            const glintIntensity = (glintVal - 0.88) / 0.12;
-            const glintSize = (4 + s.z * 5) * glintIntensity;
-
-            ctx.beginPath();
-            ctx.arc(0, -halfL * 0.75, glintSize * 0.45, 0, Math.PI * 2);
-            ctx.fillStyle = isDark ? `rgba(255, 255, 255, ${(glintIntensity * 0.9).toFixed(2)})` : `rgba(255, 255, 255, ${(glintIntensity * 0.75).toFixed(2)})`;
-            ctx.fill();
-
-            // Tiny 4-point cross flare
-            ctx.beginPath();
-            ctx.moveTo(0, -halfL * 0.75 - glintSize);
-            ctx.lineTo(0, -halfL * 0.75 + glintSize);
-            ctx.moveTo(-glintSize, -halfL * 0.75);
-            ctx.lineTo(glintSize, -halfL * 0.75);
-            ctx.lineWidth = 0.9;
-            ctx.strokeStyle = isDark ? `rgba(255, 255, 255, ${(glintIntensity * 0.85).toFixed(2)})` : `rgba(255, 255, 255, ${(glintIntensity * 0.65).toFixed(2)})`;
-            ctx.stroke();
-          }
         }
 
         ctx.restore();
