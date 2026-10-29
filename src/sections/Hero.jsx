@@ -648,7 +648,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                 <div className="flex-1 space-y-1.5 sm:space-y-2.5 min-w-0">
                   <h1
                     ref={headlineRef}
-                    className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.08] tracking-tighter will-change-transform flex flex-col items-start gap-0.5 sm:gap-1"
+                    className="font-display text-[2.2rem] xs:text-4xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.05] tracking-tighter will-change-transform flex flex-col items-start gap-0.5 sm:gap-1"
                   >
                     <span className="sr-only">{personal.name}</span>
                     <span aria-hidden="true" className="block overflow-hidden py-0.5 -my-0.5">
@@ -656,7 +656,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                         Juan
                       </span>
                     </span>
-                    <div aria-hidden="true" className="flex items-center gap-2 sm:gap-3 flex-wrap justify-start">
+                    <div aria-hidden="true" className="flex items-center gap-2 sm:gap-2.5 flex-nowrap justify-start">
                       <span className="inline-block overflow-hidden py-0.5 -my-0.5">
                         <span className="hero-word-inner inline-block will-change-transform opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
                           Sterling
@@ -666,11 +666,11 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                       {/* BABYMONSTER Devil Emblem */}
                       <div 
                         ref={emblemRef}
-                        className="relative inline-flex flex-col items-center justify-center shrink-0 -mt-1 select-none group cursor-default will-change-transform opacity-0"
+                        className="relative inline-flex flex-col items-center justify-center shrink-0 -mt-0.5 sm:-mt-1 select-none group cursor-default will-change-transform opacity-0"
                         title="BAEMON // 07"
                       >
                         {/* Stylized Devil Horns */}
-                        <div className="flex items-center justify-between w-7 sm:w-9 -mb-1 px-0.5 text-[#E11D2E] filter drop-shadow-[0_0_6px_rgba(225,29,46,0.5)] dark:drop-shadow-[0_0_8px_rgba(225,29,46,0.8)] group-hover:scale-110 transition-transform duration-300">
+                        <div className="flex items-center justify-between w-8 sm:w-9 -mb-0.5 sm:-mb-1 px-0.5 text-[#E11D2E] filter drop-shadow-[0_0_6px_rgba(225,29,46,0.5)] dark:drop-shadow-[0_0_8px_rgba(225,29,46,0.8)] group-hover:scale-110 transition-transform duration-300">
                           <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 -rotate-12 transform" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C9 7 4 14 3 22C7 19 11 15 12 2Z" />
                           </svg>
@@ -680,9 +680,9 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                         </div>
 
                         {/* Badge Container */}
-                        <div className="p-1 sm:p-2 rounded-xl bg-white dark:bg-[#090909] border border-[#E11D2E]/35 dark:border-[#E11D2E]/50 shadow-md shadow-[#E11D2E]/10 dark:shadow-[#E11D2E]/20 group-hover:shadow-lg group-hover:shadow-[#E11D2E]/25 dark:group-hover:shadow-[#E11D2E]/35 group-hover:border-[#E11D2E] transition-all duration-300 relative">
+                        <div className="p-1.5 sm:p-2 rounded-xl bg-white dark:bg-[#090909] border border-[#E11D2E]/35 dark:border-[#E11D2E]/50 shadow-md shadow-[#E11D2E]/10 dark:shadow-[#E11D2E]/20 group-hover:shadow-lg group-hover:shadow-[#E11D2E]/25 dark:group-hover:shadow-[#E11D2E]/35 group-hover:border-[#E11D2E] transition-all duration-300 relative">
                           <div className="absolute inset-0 rounded-xl bg-[#E11D2E]/8 dark:bg-[#E11D2E]/20 blur-xs pointer-events-none animate-pulse" />
-                          <Code2 className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-[#E11D2E] relative z-10" />
+                          <Code2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#E11D2E] relative z-10" />
                         </div>
                       </div>
                     </div>
@@ -701,14 +701,14 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                 {/* Mobile / Tablet Portrait Photo Card (Sejajar dengan nama pada HP!) */}
                 <div
                   ref={mobilePhotoRef}
-                  className="lg:hidden shrink-0 self-start mt-2 sm:mt-1 opacity-0 will-change-transform"
+                  className="lg:hidden shrink-0 self-start mt-0.5 sm:mt-1 opacity-0 will-change-transform"
                 >
                   <div className="relative group">
                     {/* Soft crimson ambient backlight */}
                     <div className="absolute -inset-1.5 bg-gradient-to-tr from-[#E11D2E]/25 via-[#FF3B4D]/15 to-transparent blur-md rounded-2xl -z-10 dark:opacity-80 opacity-40 pointer-events-none" />
 
                     {/* Frame */}
-                    <div className="relative w-20 h-28 sm:w-24 sm:h-34 rounded-2xl overflow-hidden border border-zinc-200/90 dark:border-white/10 shadow-lg shadow-black/10 dark:shadow-[#E11D2E]/20 bg-zinc-100 dark:bg-[#121214]">
+                    <div className="relative w-[84px] h-[116px] sm:w-24 sm:h-34 rounded-2xl overflow-hidden border border-zinc-200/90 dark:border-white/10 shadow-lg shadow-black/10 dark:shadow-[#E11D2E]/20 bg-zinc-100 dark:bg-[#121214]">
                       <img
                         src={HERO_PHOTO_URL}
                         alt="Juan Sterling"
