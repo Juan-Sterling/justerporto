@@ -69,31 +69,55 @@ export default function SideProfileNavbar({
 
         {/* Center: Attached Toxin Screen Action & Fuel Gauge Capsule */}
         <div className="flex items-center rounded-full p-0.5 bg-black/5 dark:bg-white/5 border border-[#059669]/30 dark:border-[#00f59b]/25 shadow-xs">
-          {/* Toxin Screen Toggle Button */}
+          {/* Toxin Screen Toggle Button with Dynamic Mobile Energy Fill */}
           <button
             type="button"
             onClick={onToggleToxin}
             disabled={!isToxinActive && fuel < 15}
             title={isToxinActive ? 'Vent Toxic Screen' : 'Deploy Toxic Screen'}
-            className={`group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-xs hover:scale-105 active:scale-95 shrink-0 ${
-              isToxinActive
-                ? 'bg-red-600 hover:bg-red-700 text-white shadow-[0_0_12px_rgba(239,68,68,0.5)] animate-pulse'
-                : fuel < 15
+            className={`group relative overflow-hidden inline-flex items-center rounded-full text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-xs hover:scale-105 active:scale-95 shrink-0 ${
+              fuel < 15 && !isToxinActive
                 ? 'bg-zinc-300 dark:bg-zinc-800 text-zinc-500 cursor-not-allowed'
-                : 'bg-[#047857] hover:bg-[#065f46] dark:bg-[#00f59b] dark:hover:bg-[#34d399] text-white dark:text-black shadow-[0_2px_10px_rgba(4,120,87,0.25)] dark:shadow-[0_0_15px_rgba(0,245,155,0.3)]'
+                : isToxinActive
+                ? 'bg-[#16221c] sm:bg-red-600 sm:hover:bg-red-700 text-white shadow-[0_0_12px_rgba(239,68,68,0.35)]'
+                : 'bg-[#afd8bd] dark:bg-[#16221c] sm:bg-[#047857] sm:hover:bg-[#065f46] sm:dark:bg-[#00f59b] sm:dark:hover:bg-[#34d399] sm:text-white sm:dark:text-black shadow-[0_2px_10px_rgba(4,120,87,0.2)] dark:shadow-[0_0_15px_rgba(0,245,155,0.25)]'
             }`}
           >
-            <Zap className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
-            <span className="hidden sm:inline">
-              {isToxinActive ? 'VENT TOXIN' : 'TOXIN SCREEN'}
-            </span>
-            <span className="sm:hidden">
-              {isToxinActive ? 'VENT' : 'TOXIN'}
+            {/* Mobile Energy Fill Layer (Solid color matching previous fuel gauge, zero gradient) */}
+            <div
+              className={`sm:hidden absolute inset-y-0 left-0 transition-all duration-300 pointer-events-none ${
+                isToxinActive
+                  ? 'bg-red-600 shadow-[0_0_8px_#ef4444]'
+                  : fuel < 15
+                  ? 'bg-zinc-400 dark:bg-zinc-700'
+                  : 'bg-[#00f59b] dark:bg-[#00f59b] shadow-[0_0_8px_#00f59b]'
+              }`}
+              style={{ width: `${fuel}%` }}
+            />
+
+            {/* Foreground Content */}
+            <span
+              className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 transition-colors duration-200 ${
+                isToxinActive
+                  ? 'text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]'
+                  : 'text-[#062013] dark:text-black sm:text-white sm:dark:text-black'
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5 transition-transform group-hover:scale-110 shrink-0" />
+              <span className="hidden sm:inline">
+                {isToxinActive ? 'VENT TOXIN' : 'TOXIN SCREEN'}
+              </span>
+              <span className="sm:hidden font-bold">
+                {isToxinActive ? 'VENT' : 'TOXIN'}
+              </span>
+              <span className="sm:hidden text-[10px] font-mono font-bold tracking-normal ml-0.5 opacity-90">
+                {Math.round(fuel)}%
+              </span>
             </span>
           </button>
 
-          {/* Attached Fuel Progress Gauge */}
-          <div className="flex items-center gap-2 text-[#064e3b] dark:text-[#6ee7b7] px-2.5 sm:px-3 py-1">
+          {/* Desktop Attached Fuel Progress Gauge (Hidden on mobile for ultra-compact layout) */}
+          <div className="hidden sm:flex items-center gap-2 text-[#064e3b] dark:text-[#6ee7b7] px-2.5 sm:px-3 py-1">
             <span className="font-bold text-[11px] hidden xs:inline">FUEL</span>
             <div className="w-12 sm:w-16 h-2 bg-[#afd8bd] dark:bg-[#16221c] rounded-full overflow-hidden border border-[#059669]/35 dark:border-[#00f59b]/30">
               <div
