@@ -68,6 +68,11 @@
 
         const isSide = window.location.pathname.toLowerCase().startsWith('/sideprofile');
         document.documentElement.classList.add(isSide ? 'route-sideprofile' : 'route-main');
+
+        // Prevent browser from auto-restoring scroll position on back/forward navigation
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
       } catch (e) { }
     })();
   </script>

@@ -455,17 +455,13 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
 
       {/* 2. Top Bar: Baemon Inspired System Tag */}
       <div className={`relative z-10 w-full flex items-center justify-between text-xs font-mono ${options.isDrip ? 'drip-collapse' : ''}`}>
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E11D2E] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E11D2E]" />
-          </span>
-          <span className="tracking-widest uppercase text-[11px] text-[#52525B] dark:text-[#A1A1AA] font-semibold">
+        <div className="flex items-center">
+          <span className="tracking-widest uppercase text-[11px] text-zinc-800 dark:text-zinc-200 font-bold">
             BAEMON
           </span>
         </div>
 
-        <div className="text-[11px] font-mono tracking-widest text-[#71717A] dark:text-[#52525B]">
+        <div className="text-[11px] font-mono tracking-widest text-zinc-600 dark:text-zinc-300 font-medium">
           MONSTIEZ
         </div>
       </div>
@@ -571,7 +567,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       </div>
 
       {/* 4. Bottom Footer: Baemon Swagger */}
-      <div className={`relative z-10 w-full flex items-center justify-between text-[11px] font-mono text-[#71717A] dark:text-[#52525B] ${options.isDrip ? 'drip-collapse' : ''}`}>
+      <div className={`relative z-10 w-full flex items-center justify-between text-[11px] font-mono text-zinc-600 dark:text-zinc-300 font-medium ${options.isDrip ? 'drip-collapse' : ''}`}>
         <span>DESIGN INSPIRED BY BABYMONSTER</span>
         <span className="hidden sm:inline"></span>
         <span>INDONESIA</span>

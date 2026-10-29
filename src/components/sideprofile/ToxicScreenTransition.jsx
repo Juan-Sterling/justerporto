@@ -36,19 +36,27 @@ export default function ToxicScreenTransition({
   useEffect(() => {
     if (!isActive) {
       setStage('idle');
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
       return;
     }
+
+    // Lock scrolling and hide scrollbar while transition is running
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
 
     if (initialClosed) {
       setStage('midpoint');
 
-      // Mode Direct Load Tertutup (jika dipanggil eksplisit):
+      // Mode Direct Load Tertutup (Side Profile Welcome Screen):
       const exitTimer = setTimeout(() => {
         setStage('exiting');
         if (onOpenStartRef.current) onOpenStartRef.current();
       }, 850);
 
       const finishTimer = setTimeout(() => {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
         setStage('idle');
         if (onCompleteRef.current) onCompleteRef.current();
       }, 1350);
@@ -56,6 +64,8 @@ export default function ToxicScreenTransition({
       return () => {
         clearTimeout(exitTimer);
         clearTimeout(finishTimer);
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
       };
     }
 
@@ -81,6 +91,8 @@ export default function ToxicScreenTransition({
 
     // 3. Selesai transisi penuh tepat pada 1870ms
     const finishTimer = setTimeout(() => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
       setStage('idle');
       if (onCompleteRef.current) onCompleteRef.current();
     }, 1870);
@@ -90,6 +102,8 @@ export default function ToxicScreenTransition({
       clearTimeout(midTimer);
       clearTimeout(exitTimer);
       clearTimeout(finishTimer);
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [isActive, initialClosed]);
 
@@ -100,7 +114,13 @@ export default function ToxicScreenTransition({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[9999] pointer-events-none flex flex-col justify-between overflow-hidden">
+      <div
+        className="fixed inset-0 z-[9999] pointer-events-auto select-none touch-none flex flex-col justify-between overflow-hidden"
+        onWheel={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
         {/* Layer 1: Split Tactical Toxic Curtain (Top Half) */}
         <motion.div
           initial={{ y: initialClosed ? '0%' : '-100%' }}

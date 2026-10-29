@@ -38,7 +38,7 @@ export default function App() {
 
   const [currentRoute, setCurrentRoute] = useState(getInitialRoute);
   const [transitionActive, setTransitionActive] = useState(isInitialSideProfile);
-  const [transitionInitialClosed, setTransitionInitialClosed] = useState(false);
+  const [transitionInitialClosed, setTransitionInitialClosed] = useState(isInitialSideProfile);
   const [transitionTarget, setTransitionTarget] = useState('SIDE PROFILE');
   const [pendingRoute, setPendingRoute] = useState(null);
   const [portalEntranceTrigger, setPortalEntranceTrigger] = useState(null);
@@ -55,7 +55,6 @@ export default function App() {
 
   const handleStartExit = useCallback(() => {
     setWelcomeExiting(true);
-    setPortalEntranceTrigger({ phase: 'animate', timestamp: Date.now() });
   }, []);
 
   const handleComplete = useCallback(() => {
@@ -70,43 +69,64 @@ export default function App() {
     }, 60);
   }, []);
 
+  // Helper: Reliable return to Main Portfolio
+  // Resets scroll, primes Hero, resets ScrollTrigger scrub progress, and displays Welcome Screen
+  const returnToMainPortfolio = useCallback(() => {
+    setTransitionActive(false);
+    setPendingRoute(null);
+
+    // 1. Instantly stop Lenis and reset scroll to absolute top
+    if (window.__lenis) {
+      window.__lenis.stop();
+      window.__lenis.scrollTo(0, { immediate: true, force: true });
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    // 2. Prime BaemonPortalO & Hero elements to hidden pre-entrance states
+    setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
+
+    // 3. Switch route to '/' and activate WelcomeScreen
+    flushSync(() => {
+      setCurrentRoute('/');
+      setWelcomeExiting(false);
+      setShowWelcome(true);
+    });
+
+    // 4. Explicitly reset Hero ScrollTrigger scrub progress to 0
+    const heroST = ScrollTrigger.getById('hero');
+    if (heroST && heroST.animation) {
+      heroST.animation.progress(0);
+    }
+    ScrollTrigger.getAll().forEach((st) => {
+      const isHeroTrigger =
+        st.trigger === document.getElementById('hero') ||
+        st.vars?.trigger === '#hero' ||
+        st.vars?.id === 'hero';
+      if (isHeroTrigger && st.animation) {
+        st.animation.progress(0);
+      }
+    });
+
+    // 5. Re-confirm scroll position 0 on next animation frame to override any browser async restoration
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      if (window.__lenis) {
+        window.__lenis.scrollTo(0, { immediate: true, force: true });
+      }
+    });
+  }, []);
+
   // Client-Side Routing:
   // - Ke Side Profile: Menggunakan Toxic Screen Transition
   // - Kembali ke Main Portfolio: Menggunakan Baemon Welcome Screen (per permintaan user)
   const navigateTo = useCallback((targetRoute) => {
     if (targetRoute === '/') {
-      // Kembali ke Main Portfolio: Jangan pakai ToxicScreenTransition, pakai Baemon Welcome Screen!
-      setTransitionActive(false);
-      setPendingRoute(null);
       window.history.pushState({}, '', '/');
-
-      // Scroll ke paling atas seketika di balik WelcomeScreen
-      if (window.__lenis) {
-        window.__lenis.stop();
-        window.__lenis.scrollTo(0, { immediate: true, force: true });
-      }
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-
-      // Prime BaemonPortalO & Hero elements
-      setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
-
-      // Ganti route ke '/' dan nyalakan Baemon WelcomeScreen
-      flushSync(() => {
-        setCurrentRoute('/');
-        setWelcomeExiting(false);
-        setShowWelcome(true);
-      });
-
-      // Reset & refresh ScrollTrigger
-      ScrollTrigger.getAll().forEach((st) => {
-        const isHeroTrigger = st.trigger === document.getElementById('hero') || st.vars?.trigger === '#hero' || st.vars?.id === 'hero';
-        if (isHeroTrigger && st.animation) {
-          st.animation.progress(0);
-        }
-      });
-      ScrollTrigger.refresh();
+      returnToMainPortfolio();
       return;
     }
 
@@ -116,7 +136,7 @@ export default function App() {
     setTransitionInitialClosed(false);
     setPendingRoute(targetRoute);
     setTransitionActive(true);
-  }, []);
+  }, [returnToMainPortfolio]);
 
   const handleTransitionMidpoint = useCallback(() => {
     if (pendingRoute) {
@@ -164,6 +184,11 @@ export default function App() {
 
   // Listen to browser back/forward buttons (popstate)
   useEffect(() => {
+    // Disable native browser automatic scroll restoration so back button doesn't jump down
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
     const handlePopState = () => {
       const path = window.location.pathname.toLowerCase();
       if (path === '/sideprofile' || path.startsWith('/sideprofile')) {
@@ -171,26 +196,13 @@ export default function App() {
         setCurrentRoute('/sideprofile');
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       } else {
-        if (window.__lenis) {
-          window.__lenis.stop();
-          window.__lenis.scrollTo(0, { immediate: true, force: true });
-        }
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-        setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
-        flushSync(() => {
-          setCurrentRoute('/');
-          setWelcomeExiting(false);
-          setShowWelcome(true);
-        });
-        ScrollTrigger.refresh();
+        returnToMainPortfolio();
       }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [returnToMainPortfolio]);
 
   // Active section scroll observer for main portfolio navbar
   useEffect(() => {
@@ -245,7 +257,7 @@ export default function App() {
   }, [isSideProfile]);
 
   return (
-    <SmoothScrollProvider isLocked={showWelcome}>
+    <SmoothScrollProvider isLocked={showWelcome || transitionActive}>
       <SkillModalProvider>
         {/* Toxic Screen Transition Curtain */}
         <ToxicScreenTransition

@@ -274,6 +274,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       // the Stage Aurora & Crimson Fog and all elements return 100% to their full opacity
       const scrollTl = gsap.timeline({
         scrollTrigger: {
+          id: 'hero',
           trigger: heroRef.current,
           start: 'top top',
           end: 'bottom top', // Exactly 100vh scroll: connects directly to Experience with zero dead space
@@ -494,17 +495,14 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
     return () => ctx.revert();
   }, [welcomeActive]);
 
-  // Handle ALL Hero Components Entrance Animation on return from Side Profile (via ToxicScreenTransition)
+  // Handle Hero Initial Prime State on return from Side Profile (behind WelcomeScreen)
   useEffect(() => {
     if (!portalEntranceTrigger || !portalEntranceTrigger.phase) return;
 
     if (portalEntranceTrigger.phase === 'prime') {
       primeAllHeroElements();
-    } else if (portalEntranceTrigger.phase === 'animate') {
-      primeAllHeroElements();
-      playFullHeroEntrance();
     }
-  }, [portalEntranceTrigger, primeAllHeroElements, playFullHeroEntrance]);
+  }, [portalEntranceTrigger, primeAllHeroElements]);
 
   // Role typewriter logic
   useEffect(() => {
