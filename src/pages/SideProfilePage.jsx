@@ -6,6 +6,8 @@ import GamingBattleStation from '../components/sideprofile/GamingBattleStation';
 import SportsFeed from '../components/sideprofile/SportsFeed';
 import SpotifySoundstage from '../components/sideprofile/SpotifySoundstage';
 import ViperSectionDivider from '../components/sideprofile/ViperSectionDivider';
+import TacticalCrosshair from '../components/sideprofile/TacticalCrosshair';
+import TacticalRangeArena from '../components/sideprofile/TacticalRangeArena';
 import { sideProfileData } from '../data/sideProfileData';
 import { ArrowLeft } from 'lucide-react';
 
@@ -82,6 +84,23 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
   const [isExiting, setIsExiting] = useState(false);
   const [fuel, setFuel] = useState(100);
   const [isToxinActive, setIsToxinActive] = useState(false);
+  const [isRangeActive, setIsRangeActive] = useState(false);
+  const [rangeScore, setRangeScore] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // Desktop Pointer Verification (PC Only)
+  useEffect(() => {
+    const checkPointer = () => {
+      const hasFinePointer =
+        window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+        !('ontouchstart' in window && navigator.maxTouchPoints > 2);
+      setIsDesktop(hasFinePointer);
+    };
+
+    checkPointer();
+    window.addEventListener('resize', checkPointer);
+    return () => window.removeEventListener('resize', checkPointer);
+  }, []);
 
   useEffect(() => {
     // Scroll to top on mount
@@ -142,6 +161,16 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
         isToxinActive ? 'bg-[#cce6d6]' : 'bg-[#dcefe3]'
       } dark:bg-[#090d0b] text-[#09090b] dark:text-white transition-colors duration-700 relative selection:bg-[#00f59b]/30 selection:text-white overflow-x-hidden w-full max-w-full`}
     >
+      {/* Tactical FPS Crosshair & Gunshot Bullet Impact (Active exclusively on PC) */}
+      <TacticalCrosshair />
+
+      {/* Tactical Practice Range Target Arena (Active on PC when Range Protocol is ON) */}
+      <TacticalRangeArena
+        isActive={isRangeActive}
+        isDesktop={isDesktop}
+        onTargetHit={() => setRangeScore((prev) => prev + 1)}
+      />
+
       {/* Subtle Tactical Toxic Ambient Glows */}
       <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-[#059669]/15 dark:bg-[#00f59b]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-[#047857]/15 dark:bg-[#10b981]/5 rounded-full blur-[160px] pointer-events-none -z-10" />
@@ -190,6 +219,11 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
             onToggleToxin={handleToggleToxin}
             isReady={isReady}
             isExiting={isExiting}
+            isRangeActive={isRangeActive}
+            onToggleRange={() => setIsRangeActive((prev) => !prev)}
+            rangeScore={rangeScore}
+            onResetRangeScore={() => setRangeScore(0)}
+            isDesktop={isDesktop}
           />
         </section>
 

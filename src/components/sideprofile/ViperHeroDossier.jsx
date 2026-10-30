@@ -5,6 +5,8 @@ import {
   Activity,
   Radio,
   Zap,
+  Target,
+  RotateCcw,
 } from 'lucide-react';
 
 /**
@@ -191,6 +193,11 @@ export default function ViperHeroDossier({
   onToggleToxin,
   isReady = true,
   isExiting = false,
+  isRangeActive = false,
+  onToggleRange,
+  rangeScore = 0,
+  onResetRangeScore,
+  isDesktop = false,
 }) {
   return (
     <motion.div
@@ -353,6 +360,78 @@ export default function ViperHeroDossier({
               />
             </div>
           </motion.div>
+
+          {/* Tactical Practice Range Console (Easter Egg • Desktop PC Exclusive) */}
+          {isDesktop && (
+            <motion.div
+              variants={consoleVariants}
+              className={`p-4 sm:p-5 rounded-xs border transition-all duration-300 shadow-xs ${
+                isRangeActive
+                  ? 'bg-[#c3e3ce] dark:bg-[#14231b] border-[#047857] dark:border-[#00f59b] shadow-[0_0_25px_rgba(4,120,87,0.25)] dark:shadow-[0_0_25px_rgba(0,245,155,0.2)]'
+                  : 'bg-[#cbe7d5]/70 dark:bg-[#121c16]/70 border-[#047857]/30 dark:border-[#00f59b]/25 hover:border-[#047857]/50 dark:hover:border-[#00f59b]/40'
+              }`}
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono tracking-widest uppercase font-bold text-[#064e3b] dark:text-[#00f59b] flex items-center gap-1.5">
+                      <Target className="w-3.5 h-3.5 text-[#047857] dark:text-[#00f59b]" />
+                      RANGE PROTOCOL
+                    </span>
+                    <span className="text-[#047857] dark:text-zinc-600 text-xs">•</span>
+                    <span
+                      className={`text-xs font-mono font-bold ${
+                        isRangeActive
+                          ? 'text-[#047857] dark:text-[#00f59b]'
+                          : 'text-zinc-500 dark:text-gray-400'
+                      }`}
+                    >
+                      {isRangeActive ? 'SIMULATION ACTIVE' : 'STANDBY'}
+                    </span>
+                  </div>
+                  <div className="text-xs font-mono text-[#065f46] dark:text-gray-400 mt-0.5 font-medium flex flex-wrap items-center gap-2">
+                    <span>
+                      {isRangeActive
+                        ? 'Radianite training drones deployed. Aim and shoot to eliminate.'
+                        : 'Deploy holographic training drones for target practice.'}
+                    </span>
+                    {rangeScore > 0 && (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-xs bg-[#047857]/15 dark:bg-[#00f59b]/15 text-[#047857] dark:text-[#00f59b] font-bold text-[10px]">
+                        SCORE: {rangeScore}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Range Action Buttons */}
+                <div className="flex items-center gap-2 shrink-0">
+                  {rangeScore > 0 && (
+                    <button
+                      type="button"
+                      onClick={onResetRangeScore}
+                      title="Reset practice score"
+                      className="p-2.5 rounded-xs bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={onToggleRange}
+                    className={`group inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xs text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer select-none ${
+                      isRangeActive
+                        ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-[0_0_15px_rgba(217,119,6,0.4)]'
+                        : 'bg-[#047857] hover:bg-[#065f46] dark:bg-[#00f59b] dark:hover:bg-[#34d399] text-white dark:text-black shadow-[0_4px_15px_rgba(4,120,87,0.3)] dark:shadow-[0_0_20px_rgba(0,245,155,0.3)]'
+                    }`}
+                  >
+                    <Crosshair className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" />
+                    <span>{isRangeActive ? 'CEASE FIRE (OFF)' : 'START PRACTICE (ON)'}</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* Right Column: Tactical Valorant Theme Key Art Frame */}
