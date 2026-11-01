@@ -167,6 +167,7 @@ function resolveSkill(input) {
 export function SkillModalProvider({ children }) {
   const [activeSkill, setActiveSkill] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const closeTimerRef = useRef(null);
 
   const openSkillModal = (skillOrName) => {
@@ -174,6 +175,7 @@ export function SkillModalProvider({ children }) {
       clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
     }
+    setImgError(false);
     const resolved = resolveSkill(skillOrName);
     if (resolved) {
       setActiveSkill(resolved);
@@ -256,10 +258,12 @@ export function SkillModalProvider({ children }) {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-11 h-11 rounded-xl bg-[#F4F4F5] dark:bg-[#1E1E1E] border border-[#E4E4E7] dark:border-[#2C2C2C] p-2 flex items-center justify-center shrink-0">
-                    {getTechIconUrl(activeSkill.name) ? (
+                    {getTechIconUrl(activeSkill.name) && !imgError ? (
                       <img
+                        key={activeSkill.id}
                         src={getTechIconUrl(activeSkill.name)}
                         alt=""
+                        onError={() => setImgError(true)}
                         className={`w-full h-full object-contain ${
                           activeSkill.name.toLowerCase() === 'github' ? 'dark:invert' : ''
                         }`}

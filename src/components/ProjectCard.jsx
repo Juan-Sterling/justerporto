@@ -15,7 +15,11 @@ function GithubIcon({ className = 'w-4 h-4' }) {
   );
 }
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ 
+  project, 
+  isExpanded: controlledExpanded, 
+  onToggleExpand 
+}) {
   const {
     title,
     description,
@@ -26,7 +30,9 @@ export default function ProjectCard({ project }) {
     image,
   } = project;
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [internalExpanded, setInternalExpanded] = useState(false);
+  const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+  const handleToggle = onToggleExpand || (() => setInternalExpanded((prev) => !prev));
   const isLongDescription = Boolean(description && description.length > 130);
 
   const effectiveGithubUrl =
@@ -37,9 +43,9 @@ export default function ProjectCard({ project }) {
 
   return (
     <div className="group relative rounded-xl bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] p-4 sm:p-5 transition-all duration-300 hover:border-[#D4D4D8] dark:hover:border-[#383838] hover:bg-[#FAFAFA] dark:hover:bg-[#181818] shadow-xs hover:shadow-md dark:hover:shadow-black/50">
-      <div className="flex flex-col md:flex-row gap-4 sm:gap-5 items-stretch">
+      <div className="flex flex-col md:flex-row gap-4 sm:gap-5 items-start">
         {/* Left Column: Project Preview Image Slot / Fallback */}
-        <div className="w-full md:w-5/12 lg:w-[44%] shrink-0 flex flex-col">
+        <div className="w-full md:w-5/12 lg:w-[44%] shrink-0 flex flex-col self-start">
           {image && image.trim() !== '' ? (
             projectLink && projectLink.trim() !== '' ? (
               <a
@@ -47,7 +53,7 @@ export default function ProjectCard({ project }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 title={`Visit ${title}`}
-                className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview block cursor-pointer"
+                className="relative w-full h-44 sm:h-48 md:h-[216px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview block cursor-pointer shrink-0"
               >
                 <img
                   src={optimizeCloudinaryUrl(image)}
@@ -70,7 +76,7 @@ export default function ProjectCard({ project }) {
                 </div>
               </a>
             ) : (
-              <div className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview">
+              <div className="relative w-full h-44 sm:h-48 md:h-[216px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview shrink-0">
                 <img
                   src={optimizeCloudinaryUrl(image)}
                   alt={`${title} preview`}
@@ -94,7 +100,7 @@ export default function ProjectCard({ project }) {
             )
           ) : (
             /* Clean Minimal Placeholder when image is not yet provided */
-            <div className="relative w-full h-40 sm:h-44 md:h-full md:min-h-[200px] rounded-lg overflow-hidden bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#18181A] dark:via-[#141416] dark:to-[#0D0D0E] border border-[#E4E4E7] dark:border-[#2A2A2A] p-4 flex flex-col items-center justify-center text-center select-none group/placeholder">
+            <div className="relative w-full h-44 sm:h-48 md:h-[216px] rounded-lg overflow-hidden bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#18181A] dark:via-[#141416] dark:to-[#0D0D0E] border border-[#E4E4E7] dark:border-[#2A2A2A] p-4 flex flex-col items-center justify-center text-center select-none group/placeholder shrink-0">
 
 
               {/* Center Graphic & Label */}
@@ -170,7 +176,7 @@ export default function ProjectCard({ project }) {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setIsExpanded((prev) => !prev);
+                    handleToggle();
                   }}
                   className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-mono font-medium text-[#E11D2E] hover:text-[#E11D2E]/80 transition-colors cursor-pointer select-none group/more"
                   aria-expanded={isExpanded}
@@ -188,7 +194,7 @@ export default function ProjectCard({ project }) {
 
           {/* Tech Stack Chips */}
           {technologies && technologies.length > 0 && (
-            <div className="pt-2.5 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex flex-wrap items-center gap-1.5">
+            <div className="pt-2.5 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex flex-wrap items-center gap-1.5 mt-auto">
               <span className="text-[10px] font-mono text-[#71717A] mr-1 select-none">stack:</span>
               {technologies.map((tech) => (
                 <TechBadge key={tech} name={tech} />

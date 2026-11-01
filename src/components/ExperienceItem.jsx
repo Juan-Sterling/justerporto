@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GitCommit, Calendar, Building2, MapPin, ExternalLink } from 'lucide-react';
+import { Calendar, Building2, MapPin, ExternalLink } from 'lucide-react';
 import TechBadge from './TechBadge';
 import { useInView } from '../hooks/useInView';
 import { optimizeCloudinaryUrl } from '../utils/cloudinary';
@@ -9,7 +9,7 @@ export default function ExperienceItem({
   isLast = false, 
   delay = 0 
 }) {
-  const [ref, isInView] = useInView({ threshold: 0.1, triggerOnce: false });
+  const [cardRef, isInView] = useInView({ threshold: 0.08, triggerOnce: false });
   const {
     period,
     position,
@@ -26,24 +26,37 @@ export default function ExperienceItem({
 
   return (
     <div 
-      ref={ref}
+      ref={cardRef}
       className="relative pl-6 sm:pl-8 group z-10"
     >
-      {/* Timeline Node Dot (Git commit inspired) with spring animation & laser glow bloom */}
+      {/* BABYMONSTER Split 'O' Portal Node (Synchronized in Real-Time to Laser Tip) */}
       <div 
-        className={`absolute left-0 sm:left-1 top-1.5 w-6 h-6 rounded-full bg-white dark:bg-[#090909] flex items-center justify-center text-[#E11D2E] group-hover:border-[#E11D2E] group-hover:ring-4 group-hover:ring-[#E11D2E]/20 group-hover:scale-110 transition-all duration-500 shadow-xs z-10 will-change-transform ${
-          isInView
-            ? 'border border-[#E11D2E]/60 shadow-[0_0_12px_rgba(225,29,46,0.4)]'
-            : 'border border-[#E4E4E7] dark:border-[#2A2A2A]'
-        }`}
-        style={{
-          opacity: isInView ? 1 : 0,
-          transform: isInView ? 'scale(1)' : 'scale(0)',
-          transitionDelay: `${delay}ms`,
-        }}
+        className="timeline-portal-node absolute left-0 sm:left-0.5 top-2 sm:top-1.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center z-10 select-none group-hover:scale-105 bg-[#F4F4F5] dark:bg-[#161618] border border-zinc-300/80 dark:border-zinc-800 shadow-none"
         aria-hidden="true"
       >
-        <GitCommit className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-45" />
+        {/* Miniature BABYMONSTER Split "O" Glyph (Wide Slit Aperture) */}
+        <svg 
+          viewBox="0 0 400 400" 
+          className="w-4 h-4 sm:w-[18px] sm:h-[18px] overflow-visible pointer-events-none select-none transition-transform duration-200"
+        >
+          {/* Left Half (Clearly Parted with 90px Gap) */}
+          <path
+            d="M 155 30.88 A 175 175 0 0 0 155 369.12 L 155 283.67 A 95 95 0 0 1 155 116.33 Z"
+            className="baemon-o-half baemon-o-left transition-all duration-200 fill-zinc-400 dark:fill-zinc-600"
+          />
+          {/* Right Half (Clearly Parted with 90px Gap) */}
+          <path
+            d="M 245 30.88 A 175 175 0 0 1 245 369.12 L 245 283.67 A 95 95 0 0 0 245 116.33 Z"
+            className="baemon-o-half baemon-o-right transition-all duration-200 fill-zinc-400 dark:fill-zinc-600"
+          />
+        </svg>
+
+        {/* Horizontal Solid Laser Tracer (Lights up solid red once laser reaches) */}
+        <div 
+          className="timeline-bridge-line hidden sm:block absolute left-[26px] sm:left-[28px] top-1/2 -translate-y-1/2 h-[1.5px] bg-gradient-to-r from-[#E11D2E] via-[#FF3B4D] to-transparent origin-left transition-all duration-200 pointer-events-none will-change-transform z-0 scale-x-0 opacity-0"
+          style={{ width: '14px' }}
+          aria-hidden="true"
+        />
       </div>
 
       {/* Experience Content Box with Bottom-to-Top (translateY) Animation */}

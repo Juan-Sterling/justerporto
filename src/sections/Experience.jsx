@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SectionTitle from '../components/SectionTitle';
 import ExperienceItem from '../components/ExperienceItem';
-import ProjectCoverflow from '../components/projects/ProjectCoverflow';
+import ProjectShutterStage from '../components/projects/ProjectShutterStage';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
 import { ChevronDown } from 'lucide-react';
@@ -23,6 +23,29 @@ export default function Experience() {
     const laser = timelineLaserRef.current;
     if (!container || !laser) return;
 
+    // Real-time synchronization: Checks if the laser tip has physically touched/passed each node
+    const checkNodes = () => {
+      if (!laser || !container) return;
+      const laserRect = laser.getBoundingClientRect();
+      const laserTipY = laserRect.bottom;
+      const nodeEls = container.querySelectorAll('.timeline-portal-node');
+
+      // If laser hasn't started or is at top, ensure all nodes are dormant
+      if (laserRect.height <= 2 || laserTipY <= laserRect.top + 2) {
+        nodeEls.forEach((nodeEl) => nodeEl.classList.remove('node-active'));
+        return;
+      }
+
+      nodeEls.forEach((nodeEl) => {
+        const nodeRect = nodeEl.getBoundingClientRect();
+        // Trigger precisely when the laser tip reaches the top edge of the node
+        const isReached = laserTipY >= (nodeRect.top + 4);
+        if (isReached !== nodeEl.classList.contains('node-active')) {
+          nodeEl.classList.toggle('node-active', isReached);
+        }
+      });
+    };
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         laser,
@@ -34,19 +57,29 @@ export default function Experience() {
             trigger: container,
             start: 'top 75%',
             end: 'bottom 75%',
-            scrub: 0.5,
+            scrub: 0.35,
             invalidateOnRefresh: true,
+            onUpdate: checkNodes,
+            onRefresh: checkNodes,
+            onLeaveBack: () => {
+              const nodeEls = container.querySelectorAll('.timeline-portal-node');
+              nodeEls.forEach((nodeEl) => nodeEl.classList.remove('node-active'));
+            },
           },
         }
       );
     }, container);
 
+    const initTimer = setTimeout(checkNodes, 80);
+
     // Refresh ScrollTrigger to account for expandable container height changes
     const timer = setTimeout(() => {
       ScrollTrigger.refresh();
+      checkNodes();
     }, 720);
 
     return () => {
+      clearTimeout(initTimer);
       clearTimeout(timer);
       ctx.revert();
     };
@@ -67,18 +100,84 @@ export default function Experience() {
         />
 
         {/* Work Experience Timeline */}
+        <style>{`
+          .timeline-portal-node {
+            transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+          }
+          .timeline-portal-node.node-active {
+            background-color: #FFFFFF !important;
+            border-color: #E11D2E !important;
+            box-shadow: 0 0 14px rgba(225, 29, 46, 0.45) !important;
+          }
+          .dark .timeline-portal-node.node-active {
+            background-color: #0E0E12 !important;
+            border-color: #E11D2E !important;
+            box-shadow: 0 0 14px rgba(225, 29, 46, 0.45) !important;
+          }
+          .timeline-portal-node.node-active .baemon-o-half {
+            fill: #E11D2E !important;
+            filter: drop-shadow(0 0 4px rgba(225, 29, 46, 0.7));
+          }
+          .timeline-portal-node.node-active .timeline-bridge-line {
+            transform: scaleX(1) !important;
+            opacity: 1 !important;
+          }
+          .timeline-portal-node:hover .baemon-o-left {
+            transform: translateX(-1.5px);
+          }
+          .timeline-portal-node:hover .baemon-o-right {
+            transform: translateX(1.5px);
+          }
+        `}</style>
         <div ref={timelineContainerRef} className="mt-8 relative">
-          {/* Timeline Background Track */}
+          {/* 1. Stage Rigging / Dual-Rail Truss Track (Ultra-lightweight vector truss structure) */}
           <div 
-            className="absolute left-[11px] sm:left-[15px] top-4 bottom-10 w-[1.5px] bg-[#E4E4E7] dark:bg-[#232326] rounded-full pointer-events-none" 
+            className="absolute left-[4px] sm:left-[6px] top-4 bottom-10 w-4 sm:w-5 pointer-events-none select-none z-0 overflow-hidden" 
             aria-hidden="true" 
-          />
-          {/* GSAP ScrollTrigger Laser Beam */}
+          >
+            {/* Left Rail */}
+            <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-zinc-300/80 dark:bg-zinc-800/90" />
+            
+            {/* Right Rail */}
+            <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-zinc-300/80 dark:bg-zinc-800/90" />
+            
+            {/* Center Guide Line */}
+            <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] bg-zinc-200/60 dark:bg-zinc-800/40" />
+
+            {/* Diagonal Truss Cross-Braces Pattern */}
+            <svg className="w-full h-full opacity-45 dark:opacity-30" aria-hidden="true">
+              <defs>
+                <pattern id="stage-truss-pattern" width="20" height="26" patternUnits="userSpaceOnUse">
+                  <line x1="0" y1="0" x2="20" y2="13" stroke="currentColor" strokeWidth="0.8" className="text-zinc-400 dark:text-zinc-600" />
+                  <line x1="20" y1="13" x2="0" y2="26" stroke="currentColor" strokeWidth="0.8" className="text-zinc-400 dark:text-zinc-600" />
+                  <circle cx="0.5" cy="0.5" r="1" className="fill-zinc-400 dark:fill-zinc-500" />
+                  <circle cx="19.5" cy="13" r="1" className="fill-zinc-400 dark:fill-zinc-500" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#stage-truss-pattern)" />
+            </svg>
+          </div>
+
+          {/* 2. GSAP ScrollTrigger Stage Laser Beam (Laser Core + Traveling Head Spark) */}
           <div 
             ref={timelineLaserRef}
-            className="absolute left-[11px] sm:left-[15px] top-4 bottom-10 w-[1.5px] bg-gradient-to-b from-[#E11D2E] via-[#FF3B4D] to-[#E11D2E] origin-top shadow-[0_0_8px_rgba(225,29,46,0.9)] rounded-full pointer-events-none z-0 will-change-transform" 
+            className="absolute left-[11px] sm:left-[15px] top-4 bottom-10 w-[2px] origin-top pointer-events-none z-0 will-change-transform" 
             aria-hidden="true" 
-          />
+          >
+            {/* Ambient Ruby Laser Bloom */}
+            <div className="absolute -inset-x-1 inset-y-0 bg-[#E11D2E]/25 blur-[3px]" />
+
+            {/* Razor-sharp Central Laser Core */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#E11D2E] via-[#FF3B4D] to-[#E11D2E] shadow-[0_0_8px_rgba(225,29,46,0.9)]" />
+
+            {/* Traveling Laser Spark Head (Mounted at the moving tip of the beam) */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 flex items-center justify-center pointer-events-none z-10">
+              {/* Soft radial aura */}
+              <div className="w-4 h-4 rounded-full bg-[#E11D2E]/40 blur-xs animate-pulse" />
+              {/* Sharp diamond spark */}
+              <div className="absolute w-2 h-2 rotate-45 bg-white dark:bg-[#FFE5E8] shadow-[0_0_10px_#FF2A3D]" />
+            </div>
+          </div>
 
           {initialExperience.map((item, index) => (
             <ExperienceItem
@@ -170,8 +269,8 @@ export default function Experience() {
               </div>
             </AnimatedSection>
 
-            {/* 3D Perspective Coverflow Carousel */}
-            <ProjectCoverflow projects={personalProjects} />
+            {/* Split-Shutter Stage Project Showcase */}
+            <ProjectShutterStage projects={personalProjects} />
           </div>
         )}
       </div>
