@@ -43,19 +43,19 @@ export default function ProjectShutterStage({ projects = [] }) {
     setIsAnimating(true);
     setIsShutterClosed(true);
 
-    // Step 1: Shutters snap shut with laser beam flare (160ms)
+    // Step 1: Fixed central blast doors snap shut over center stage frame (190ms)
     setTimeout(() => {
-      // Step 2: Swap active index under closed blast doors
+      // Step 2: Swap active index while center frame is 100% sealed behind blast doors
       setCurrentIndex(targetIndex);
 
-      // Step 3: Part shutters open to unveil new project
+      // Step 3: Allow wings to align smoothly, then part blast doors open to unveil new project
       setTimeout(() => {
         setIsShutterClosed(false);
         setTimeout(() => {
           setIsAnimating(false);
         }, 220);
-      }, 70);
-    }, 170);
+      }, 90);
+    }, 190);
   }, [currentIndex, isAnimating, totalProjects]);
 
   const nextProject = useCallback(() => {
@@ -257,7 +257,7 @@ export default function ProjectShutterStage({ projects = [] }) {
             return (
               <motion.div
                 key={project.title}
-                className="absolute top-0 w-full max-w-2xl px-2 sm:px-3 will-change-transform"
+                className="absolute top-2 w-full max-w-2xl px-2 sm:px-3 will-change-transform"
                 style={{
                   pointerEvents: isCenter || Math.abs(diff) === 1 ? 'auto' : 'none',
                 }}
@@ -300,47 +300,60 @@ export default function ProjectShutterStage({ projects = [] }) {
                       onToggleExpand={isCenter ? () => setIsCardExpanded((prev) => !prev) : undefined}
                     />
                   </div>
-
-                  {/* Hydraulic Split-Shutter Blast Curtain (Mounted on Active Center Card) */}
-                  {isCenter && (
-                    <div className="absolute inset-0 rounded-xl overflow-hidden pointer-events-none z-40">
-                      {/* Top Shutter Blast Door (Slides down to cover top half) */}
-                      <div
-                        className={`absolute inset-x-0 top-0 h-1/2 bg-[#09090C] border-b border-[#E11D2E] transition-transform duration-200 ease-in-out pointer-events-none will-change-transform ${
-                          isShutterClosed ? 'translate-y-0' : '-translate-y-full'
-                        }`}
-                        aria-hidden="true"
-                      >
-                        {/* Subtle Stage Texture Lines */}
-                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(225,29,46,0.18)_0%,transparent_70%)]" />
-                      </div>
-
-                      {/* Bottom Shutter Blast Door (Slides up to cover bottom half) */}
-                      <div
-                        className={`absolute inset-x-0 bottom-0 h-1/2 bg-[#09090C] border-t border-[#E11D2E] transition-transform duration-200 ease-in-out pointer-events-none will-change-transform ${
-                          isShutterClosed ? 'translate-y-0' : 'translate-y-full'
-                        }`}
-                        aria-hidden="true"
-                      >
-                        {/* Subtle Stage Texture Lines */}
-                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(225,29,46,0.18)_0%,transparent_70%)]" />
-                      </div>
-
-                      {/* Horizontal Center Laser Beam Flare (Ignites when shutters touch) */}
-                      <div
-                        className={`absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r from-transparent via-[#FF3B4D] to-transparent transition-opacity duration-150 pointer-events-none shadow-[0_0_14px_#FF2A3D] ${
-                          isShutterClosed ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-50'
-                        }`}
-                        aria-hidden="true"
-                      >
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45 bg-white shadow-[0_0_10px_#FF2A3D]" />
-                      </div>
-                    </div>
-                  )}
                 </div>
               </motion.div>
             );
           })}
+        </div>
+
+        {/* Fixed Center Stage Hydraulic Split-Shutter Blast Curtain (Stationary in Center Frame) */}
+        <div
+          className={`absolute top-2 w-full max-w-2xl px-2 sm:px-3 pointer-events-none z-40 transition-opacity duration-150 ${
+            isAnimating || isShutterClosed ? 'opacity-100' : 'opacity-0'
+          }`}
+          style={{
+            bottom: '14px',
+          }}
+          aria-hidden="true"
+        >
+          <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl">
+            {/* Top Shutter Blast Door (Slides down to cover top half) */}
+            <div
+              className={`absolute inset-x-0 top-0 h-1/2 bg-[#09090C] dark:bg-[#07070A] border-b-2 border-[#E11D2E] transition-transform duration-200 ease-in-out will-change-transform ${
+                isShutterClosed ? 'translate-y-0' : '-translate-y-full'
+              }`}
+              style={{
+                transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+            >
+              {/* Subtle Stage Texture Lines & Radial Red Glow */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(225,29,46,0.22)_0%,transparent_75%)]" />
+              <div className="absolute bottom-1 inset-x-0 h-px bg-white/15" />
+            </div>
+
+            {/* Bottom Shutter Blast Door (Slides up to cover bottom half) */}
+            <div
+              className={`absolute inset-x-0 bottom-0 h-1/2 bg-[#09090C] dark:bg-[#07070A] border-t-2 border-[#E11D2E] transition-transform duration-200 ease-in-out will-change-transform ${
+                isShutterClosed ? 'translate-y-0' : 'translate-y-full'
+              }`}
+              style={{
+                transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+            >
+              {/* Subtle Stage Texture Lines & Radial Red Glow */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(225,29,46,0.22)_0%,transparent_75%)]" />
+              <div className="absolute top-1 inset-x-0 h-px bg-white/15" />
+            </div>
+
+            {/* Center Laser Beam Flare Seam (Ignites when shutters touch) */}
+            <div
+              className={`absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r from-transparent via-[#FF3B4D] to-transparent transition-all duration-150 pointer-events-none shadow-[0_0_16px_#FF2A3D] ${
+                isShutterClosed ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-50'
+              }`}
+            >
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rotate-45 bg-white shadow-[0_0_12px_#FF2A3D]" />
+            </div>
+          </div>
         </div>
       </motion.div>
 

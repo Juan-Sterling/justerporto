@@ -260,71 +260,73 @@ export default function App() {
     <SmoothScrollProvider isLocked={showWelcome || transitionActive}>
       <SkillModalProvider>
         {/* Toxic Screen Transition Curtain */}
-        <ToxicScreenTransition
-          isActive={transitionActive}
-          targetName={transitionTarget}
-          initialClosed={transitionInitialClosed}
-          onMidpoint={handleTransitionMidpoint}
-          onOpenStart={handleOpenStart}
-          onComplete={handleTransitionComplete}
-        />
+          <ToxicScreenTransition
+            isActive={transitionActive}
+            targetName={transitionTarget}
+            initialClosed={transitionInitialClosed}
+            onMidpoint={handleTransitionMidpoint}
+            onOpenStart={handleOpenStart}
+            onComplete={handleTransitionComplete}
+          />
 
-        {/* MAIN BABYMONSTER PORTFOLIO: Kept mounted in the DOM to eliminate heavy re-mount lag */}
-        <div
-          style={{ display: isSideProfile ? 'none' : 'flex' }}
-          className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex-col selection:bg-[#E11D2E]/30 selection:text-white overflow-x-hidden w-full max-w-full"
-        >
-          {/* Opening Welcome Screen Animation */}
-          {showWelcome && (
-            <WelcomeScreen
-              exitMode={exitMode}
-              onStartExit={handleStartExit}
-              onComplete={handleComplete}
+          {/* MAIN BABYMONSTER PORTFOLIO: Kept mounted in the DOM to eliminate heavy re-mount lag */}
+          <div
+            style={{ display: isSideProfile ? 'none' : 'flex' }}
+            className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex-col selection:bg-[#E11D2E]/30 selection:text-white overflow-x-hidden w-full max-w-full"
+          >
+            {/* Opening Welcome Screen Animation */}
+            {showWelcome && (
+              <WelcomeScreen
+                exitMode={exitMode}
+                onStartExit={handleStartExit}
+                onComplete={handleComplete}
+              />
+            )}
+
+            {/* Sticky Header Navigation */}
+            <Navbar activeSection={activeSection} />
+
+            {/* Atmospheric BABYMONSTER Ambient Background Canvas */}
+            <BaemonBackground />
+
+            {/* [SAVED FOR FUTURE USE] Alternative Background Components: */}
+            {/* <BaemonGeometricBackground /> */}
+            {/* <BaemonRainBackground /> */}
+            {/* <WorkBackground /> */}
+
+            {/* GSAP Scroll-Driven Reactive Ambient Lighting Atmosphere */}
+            <ReactiveAmbientGlow />
+
+            {/* Main Content Sections with Laser Horizon Transitions */}
+            <main className="flex-1 w-full relative z-10">
+              {/* Hero Portal Zooms directly into Experience */}
+              <Hero
+                welcomeActive={showWelcome && !welcomeExiting}
+                portalEntranceTrigger={portalEntranceTrigger}
+              />
+              <Experience />
+              <LaserSectionDivider />
+              <Skills />
+              <LaserSectionDivider />
+              <Education />
+              <LaserSectionDivider />
+              <Contact />
+            </main>
+
+            {/* Semantic Footer with Balanced Left-Right Layout */}
+            <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
+          </div>
+
+
+
+          {/* SIDE PROFILE PAGE: Mounted only when active */}
+          {isSideProfile && (
+            <SideProfilePage
+              isReady={sideProfileEntranceReady}
+              onBackToPortfolio={() => navigateTo('/')}
             />
           )}
-
-          {/* Sticky Header Navigation */}
-          <Navbar activeSection={activeSection} />
-
-          {/* Atmospheric BABYMONSTER Ambient Background Canvas */}
-          <BaemonBackground />
-
-          {/* [SAVED FOR FUTURE USE] Alternative Background Components: */}
-          {/* <BaemonGeometricBackground /> */}
-          {/* <BaemonRainBackground /> */}
-          {/* <WorkBackground /> */}
-
-          {/* GSAP Scroll-Driven Reactive Ambient Lighting Atmosphere */}
-          <ReactiveAmbientGlow />
-
-          {/* Main Content Sections with Laser Horizon Transitions */}
-          <main className="flex-1 w-full relative z-10">
-            {/* Hero Portal Zooms directly into Experience */}
-            <Hero
-              welcomeActive={showWelcome && !welcomeExiting}
-              portalEntranceTrigger={portalEntranceTrigger}
-            />
-            <Experience />
-            <LaserSectionDivider />
-            <Skills />
-            <LaserSectionDivider />
-            <Education />
-            <LaserSectionDivider />
-            <Contact />
-          </main>
-
-          {/* Semantic Footer with Balanced Left-Right Layout */}
-          <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
-        </div>
-
-        {/* SIDE PROFILE PAGE: Mounted only when active */}
-        {isSideProfile && (
-          <SideProfilePage
-            isReady={sideProfileEntranceReady}
-            onBackToPortfolio={() => navigateTo('/')}
-          />
-        )}
-      </SkillModalProvider>
+        </SkillModalProvider>
     </SmoothScrollProvider>
   );
 }
