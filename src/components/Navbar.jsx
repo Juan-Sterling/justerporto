@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Menu, X, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import BaemonNavbarFrame from './BaemonNavbarFrame';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
 
 const NAV_ITEMS = [
@@ -70,16 +71,10 @@ export default function Navbar({ activeSection = '' }) {
 
       {/* Floating Pill Header Wrapper */}
       <header
-        className="fixed top-3 sm:top-5 inset-x-0 z-50 flex flex-col items-center px-3 sm:px-6 pointer-events-none transition-all duration-300"
+        className="fixed top-2 sm:top-4 inset-x-0 z-50 flex flex-col items-center px-3 sm:px-6 pointer-events-none transition-all duration-300"
       >
-        {/* Floating Pill Bar */}
-        <div
-          className={`pointer-events-auto w-full max-w-5xl rounded-full transition-all duration-300 flex items-center justify-between px-3.5 sm:px-5 py-2 sm:py-2.5 ${
-            scrolled
-              ? 'bg-white/65 dark:bg-[#161b22]/55 backdrop-blur-2xl backdrop-saturate-200 border border-white/70 dark:border-white/15 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.8),0_12px_36px_rgba(0,0,0,0.08)] dark:shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2),0_12px_40px_rgba(0,0,0,0.45),0_0_20px_rgba(225,29,46,0.1)]'
-              : 'bg-white/50 dark:bg-[#161b22]/40 backdrop-blur-xl backdrop-saturate-180 border border-white/60 dark:border-white/10 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.6),0_8px_24px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.15),0_8px_30px_rgba(0,0,0,0.35)]'
-          }`}
-        >
+        {/* BABYMONSTER Horn Navbar Frame */}
+        <BaemonNavbarFrame scrolled={scrolled} className="pointer-events-auto">
           {/* Brand Name / Wordmark with BABYMONSTER Devil Horns & Code Badge */}
           <a
             href="#hero"
@@ -119,10 +114,10 @@ export default function Navbar({ activeSection = '' }) {
             </div>
           </a>
 
-          {/* Desktop Navigation Capsule */}
-          <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
+          {/* Desktop Navigation Capsule (matching reference image) */}
+          <div className="hidden md:flex items-center rounded-full bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.05] dark:border-white/[0.08] p-1 shadow-xs">
             <nav
-              className="relative flex items-center gap-1 p-1 rounded-full bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.05] dark:border-white/[0.08]"
+              className="relative flex items-center gap-0.5"
               aria-label="Main Navigation"
             >
               {NAV_ITEMS.map((item) => {
@@ -136,7 +131,7 @@ export default function Navbar({ activeSection = '' }) {
                       e.preventDefault();
                       handleNavClick(item.id);
                     }}
-                    className={`relative px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center select-none ${
+                    className={`relative px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center select-none ${
                       isActive
                         ? 'text-[#09090B] dark:text-white font-semibold'
                         : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-white/30 dark:hover:bg-white/[0.04]'
@@ -156,7 +151,9 @@ export default function Navbar({ activeSection = '' }) {
               })}
             </nav>
 
-            <div className="flex items-center pl-2 border-l border-white/40 dark:border-white/10">
+            <div className="h-4 w-[1px] bg-black/10 dark:bg-white/10 mx-1.5" />
+
+            <div className="flex items-center pr-0.5">
               {/* Theme Toggle Button */}
               <ThemeToggle />
             </div>
@@ -179,7 +176,7 @@ export default function Navbar({ activeSection = '' }) {
               {isOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </motion.button>
           </div>
-        </div>
+        </BaemonNavbarFrame>
 
         {/* Mobile Floating Card Dropdown */}
         {isOpen && (

@@ -612,33 +612,37 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
           {/* Left Column / Mobile Responsive Wrapper */}
           <div
             ref={leftColRef}
-            className="lg:col-span-5 xl:col-span-5 flex flex-col justify-between h-full lg:h-auto lg:justify-start lg:space-y-6 max-w-md lg:max-w-[400px] xl:max-w-[440px] text-center sm:text-left items-center sm:items-start mx-auto sm:mx-0 w-full will-change-transform"
+            className="lg:col-span-5 xl:col-span-5 flex flex-col justify-between h-full lg:h-auto lg:justify-start lg:space-y-6 max-w-lg lg:max-w-[500px] xl:max-w-[540px] text-center sm:text-left items-center sm:items-start mx-auto sm:mx-0 w-full will-change-transform"
           >
             {/* Upper Group (Above portal on mobile, top of column on desktop) */}
             <div className="flex flex-col items-start text-left space-y-2.5 sm:space-y-3.5 w-full">
-              {/* Top Row: Live Availability Beacon + Location Badge */}
-              <div ref={badgesRef} className="flex flex-wrap items-center justify-start gap-2 sm:gap-2.5 w-full">
-                {/* Development Status Badge */}
+              {/* Top Row: Location Badge + Live Availability Status (Side-by-Side & Mobile Responsive) */}
+              <div ref={badgesRef} className="flex items-center justify-start gap-1.5 sm:gap-2.5 w-full flex-nowrap">
+                {/* 1. Current Location Badge */}
                 <motion.div
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform cursor-default"
+                  className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-[11px] sm:text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform cursor-default shrink-0"
                 >
-                  <span className="relative flex h-2 w-2">
+                  <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#E11D2E]" />
+                  <span className="font-medium whitespace-nowrap">
+                    North Jakarta<span className="hidden sm:inline">, Indonesia</span>
+                  </span>
+                </motion.div>
+
+                {/* 2. Development Status Badge (Dipindah ke samping tulisan North Jakarta) */}
+                <motion.div
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-[11px] sm:text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform cursor-default shrink-0"
+                >
+                  <span className="relative flex h-2 w-2 shrink-0">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500 dark:bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.6)] dark:shadow-[0_0_8px_rgba(251,191,36,0.8)]"></span>
                   </span>
-                  <span className="font-medium">{personal.availability}</span>
-                </motion.div>
-
-                {/* Current Location Badge */}
-                <motion.div
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform cursor-default"
-                >
-                  <MapPin className="w-3.5 h-3.5 text-[#E11D2E]" />
-                  <span className="font-medium">{personal.location || "North Jakarta, Indonesia"}</span>
+                  <span className="font-medium whitespace-nowrap">
+                    Under Development<span className="hidden md:inline"> • Feel Free to Explore</span>
+                  </span>
                 </motion.div>
               </div>
 
