@@ -173,7 +173,7 @@ export default function Experience() {
             {/* Traveling Laser Spark Head (Mounted at the moving tip of the beam) */}
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 flex items-center justify-center pointer-events-none z-10">
               {/* Soft radial aura */}
-              <div className="w-4 h-4 rounded-full bg-[#E11D2E]/40 blur-xs animate-pulse" />
+              <div className="w-3.5 h-3.5 rounded-full bg-[#E11D2E]/30 blur-xs" />
               {/* Sharp diamond spark */}
               <div className="absolute w-2 h-2 rotate-45 bg-white dark:bg-[#FFE5E8] shadow-[0_0_10px_#FF2A3D]" />
             </div>

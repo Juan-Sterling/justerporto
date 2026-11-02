@@ -235,7 +235,7 @@ export function SkillModalProvider({ children }) {
             role="dialog"
             aria-modal="true"
             data-lenis-prevent
-            className={`fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200 ease-out ${
+            className={`fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200 ease-out ${
               isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
             onClick={closeSkillModal}

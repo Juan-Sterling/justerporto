@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, ImageIcon, ChevronDown } from 'lucide-react';
+import { ExternalLink, ImageIcon, Eye, ArrowUpRight } from 'lucide-react';
 import TechBadge from './TechBadge';
 import { optimizeCloudinaryUrl } from '../utils/cloudinary';
 
@@ -17,8 +17,9 @@ function GithubIcon({ className = 'w-4 h-4' }) {
 
 export default function ProjectCard({ 
   project, 
-  isExpanded: controlledExpanded, 
-  onToggleExpand 
+  onOpenDetail,
+  isExpanded: _controlledExpanded, 
+  onToggleExpand: _onToggleExpand 
 }) {
   const {
     title,
@@ -30,177 +31,155 @@ export default function ProjectCard({
     image,
   } = project;
 
-  const [internalExpanded, setInternalExpanded] = useState(false);
-  const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
-  const handleToggle = onToggleExpand || (() => setInternalExpanded((prev) => !prev));
-  const isLongDescription = Boolean(description && description.length > 130);
+  const [imgError, setImgError] = useState(false);
 
   const effectiveGithubUrl =
     githubUrl || (liveUrl && liveUrl.includes('github.com') ? liveUrl : '');
   const effectiveLiveUrl =
     liveUrl && !liveUrl.includes('github.com') ? liveUrl : '';
-  const projectLink = effectiveLiveUrl || effectiveGithubUrl || liveUrl;
+
+  const handleCardClick = () => {
+    if (onOpenDetail) {
+      onOpenDetail(project);
+    }
+  };
 
   return (
-    <div className="group relative rounded-xl bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] p-4 sm:p-5 transition-all duration-300 hover:border-[#D4D4D8] dark:hover:border-[#383838] hover:bg-[#FAFAFA] dark:hover:bg-[#181818] shadow-xs hover:shadow-md dark:hover:shadow-black/50">
-      <div className="flex flex-col md:flex-row gap-4 sm:gap-5 items-start">
-        {/* Left Column: Project Preview Image Slot / Fallback */}
-        <div className="w-full md:w-5/12 lg:w-[44%] shrink-0 flex flex-col self-start">
-          {image && image.trim() !== '' ? (
-            projectLink && projectLink.trim() !== '' ? (
-              <a
-                href={projectLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={`Visit ${title}`}
-                className="relative w-full h-44 sm:h-48 md:h-[216px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview block cursor-pointer shrink-0"
-              >
-                <img
-                  src={optimizeCloudinaryUrl(image)}
-                  alt={`${title} preview`}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget.parentElement?.querySelector('.img-fallback');
-                    if (fallback) fallback.classList.remove('hidden');
-                  }}
-                />
-                {/* Fallback container if image URL fails */}
-                <div className="img-fallback hidden absolute inset-0 flex flex-col items-center justify-center p-3 bg-[#F4F4F5] dark:bg-[#181818]">
-                  <ImageIcon className="w-7 h-7 text-[#A1A1AA] mb-1.5" />
-                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA]">
-                    Image unavailable
-                  </span>
-                </div>
-              </a>
-            ) : (
-              <div className="relative w-full h-44 sm:h-48 md:h-[216px] rounded-lg overflow-hidden bg-[#F4F4F5] dark:bg-[#1C1C1C] border border-[#E4E4E7] dark:border-[#2A2A2A] group/preview shrink-0">
-                <img
-                  src={optimizeCloudinaryUrl(image)}
-                  alt={`${title} preview`}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover/preview:scale-105"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget.parentElement?.querySelector('.img-fallback');
-                    if (fallback) fallback.classList.remove('hidden');
-                  }}
-                />
-                {/* Fallback container if image URL fails */}
-                <div className="img-fallback hidden absolute inset-0 flex flex-col items-center justify-center p-3 bg-[#F4F4F5] dark:bg-[#181818]">
-                  <ImageIcon className="w-7 h-7 text-[#A1A1AA] mb-1.5" />
-                  <span className="text-[11px] font-mono text-[#71717A] dark:text-[#A1A1AA]">
-                    Image unavailable
-                  </span>
-                </div>
-              </div>
-            )
+    <div 
+      onClick={handleCardClick}
+      className="group relative rounded-xl bg-white dark:bg-[#121216] border border-zinc-200 dark:border-[#24242C] p-4 sm:p-5 transition-all duration-200 hover:border-[#E11D2E] dark:hover:border-[#E11D2E] hover:shadow-lg cursor-pointer select-none overflow-hidden"
+    >
+      {/* Top Bar: Period Badge & Action Links */}
+      <div className="flex items-center justify-between pb-2.5 mb-3.5 border-b border-zinc-200/80 dark:border-[#22222A]">
+        <div>
+          {period ? (
+            <span className="font-mono text-[10px] text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-[#1A1A22] px-2.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+              {period}
+            </span>
           ) : (
-            /* Clean Minimal Placeholder when image is not yet provided */
-            <div className="relative w-full h-44 sm:h-48 md:h-[216px] rounded-lg overflow-hidden bg-gradient-to-br from-[#FAFAFA] via-[#F4F4F5] to-[#EAEAEA] dark:from-[#18181A] dark:via-[#141416] dark:to-[#0D0D0E] border border-[#E4E4E7] dark:border-[#2A2A2A] p-4 flex flex-col items-center justify-center text-center select-none group/placeholder shrink-0">
-
-
-              {/* Center Graphic & Label */}
-              <div className="relative z-10 flex flex-col items-center justify-center py-1">
-                <div className="w-10 h-10 rounded-lg bg-white dark:bg-[#1E1E22] border border-[#E4E4E7] dark:border-[#333333] flex items-center justify-center text-[#71717A] dark:text-[#A1A1AA] group-hover/placeholder:text-[#E11D2E] group-hover/placeholder:border-[#E11D2E]/50 group-hover/placeholder:scale-105 transition-all shadow-xs mb-2">
-                  <ImageIcon className="w-5 h-5" />
-                </div>
-                <p className="text-xs font-mono text-[#52525B] dark:text-[#A1A1AA] max-w-[210px] leading-relaxed">
-                  Sorry, I haven't provided the image yet
-                </p>
-              </div>
-            </div>
+            <span className="font-mono text-[10px] text-zinc-400 dark:text-zinc-500 uppercase">
+              Project
+            </span>
           )}
         </div>
 
-        {/* Right Column: Project Details, Meta, & Stack */}
+        {/* Quick Action Links */}
+        <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+          {Boolean(effectiveGithubUrl && effectiveGithubUrl.trim()) && (
+            <a
+              href={effectiveGithubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="View GitHub Repository"
+              className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-[#1A1A22] border border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 transition-all cursor-pointer"
+              aria-label={`View GitHub repository for ${title}`}
+            >
+              <GithubIcon className="w-3.5 h-3.5" />
+            </a>
+          )}
+
+          {Boolean(effectiveLiveUrl && effectiveLiveUrl.trim()) && (
+            <a
+              href={effectiveLiveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={effectiveLiveUrl}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-[#1A1A22] border border-zinc-200 dark:border-zinc-800 hover:border-[#E11D2E] hover:bg-[#E11D2E]/10 text-[11px] font-mono text-zinc-900 dark:text-white transition-all group/btn shadow-xs max-w-[140px] sm:max-w-[190px] cursor-pointer"
+            >
+              <span className="truncate">{effectiveLiveUrl}</span>
+              <ExternalLink className="w-2.5 h-2.5 text-[#E11D2E] shrink-0 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+            </a>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-4 sm:gap-5 items-stretch">
+        {/* Left Column: Visual Showcase Preview */}
+        <div className="w-full md:w-5/12 lg:w-[44%] shrink-0">
+          <div className="relative w-full h-44 sm:h-48 md:h-[200px] rounded-lg overflow-hidden bg-zinc-100 dark:bg-[#16161E] border border-zinc-200 dark:border-[#22222A] group/preview flex items-center justify-center">
+            {image && image.trim() !== '' && !imgError ? (
+              <>
+                <img
+                  src={optimizeCloudinaryUrl(image)}
+                  alt={`${title} preview`}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover object-top transition-transform duration-300 group-hover/preview:scale-105"
+                  onError={() => setImgError(true)}
+                />
+                
+                {/* Subtle Vignette on Dark Mode */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40 group-hover/preview:opacity-20 transition-opacity" />
+
+                {/* Detail Peek Overlay */}
+                <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 text-white text-xs font-mono">
+                  <div className="px-3 py-1.5 rounded-full bg-[#E11D2E] text-white flex items-center gap-1.5 shadow-md font-semibold tracking-wide">
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>View Details</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              /* Clean Minimal Placeholder */
+              <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center select-none bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-200 dark:from-[#16161E] dark:via-[#121217] dark:to-[#0B0B0E] relative">
+                <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#1E1E26] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-[#E11D2E] mb-2 shadow-xs group-hover:scale-105 transition-transform">
+                  <ImageIcon className="w-5 h-5" />
+                </div>
+                <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 max-w-[210px] leading-relaxed">
+                  Sorry, I haven't provided the image yet
+                </p>
+                <div className="mt-2 text-[10px] font-mono text-[#E11D2E] font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  Click to inspect details
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Column: Title, Description & Tech Stack */}
         <div className="w-full md:w-7/12 lg:w-[56%] flex flex-col justify-between">
           <div>
-            {/* Top Bar: Period & External Action Links */}
-            <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#E4E4E7] dark:border-[#2A2A2A]">
-              <div className="flex items-center gap-2">
-                {period && (
-                  <span className="font-mono text-[11px] text-[#52525B] dark:text-[#A1A1AA] bg-[#F4F4F5] dark:bg-[#090909] px-2 py-0.5 rounded border border-[#E4E4E7] dark:border-[#2A2A2A]">
-                    {period}
+            {/* Title */}
+            <h4 className="font-display text-base sm:text-lg font-bold text-zinc-900 dark:text-white tracking-tight group-hover:text-[#E11D2E] transition-colors mb-2">
+              {title}
+            </h4>
+
+            {/* Description Clamped to 3 lines */}
+            <p className="text-xs sm:text-[13px] text-zinc-600 dark:text-zinc-400 leading-relaxed line-clamp-3 mb-3">
+              {description}
+            </p>
+          </div>
+
+          <div>
+            {/* Tech Stack Chips */}
+            {technologies && technologies.length > 0 && (
+              <div className="pt-2.5 border-t border-zinc-200/80 dark:border-[#22222A] flex flex-wrap items-center gap-1.5 mb-3">
+                <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500 mr-1 select-none">
+                  stack:
+                </span>
+                {technologies.slice(0, 5).map((tech) => (
+                  <TechBadge key={tech} name={tech} size="sm" />
+                ))}
+                {technologies.length > 5 && (
+                  <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">
+                    +{technologies.length - 5}
                   </span>
                 )}
               </div>
+            )}
 
-              <div className="flex items-center gap-1.5">
-                {Boolean(effectiveGithubUrl && effectiveGithubUrl.trim()) && (
-                  <a
-                    href={effectiveGithubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="View GitHub Repository"
-                    className="p-1 rounded-md text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white hover:bg-[#F4F4F5] dark:hover:bg-[#090909] border border-transparent hover:border-[#E4E4E7] dark:border-[#2A2A2A] transition-all"
-                    aria-label={`View GitHub repository for ${title}`}
-                  >
-                    <GithubIcon className="w-3.5 h-3.5" />
-                  </a>
-                )}
+            {/* Card Footer: Detail Trigger Button */}
+            <div className="pt-2 flex items-center justify-between">
+              <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+                Click card for full details
+              </span>
 
-                {Boolean(effectiveLiveUrl && effectiveLiveUrl.trim()) && (
-                  <a
-                    href={effectiveLiveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={effectiveLiveUrl}
-                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] dark:bg-[#090909] border border-[#E4E4E7] dark:border-[#2A2A2A] hover:border-[#E11D2E] hover:bg-[#E11D2E]/10 text-[11px] font-mono text-[#09090B] dark:text-white transition-all group/btn shadow-xs max-w-[160px] sm:max-w-[210px]"
-                  >
-                    <span className="truncate">{effectiveLiveUrl}</span>
-                    <ExternalLink className="w-2.5 h-2.5 text-[#E11D2E] shrink-0 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                  </a>
-                )}
+              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[#E11D2E] group-hover:translate-x-1 transition-transform">
+                <span>View Details</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
               </div>
             </div>
-
-            {/* Title & Description */}
-            <h4 className="font-display text-base sm:text-lg font-bold text-[#E11D2E] tracking-tight mb-1.5">
-              {title}
-            </h4>
-            <div className="mb-3">
-              <p
-                className={`text-xs sm:text-[13px] text-[#52525B] dark:text-[#A1A1AA] leading-relaxed transition-all duration-300 ${
-                  !isExpanded && isLongDescription ? 'line-clamp-3' : ''
-                }`}
-              >
-                {description}
-              </p>
-
-              {isLongDescription && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleToggle();
-                  }}
-                  className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-mono font-medium text-[#E11D2E] hover:text-[#E11D2E]/80 transition-colors cursor-pointer select-none group/more"
-                  aria-expanded={isExpanded}
-                >
-                  <span>{isExpanded ? 'Show less' : 'Read more'}</span>
-                  <ChevronDown
-                    className={`w-3 h-3 text-[#E11D2E] transition-transform duration-200 ${
-                      isExpanded ? 'rotate-180' : 'group-hover/more:translate-y-0.5'
-                    }`}
-                  />
-                </button>
-              )}
-            </div>
           </div>
-
-          {/* Tech Stack Chips */}
-          {technologies && technologies.length > 0 && (
-            <div className="pt-2.5 border-t border-[#E4E4E7] dark:border-[#2A2A2A]/60 flex flex-wrap items-center gap-1.5 mt-auto">
-              <span className="text-[10px] font-mono text-[#71717A] mr-1 select-none">stack:</span>
-              {technologies.map((tech) => (
-                <TechBadge key={tech} name={tech} />
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>

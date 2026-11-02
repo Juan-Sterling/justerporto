@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProjectCard from '../ProjectCard';
+import ProjectDetailModal from './ProjectDetailModal';
 
 /**
  * ProjectShutterStage - Concept 3 (Evolved Stage Shutter with Peeking Wings & Multi-Input Scroll)
@@ -19,9 +20,8 @@ import ProjectCard from '../ProjectCard';
  */
 export default function ProjectShutterStage({ projects = [] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isShutterClosed, setIsShutterClosed] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isCardExpanded, setIsCardExpanded] = useState(false);
+  const [selectedProjectModal, setSelectedProjectModal] = useState(null);
   const totalProjects = projects.length;
   const containerRef = useRef(null);
 
@@ -39,23 +39,11 @@ export default function ProjectShutterStage({ projects = [] }) {
 
   const goToProject = useCallback((targetIndex) => {
     if (isAnimating || targetIndex === currentIndex || totalProjects <= 1) return;
-    setIsCardExpanded(false);
     setIsAnimating(true);
-    setIsShutterClosed(true);
-
-    // Step 1: Fixed central blast doors snap shut over center stage frame (190ms)
+    setCurrentIndex(targetIndex);
     setTimeout(() => {
-      // Step 2: Swap active index while center frame is 100% sealed behind blast doors
-      setCurrentIndex(targetIndex);
-
-      // Step 3: Allow wings to align smoothly, then part blast doors open to unveil new project
-      setTimeout(() => {
-        setIsShutterClosed(false);
-        setTimeout(() => {
-          setIsAnimating(false);
-        }, 220);
-      }, 90);
-    }, 190);
+      setIsAnimating(false);
+    }, 280);
   }, [currentIndex, isAnimating, totalProjects]);
 
   const nextProject = useCallback(() => {
@@ -207,7 +195,7 @@ export default function ProjectShutterStage({ projects = [] }) {
           className="invisible pointer-events-none w-full max-w-2xl mx-auto px-2 opacity-0 select-none"
           aria-hidden="true"
         >
-          <ProjectCard project={projects[currentIndex]} isExpanded={isCardExpanded} />
+          <ProjectCard project={projects[currentIndex]} />
         </div>
 
         {/* Stack of Stage Cards: Active Center + Peeking Wing Previews */}
@@ -277,7 +265,7 @@ export default function ProjectShutterStage({ projects = [] }) {
                 <div
                   className={`relative rounded-xl transition-all duration-300 ${
                     isCenter
-                      ? 'ring-1 ring-[#E11D2E]/40 dark:ring-[#E11D2E]/50 shadow-[0_12px_45px_-8px_rgba(225,29,46,0.25)]'
+                      ? 'ring-1 ring-[#E11D2E] dark:ring-[#E11D2E]'
                       : 'cursor-pointer hover:opacity-85'
                   }`}
                   onClick={() => {
@@ -296,64 +284,13 @@ export default function ProjectShutterStage({ projects = [] }) {
                   <div className="w-full">
                     <ProjectCard
                       project={project}
-                      isExpanded={isCenter ? isCardExpanded : false}
-                      onToggleExpand={isCenter ? () => setIsCardExpanded((prev) => !prev) : undefined}
+                      onOpenDetail={isCenter ? () => setSelectedProjectModal(project) : undefined}
                     />
                   </div>
                 </div>
               </motion.div>
             );
           })}
-        </div>
-
-        {/* Fixed Center Stage Hydraulic Split-Shutter Blast Curtain (Stationary in Center Frame) */}
-        <div
-          className={`absolute top-2 w-full max-w-2xl px-2 sm:px-3 pointer-events-none z-40 transition-opacity duration-150 ${
-            isAnimating || isShutterClosed ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{
-            bottom: '14px',
-          }}
-          aria-hidden="true"
-        >
-          <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl">
-            {/* Top Shutter Blast Door (Slides down to cover top half) */}
-            <div
-              className={`absolute inset-x-0 top-0 h-1/2 bg-[#09090C] dark:bg-[#07070A] border-b-2 border-[#E11D2E] transition-transform duration-200 ease-in-out will-change-transform ${
-                isShutterClosed ? 'translate-y-0' : '-translate-y-full'
-              }`}
-              style={{
-                transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-              }}
-            >
-              {/* Subtle Stage Texture Lines & Radial Red Glow */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(225,29,46,0.22)_0%,transparent_75%)]" />
-              <div className="absolute bottom-1 inset-x-0 h-px bg-white/15" />
-            </div>
-
-            {/* Bottom Shutter Blast Door (Slides up to cover bottom half) */}
-            <div
-              className={`absolute inset-x-0 bottom-0 h-1/2 bg-[#09090C] dark:bg-[#07070A] border-t-2 border-[#E11D2E] transition-transform duration-200 ease-in-out will-change-transform ${
-                isShutterClosed ? 'translate-y-0' : 'translate-y-full'
-              }`}
-              style={{
-                transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-              }}
-            >
-              {/* Subtle Stage Texture Lines & Radial Red Glow */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(225,29,46,0.22)_0%,transparent_75%)]" />
-              <div className="absolute top-1 inset-x-0 h-px bg-white/15" />
-            </div>
-
-            {/* Center Laser Beam Flare Seam (Ignites when shutters touch) */}
-            <div
-              className={`absolute inset-x-0 top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-r from-transparent via-[#FF3B4D] to-transparent transition-all duration-150 pointer-events-none shadow-[0_0_16px_#FF2A3D] ${
-                isShutterClosed ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-50'
-              }`}
-            >
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rotate-45 bg-white shadow-[0_0_12px_#FF2A3D]" />
-            </div>
-          </div>
         </div>
       </motion.div>
 
@@ -374,7 +311,7 @@ export default function ProjectShutterStage({ projects = [] }) {
                 <div
                   className={`h-1.5 rounded-full transition-all duration-300 ${
                     isActive
-                      ? 'bg-[#E11D2E] shadow-[0_0_8px_rgba(225,29,46,0.8)] scale-y-110'
+                      ? 'bg-[#E11D2E] scale-y-110'
                       : 'bg-zinc-300 dark:bg-zinc-800 hover:bg-zinc-400 dark:hover:bg-zinc-600'
                   }`}
                 />
@@ -383,6 +320,14 @@ export default function ProjectShutterStage({ projects = [] }) {
           })}
         </div>
       )}
+
+      {/* Project Detail Modal */}
+      <ProjectDetailModal
+        key={selectedProjectModal?.title || 'project-modal'}
+        project={selectedProjectModal}
+        isOpen={Boolean(selectedProjectModal)}
+        onClose={() => setSelectedProjectModal(null)}
+      />
     </div>
   );
 }

@@ -135,18 +135,56 @@ export const portfolioData = {
     {
       title: "LOUIFOOTBALL CATALOG",
       period: "2026",
-      description: "Developed a web-based product catalog for LOUIFOOTBALL. The website is designed to showcase available products and editions, providing visitors with an easy way to browse and explore LOUIFOOTBALL's merchandise collection.",
-      technologies: ["Next.js", "React.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary", "REST API"],
+      description: "Developed a web-based product catalog for LOUIFOOTBALL, designed to showcase available products and editions while providing visitors with an intuitive way to browse and explore the merchandise collection.",
+      technologies: ["Next.js", "React.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary", "REST API", "Cloudflare R2"],
       liveUrl: "https://louifootball.vercel.app/",
+      githubUrl: "",
       image: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909210/fc6e70e8-d9c5-42d8-93a8-805ee800f4b0.png",
+      details: {
+        overview: `Developed a web-based product catalog for LOUIFOOTBALL, designed to showcase available products and editions while providing visitors with an intuitive way to browse and explore the merchandise collection.
+
+                    The project consists of three main pages: Catalog Page, Admin Page, and Video Preview Page, each serving a specific purpose:
+
+                    - Catalog Page: The main page of the website, featuring promotional advertisements displayed through an interactive carousel, product filtering based on categories, and pagination to help visitors easily navigate and explore the available merchandise.
+
+                    - Admin Page: An exclusive page accessible only to administrators, designed to simplify the management of the main catalog page. It provides four key management sections: Product Management, Category Management, Advertisement Management, and Display Priority Management, allowing administrators to organize and control the content displayed on the website.
+
+                    - Video Preview Page: A dedicated page accessed by visitors when scanning QR codes attached to selected LOUIFOOTBALL products. It displays product-related videos and provides convenient access to the main product catalog, along with LOUIFOOTBALL's contact information, allowing visitors to explore more products or get in touch with the brand.`,
+        timeline: "2026",
+        gallery: [
+          {
+            url: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909210/fc6e70e8-d9c5-42d8-93a8-805ee800f4b0.png",
+            caption: "Catalog Page",
+            description: "",
+          },
+        ],
+      },
     },
     {
       title: "LOUI Portfolio",
       period: "2026",
-      description: "Developed a web-based portfolio website for LOUI. The website is designed to showcase the project from LOUI.",
+      description: "Developed a web-based portfolio website for LOUI, designed to showcase and present LOUI's creative projects and completed works through an engaging and visually appealing gallery.",
       technologies: ["Next.js", "TypeScript", "React.js", "Tailwind CSS", "JavaScript", "Supabase", "Vercel", "Cloudinary", "Cloudflare R2", "REST API", "GSAP"],
-      liveUrl: "https://louiportfolio.vercel.app/",
+      liveUrl: "https://www.louiportfolio.my.id/",
+      githubUrl: "",
       image: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909609/bab4c30b-d53e-4ec8-a452-f0da70a478cd.png",
+      details: {
+        overview: `Developed a web-based portfolio website for LOUI, designed to showcase and present LOUI's creative projects and completed works through an engaging and visually appealing gallery.
+
+                The project consists of two main pages: Portfolio Page and Admin Page, each serving a specific purpose:
+
+                - Portfolio Page: Serves as the main page of the website, showcasing LOUI's creative works through a visually appealing gallery. It implements Masonry and Robin layouts to provide different gallery arrangements, along with filtering functionality to help visitors explore projects by category. The page also includes contact information, allowing visitors to easily get in touch with LOUI.
+
+                - Admin Page: An exclusive page accessible only to administrators, designed to simplify the management and customization of the main portfolio page. It consists of four key sections: Overview, Project Management, Category & Subcategory Management, and Gallery Layout Management, allowing administrators to manage portfolio content, organize project categories, and customize how projects are displayed in the gallery.`,
+        timeline: "2026",
+        gallery: [
+          {
+            url: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909609/bab4c30b-d53e-4ec8-a452-f0da70a478cd.png",
+            caption: "Portfolio Page",
+            description: "",
+          },
+        ],
+      },
     },
     {
       title: "FPS Aim Training",
@@ -154,7 +192,19 @@ export const portfolioData = {
       description: "As a fan of FPS games such as Valorant and Counter-Strike, I created a simple web-based aim trainer to practice and improve my aiming skills in FPS games.",
       technologies: ["HTML", "CSS", "JavaScript", "Netlify"],
       liveUrl: "https://aimtrainbyjuster.netlify.app/",
+      githubUrl: "",
       image: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909681/6c2e6015-bccf-4abd-ad49-1597361fbaa0.png",
+      details: {
+        overview: "As a fan of FPS games such as Valorant and Counter-Strike, I created a simple web-based aim trainer to practice and improve my aiming skills in FPS games.",
+        timeline: "2026",
+        gallery: [
+          {
+            url: "https://res.cloudinary.com/og1jrvy3/image/upload/v1791909681/6c2e6015-bccf-4abd-ad49-1597361fbaa0.png",
+            caption: "Target Arena & Scoreboard",
+            description: "",
+          },
+        ],
+      },
     },
     {
       title: "GAME PENALTY FOOTBALL",
@@ -162,7 +212,19 @@ export const portfolioData = {
       description: "Developed a football penalty shootout game as a final course project in collaboration with a teammate, using Three.js to create an interactive 3D gaming experience.",
       technologies: ["HTML", "JavaScript", "Three.js", "JSON"],
       liveUrl: "https://github.com/kevinlau2102/tubes-grafkom",
+      githubUrl: "https://github.com/kevinlau2102/tubes-grafkom",
       image: "",
+      details: {
+        overview: "Developed a football penalty shootout game as a final course project in collaboration with a teammate, using Three.js to create an interactive 3D gaming experience.",
+        timeline: "2022 — 2023",
+        gallery: [
+          {
+            url: "",
+            caption: "3D Stadium & Penalty Spot",
+            description: "Perspective from the penalty taker showing 3D goalpost, stadium environment, and goalkeeper model.",
+          },
+        ],
+      },
     },
     {
       title: "UrGalon",
@@ -170,7 +232,19 @@ export const portfolioData = {
       description: "Developed an Android application called UrGalon as a final course project in collaboration with a teammate, using Kotlin. The application allows users to find nearby water refill depots and place orders for purchasing or refilling water gallons.",
       technologies: ["Kotlin", "Firebase", "Figma"],
       liveUrl: "https://github.com/MichaelMathew/UAS_Mobile",
+      githubUrl: "https://github.com/MichaelMathew/UAS_Mobile",
       image: "",
+      details: {
+        overview: "Developed an Android application called UrGalon as a final course project in collaboration with a teammate, using Kotlin. The application allows users to find nearby water refill depots and place orders for purchasing or refilling water gallons.",
+        timeline: "2022 — 2023",
+        gallery: [
+          {
+            url: "",
+            caption: "UrGalon Depot Finder & Order Flow",
+            description: "Mobile user interface showcasing nearby water refill station listings and direct order submission.",
+          },
+        ],
+      },
     },
     {
       title: "Movie Ticket Ticketing Apps",
@@ -178,7 +252,20 @@ export const portfolioData = {
       description: "Developed a mobile ticketing application as a final course project using Dart and Flutter. The application enables users to explore currently showing and upcoming movies, check available showtimes and cinemas, and purchase tickets for their preferred movie, schedule, and cinema.",
       technologies: ["Dart", "Flutter", "Firebase", "Figma"],
       liveUrl: "",
+      githubUrl: "",
       image: "",
+      details: {
+        overview: "Developed a mobile ticketing application as a final course project using Dart and Flutter. The application enables users to explore currently showing and upcoming movies, check available showtimes and cinemas, and purchase tickets for their preferred movie, schedule, and cinema.",
+        timeline: "2022 — 2023",
+        gallery: [
+          {
+            url: "",
+            caption: "Movie Catalog & Cinema Schedule",
+            description: "Browse now playing movies with synopsis, ratings, and theater showtime schedules.",
+          },
+        ],
+
+      },
     },
     // {
     //   title: "Berita Acara IT Maranatha",
