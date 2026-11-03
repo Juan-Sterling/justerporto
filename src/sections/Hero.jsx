@@ -87,9 +87,11 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
 
     if (portalContainerRef.current) {
       gsap.set(portalContainerRef.current, {
-        scale: 0.82,
-        rotation: -90,
-        opacity: 0,
+        xPercent: -50,
+        yPercent: -50,
+        scale: 1,
+        rotation: 0,
+        opacity: 1,
         transformOrigin: '50% 50%',
         force3D: true,
       });
@@ -97,7 +99,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
     if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1, transformOrigin: '50% 50%', force3D: true });
     if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
     if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
-    if (portalAuraRef.current) gsap.set(portalAuraRef.current, { scale: 0.8, opacity: 0, force3D: true });
+    if (portalAuraRef.current) gsap.set(portalAuraRef.current, { scale: 0.5, opacity: 0, force3D: true });
 
     if (contentWrapperRef.current) {
       gsap.set(contentWrapperRef.current, {
@@ -159,18 +161,18 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       entranceTl.to(fogRightRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.08);
     }
 
-    // B. BaemonPortalO in Center Stage Scales in with 90° rotation into upright alignment
+    // B. BaemonPortalO in Center Stage: Seamless handover from WelcomeScreen (already at 1:1 scale and opacity 1)
     if (portalContainerRef.current) {
-      entranceTl.to(portalContainerRef.current, {
+      entranceTl.set(portalContainerRef.current, {
+        xPercent: -50,
+        yPercent: -50,
         scale: 1,
         rotation: 0,
         opacity: 1,
-        duration: 1.25,
-        ease: 'power3.out',
-      }, 0.05);
+      }, 0);
     }
     if (portalAuraRef.current) {
-      entranceTl.to(portalAuraRef.current, { scale: 1, opacity: 0.85, duration: 0.9, ease: 'power2.out' }, 0.1);
+      entranceTl.to(portalAuraRef.current, { scale: 1, opacity: 0.85, duration: 1.0, ease: 'power2.out' }, 0.05);
     }
 
     // C. Top Row: Availability Beacon + Location Badge slide down
@@ -322,6 +324,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             y: isDesktop ? 0 : -14,
             duration: 0.24,
             ease: 'sine.out',
+            immediateRender: false,
           },
           0
         );
@@ -339,6 +342,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             x: 35,
             duration: 0.24,
             ease: 'sine.out',
+            immediateRender: false,
           },
           0
         );
@@ -358,6 +362,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             y: -10,
             duration: 0.22,
             ease: 'sine.out',
+            immediateRender: false,
           },
           0
         );
@@ -375,6 +380,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             scale: 0.98,
             duration: 0.26,
             ease: 'sine.out',
+            immediateRender: false,
           },
           0
         );
@@ -393,6 +399,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             opacity: 0.75,
             duration: 0.30,
             ease: 'sine.out',
+            immediateRender: false,
           },
           0.04
         );
@@ -421,6 +428,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             scale: targetScale,
             duration: 0.62,
             ease: 'sine.inOut',
+            immediateRender: false,
           },
           0.04
         );
@@ -437,6 +445,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             x: -48,
             duration: 0.62,
             ease: 'sine.inOut',
+            immediateRender: false,
           },
           0.04
         );
@@ -451,6 +460,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             x: 48,
             duration: 0.62,
             ease: 'sine.inOut',
+            immediateRender: false,
           },
           0.04
         );
@@ -590,10 +600,11 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 to-transparent dark:from-[#0f1117] dark:via-[#0f1117]/60 pointer-events-none" />
       </div>
 
-      {/* 2. BaemonPortalO Emblem: Positioned in the exact CENTER of the screen via bulletproof inset-0 flex centering */}
+      {/* 2. BaemonPortalO Emblem: Positioned at exact 50vw center to match WelcomeScreen with 0px scrollbar shift */}
       <div
         ref={portalContainerRef}
-        className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center will-change-transform opacity-0"
+        className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center will-change-transform"
+        style={{ left: 'calc(50% + (100vw - 100%) / 2)' }}
       >
         <BaemonPortalO
           ringScaleRef={ringScaleRef}

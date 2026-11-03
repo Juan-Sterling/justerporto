@@ -57,6 +57,12 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
   const clawTopRef = useRef(null);
   const clawBottomRef = useRef(null);
   const sheeshBadgeRef = useRef(null);
+  const baemonWordmarkRef = useRef(null);
+  const baemonLeftRef = useRef(null);
+  const baemonCenterORef = useRef(null);
+  const baemonGhostORef = useRef(null);
+  const baemonRightRef = useRef(null);
+  const baemonOAuraRef = useRef(null);
 
   // Mode 2: Batter Up refs
   const doorTopRef = useRef(null);
@@ -96,6 +102,8 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         },
       });
 
+      let deltaX = 0;
+
       // ------------------------------------------
       // 1. Initial State Setup (All Modes)
       // ------------------------------------------
@@ -108,12 +116,51 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
 
       // Mode-specific initial setups
       if (exitMode === 'sheesh') {
-        gsap.set(slashSvgRef.current, { opacity: 0 });
-        gsap.set([slashMainRef.current, clawTopRef.current, clawBottomRef.current], {
-          strokeDasharray: 1400,
-          strokeDashoffset: 1400,
-        });
+        if (slashSvgRef.current) {
+          gsap.set(slashSvgRef.current, { opacity: 0 });
+          gsap.set([slashMainRef.current, clawTopRef.current, clawBottomRef.current], {
+            strokeDasharray: 1400,
+            strokeDashoffset: 1400,
+          });
+        }
         if (sheeshBadgeRef.current) gsap.set(sheeshBadgeRef.current, { scale: 0.7, opacity: 0 });
+        if (baemonWordmarkRef.current) gsap.set(baemonWordmarkRef.current, { opacity: 0, scale: 0.88 });
+        if (baemonLeftRef.current) gsap.set(baemonLeftRef.current, { xPercent: 0, yPercent: 0, rotation: 0, opacity: 1 });
+        if (baemonRightRef.current) gsap.set(baemonRightRef.current, { xPercent: 0, yPercent: 0, rotation: 0, opacity: 1 });
+
+        // Responsive Resolution Inversion: Measure exact ghost letter metrics or use responsive defaults
+        const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+        const isTablet = typeof window !== 'undefined' && window.innerWidth >= 640 && window.innerWidth < 1024;
+        let initialScale = isMobile ? 0.14 : (isTablet ? 0.178 : 0.174);
+        let initialY = isMobile ? -3.5 : (isTablet ? -6 : -8.5);
+
+        deltaX = 0;
+        if (baemonGhostORef.current && baemonCenterORef.current) {
+          const ghostRect = baemonGhostORef.current.getBoundingClientRect();
+          const targetRect = baemonCenterORef.current.getBoundingClientRect();
+          if (ghostRect.height > 0 && targetRect.width > 0) {
+            initialScale = (ghostRect.height * 0.89) / targetRect.width;
+            initialY = -ghostRect.height * 0.12;
+            const screenCenterX = window.innerWidth / 2;
+            const ghostCenterX = ghostRect.left + ghostRect.width / 2;
+            deltaX = screenCenterX - ghostCenterX;
+          }
+        }
+
+        if (baemonCenterORef.current) {
+          gsap.set(baemonCenterORef.current, {
+            xPercent: -50,
+            yPercent: -50,
+            x: 0,
+            y: initialY,
+            scale: initialScale,
+            rotation: 0,
+            opacity: 1,
+            transformOrigin: '50% 50%',
+            force3D: true,
+          });
+        }
+        if (baemonOAuraRef.current) gsap.set(baemonOAuraRef.current, { opacity: 0 });
       } else if (exitMode === 'batterup') {
         gsap.set(centerBeamRef.current, { width: '0%', opacity: 0 });
         if (batterBadgeRef.current) gsap.set(batterBadgeRef.current, { scale: 0.7, opacity: 0 });
@@ -142,7 +189,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       const progressObj = { value: 0 };
       tl.to(progressObj, {
         value: 100,
-        duration: 2.7,
+        duration: 1.95,
         ease: 'power2.inOut',
         onUpdate: () => {
           const rounded = Math.round(progressObj.value);
@@ -208,22 +255,22 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         opacity: 0,
         y: -14,
         scale: 0.95,
-        duration: 0.16,
+        duration: 0.15,
         ease: 'power2.in',
         onComplete: () => {
           setActiveGreeting(GREETINGS[2].text);
           const greetings = containerRef.current?.querySelectorAll('.welcome-greeting-text');
           if (greetings) greetings.forEach(g => { g.textContent = GREETINGS[2].text; });
         },
-      }, 1.85);
+      }, 1.45);
 
       tl.to('.welcome-greeting-text', {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: 0.25,
+        duration: 0.22,
         ease: 'power3.out',
-      }, 2.05);
+      }, 1.60);
 
       // ==========================================
       // 7. EXIT ANIMATION ROUTER BY THEME
@@ -231,56 +278,100 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
 
       if (exitMode === 'sheesh') {
         // ----------------------------------------
-        // MODE 1: "SHEESH" — Laser Claw Slash Split (60/120fps GPU-Accelerated)
+        // MODE 1: "SHEESH" — BABYMONSTER Clear Showcase -> Letters Dissolve -> O Transforms into Portal
         // ----------------------------------------
-        tl.to(containerRef.current, { scale: 0.99, duration: 0.08, ease: 'power2.out' }, 2.80);
+        // 1. Loading bar finishes: welcome greeting centerpiece fades out smoothly
+        tl.to('.welcome-center-stage', {
+          opacity: 0,
+          scale: 0.94,
+          duration: 0.20,
+          ease: 'power2.in',
+        }, 2.05);
 
-        tl.set(slashSvgRef.current, { opacity: 1 }, 2.88);
-        tl.to(flareRef.current, { opacity: 0.85, scale: 1.2, duration: 0.12, ease: 'power2.out' }, 2.88);
-
-        // Slash lines draw across with pure GPU strokes
-        tl.to([slashMainRef.current, clawTopRef.current, clawBottomRef.current], {
-          strokeDashoffset: 0,
-          duration: 0.18,
-          ease: 'power4.inOut',
-        }, 2.88);
-
-        // Flash
-        tl.to(flashRef.current, { opacity: 0.35, duration: 0.06, ease: 'power2.in' }, 2.94);
-        tl.to(flashRef.current, { opacity: 0, duration: 0.16, ease: 'power2.out' }, 3.00);
-
-        if (sheeshBadgeRef.current) {
-          tl.to(sheeshBadgeRef.current, { opacity: 1, scale: 1, duration: 0.15, ease: 'back.out(2)' }, 2.92);
+        // 2. Grand BABYMONSTER Wordmark enters center stage & stays clearly readable for ~0.9s
+        if (baemonWordmarkRef.current) {
+          tl.to(baemonWordmarkRef.current, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.28,
+            ease: 'back.out(1.4)',
+          }, 2.15);
         }
 
-        const splitTime = 3.02;
-        // Mount Hero entrance right as split starts to seamlessly unveil without CPU choke
+        // 3. Letters BABYM and NSTER dissolve away, leaving ONLY the center "O"
+        if (baemonLeftRef.current) {
+          tl.to(baemonLeftRef.current, {
+            xPercent: -90,
+            opacity: 0,
+            duration: 0.30,
+            ease: 'power2.in',
+            force3D: true,
+          }, 3.00);
+        }
+
+        if (baemonRightRef.current) {
+          tl.to(baemonRightRef.current, {
+            xPercent: 90,
+            opacity: 0,
+            duration: 0.30,
+            ease: 'power2.in',
+            force3D: true,
+          }, 3.00);
+        }
+
+        // 4. Center "O" Awakens: rotates 180° and expands smoothly into full portal scale
+        // Finishes 100% cleanly at 3.73s BEFORE the exit fade starts
+        if (baemonOAuraRef.current) {
+          tl.to(baemonOAuraRef.current, {
+            opacity: 0.85,
+            duration: 0.35,
+            ease: 'power2.out',
+          }, 3.25);
+        }
+
+        if (baemonCenterORef.current) {
+          tl.to(baemonCenterORef.current, {
+            scale: 1.0,
+            rotation: 180,
+            x: deltaX,
+            y: 0,
+            duration: 0.48,
+            ease: 'power3.out',
+            force3D: true,
+          }, 3.25);
+        }
+
+        // 5. Exit starts at 3.75s (AFTER rotation & expansion is 100% complete and stationary)
+        const splitTime = 3.75;
+        // Mount Hero entrance right as background fades to reveal Hero section
         tl.call(() => { onStartExitRef.current?.(); }, null, splitTime);
         tl.set(containerRef.current, { pointerEvents: 'none' }, splitTime);
 
-        // Split panels slide apart diagonally (pure translate3d, no rotation re-rasterization)
-        tl.to(topPanelRef.current, {
-          xPercent: -35,
-          yPercent: -30,
-          opacity: 0,
-          duration: 0.55,
-          ease: 'power3.in',
-          force3D: true,
-        }, splitTime);
-
-        tl.to(bottomPanelRef.current, {
-          xPercent: 35,
-          yPercent: 30,
-          opacity: 0,
-          duration: 0.55,
-          ease: 'power3.in',
-          force3D: true,
-        }, splitTime);
+        // Clean fade out of solid screen panel (No diagonal cut/slash)
+        // Reveals Hero section behind it without any blink or flicker
+        if (topPanelRef.current) {
+          tl.to(topPanelRef.current, {
+            opacity: 0,
+            duration: 0.50,
+            ease: 'power2.inOut',
+            force3D: true,
+          }, splitTime);
+        }
+        if (bottomPanelRef.current) {
+          tl.to(bottomPanelRef.current, {
+            opacity: 0,
+            duration: 0.50,
+            ease: 'power2.inOut',
+            force3D: true,
+          }, splitTime);
+        }
 
         if (sheeshBadgeRef.current) {
           tl.to(sheeshBadgeRef.current, { scale: 1.5, opacity: 0, duration: 0.38, ease: 'power2.out' }, splitTime + 0.04);
         }
-        tl.to(slashSvgRef.current, { scale: 1.1, opacity: 0, duration: 0.4, ease: 'power2.out' }, splitTime + 0.04);
+        if (slashSvgRef.current) {
+          tl.to(slashSvgRef.current, { scale: 1.1, opacity: 0, duration: 0.4, ease: 'power2.out' }, splitTime + 0.04);
+        }
         tl.to(flareRef.current, { scale: 1.6, opacity: 0, duration: 0.42, ease: 'power2.out' }, splitTime);
 
       } else if (exitMode === 'batterup') {
@@ -467,7 +558,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       </div>
 
       {/* 3. Centerpiece: BABYMONSTER Inspired Welcome Stage */}
-      <div className="relative z-10 my-auto flex flex-col items-center justify-center text-center px-4">
+      <div className="welcome-center-stage relative z-10 my-auto flex flex-col items-center justify-center text-center px-4 will-change-transform">
         {/* Devil Horns Crown Motif + Monogram */}
         <div
           ref={options.isDrip ? dripEmblemRef : null}
@@ -586,77 +677,77 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       {/* ---------------------------------------------------- */}
       {exitMode === 'sheesh' && (
         <>
-          {/* Upper-Left Sliced Panel */}
+          {/* Solid Fullscreen Panel (No diagonal cut/slash) */}
           <div
             ref={topPanelRef}
             className="absolute inset-0 bg-[#FAFAFA] dark:bg-[#0f1117] overflow-hidden will-change-transform"
-            style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 65.2%, 0% 35.2%)' }}
           >
-            {renderPanelContent('top')}
+            {renderPanelContent('main')}
           </div>
 
-          {/* Lower-Right Sliced Panel */}
+          {/* Grand BABYMONSTER -> O Transformation Stage (z-45, dead center) */}
           <div
-            ref={bottomPanelRef}
-            aria-hidden="true"
-            className="absolute inset-0 bg-[#FAFAFA] dark:bg-[#0f1117] overflow-hidden will-change-transform"
-            style={{ clipPath: 'polygon(0% 34.8%, 100% 64.8%, 100% 100%, 0% 100%)' }}
+            ref={baemonWordmarkRef}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-45 pointer-events-none select-none inline-flex items-center justify-center opacity-0 will-change-transform font-display font-black uppercase text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#09090B] dark:text-white whitespace-nowrap leading-none tracking-normal"
+            aria-label="BABYMONSTER"
           >
-            {renderPanelContent('bottom')}
-          </div>
+            {/* Left Wing: "BABYM" with isolated glow */}
+            <span
+              ref={baemonLeftRef}
+              className="inline-block will-change-transform drop-shadow-[0_0_16px_rgba(225,29,46,0.35)] dark:drop-shadow-[0_0_24px_rgba(225,29,46,0.7)]"
+            >
+              BABYM
+            </span>
 
-          {/* 3-Claw Laser Slash SVG (GPU-Accelerated CSS Filters) */}
-          <svg
-            ref={slashSvgRef}
-            viewBox="0 0 1000 1000"
-            preserveAspectRatio="none"
-            className="absolute inset-0 w-full h-full pointer-events-none z-40 opacity-0 overflow-visible will-change-transform"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="laser-core-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FF4D5E" />
-                <stop offset="50%" stopColor="#FFFFFF" />
-                <stop offset="100%" stopColor="#E11D2E" />
-              </linearGradient>
-            </defs>
+            {/* Center Focal Point: The Baemon "O" Portal Icon */}
+            <span
+              className="relative inline-flex items-center justify-center leading-none mx-0.5 sm:mx-1"
+            >
+              {/* Ghost 'O' sets 100% native font metrics (height, width, baseline, kerning) in normal layout flow */}
+              <span ref={baemonGhostORef} className="invisible select-none" aria-hidden="true">O</span>
 
-            <path
-              ref={clawTopRef}
-              d="M -50 250 L 1050 580"
-              stroke="#E11D2E"
-              strokeWidth="3.5"
-              strokeLinecap="round"
-              className="filter drop-shadow-[0_0_8px_rgba(225,29,46,0.85)]"
-              opacity="0.85"
-            />
-            <path
-              ref={slashMainRef}
-              d="M -100 320 L 1100 680"
-              stroke="url(#laser-core-grad)"
-              strokeWidth="6"
-              strokeLinecap="round"
-              className="filter drop-shadow-[0_0_12px_rgba(255,77,94,0.9)]"
-            />
-            <path
-              ref={clawBottomRef}
-              d="M -50 420 L 1050 750"
-              stroke="#E11D2E"
-              strokeWidth="3.5"
-              strokeLinecap="round"
-              className="filter drop-shadow-[0_0_8px_rgba(225,29,46,0.85)]"
-              opacity="0.85"
-            />
-          </svg>
+              {/* High-Resolution Portal Container: Rendered at FULL portal dimensions (w-[190px] sm:w-[250px] lg:w-[350px]) */}
+              {/* Eliminates raster stretch blur by animating from scale: ~0.174 up to 1.0 (never exceeding 1:1 pixel resolution!) */}
+              <div
+                ref={baemonCenterORef}
+                className="absolute top-1/2 left-1/2 w-[190px] h-[190px] sm:w-[250px] sm:h-[250px] lg:w-[350px] lg:h-[350px] flex items-center justify-center will-change-transform transform-gpu pointer-events-none"
+                style={{ transformOrigin: '50% 50%' }}
+              >
+                {/* Concentrated Crimson Aperture Glow */}
+                <div
+                  ref={baemonOAuraRef}
+                  className="absolute w-44 h-44 sm:w-60 sm:h-60 lg:w-80 lg:h-80 rounded-full bg-radial from-[#FF3B4D]/35 via-[#E11D2E]/15 to-transparent blur-xl pointer-events-none opacity-0 will-change-transform transform-gpu"
+                />
 
-          {/* "SHEESH!" Impact Typography */}
-          <div
-            ref={sheeshBadgeRef}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none select-none text-center opacity-0 will-change-transform"
-            aria-hidden="true"
-          >
-            <span className="font-display text-5xl sm:text-7xl md:text-8xl font-black italic tracking-widest text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.9)]">
-              SHEESH!
+                {/* The Baemon Split "O" Vector Master (100% vector, geometricPrecision) */}
+                <div className="w-[190px] h-[190px] sm:w-[250px] sm:h-[250px] lg:w-[350px] lg:h-[350px] flex items-center justify-center">
+                  <svg
+                    viewBox="25 25 350 350"
+                    className="w-full h-full overflow-visible pointer-events-none transform-gpu"
+                    shapeRendering="geometricPrecision"
+                    aria-hidden="true"
+                  >
+                    {/* Left half */}
+                    <path
+                      d="M 188 25.41 A 175 175 0 0 0 188 374.59 L 188 294.24 A 95 95 0 0 1 188 105.76 Z"
+                      className="fill-black dark:fill-[#E11D2E] transition-colors duration-200"
+                    />
+                    {/* Right half */}
+                    <path
+                      d="M 212 25.41 A 175 175 0 0 1 212 374.59 L 212 294.24 A 95 95 0 0 0 212 105.76 Z"
+                      className="fill-black dark:fill-[#E11D2E] transition-colors duration-200"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </span>
+
+            {/* Right Wing: "NSTER" with isolated glow */}
+            <span
+              ref={baemonRightRef}
+              className="inline-block will-change-transform drop-shadow-[0_0_16px_rgba(225,29,46,0.35)] dark:drop-shadow-[0_0_24px_rgba(225,29,46,0.7)]"
+            >
+              NSTER
             </span>
           </div>
         </>
