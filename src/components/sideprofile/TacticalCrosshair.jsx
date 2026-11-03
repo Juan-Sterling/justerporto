@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react';
  * - Mathematical pixel-perfect symmetry (Valorant 1-4-2-2 style crosshair).
  * - 100% Contrast in Light and Dark mode using 1px solid black bounding outline.
  * - Tactical Lock-On HUD Brackets when hovering clickable elements (buttons, links).
- * - Recoil kick + multi-particle bullet impact VFX on click (auto-cleaned in 400ms).
+ * - Recoil kick + multi-particle bullet impact VFX on click (persistent bullet hole mark ~2.8s).
  * - Guaranteed restoration of native cursor when leaving the Side Profile.
  */
 export default function TacticalCrosshair() {
@@ -105,14 +105,20 @@ export default function TacticalCrosshair() {
         ${sparksHtml}
       `;
 
+      // Keep DOM clean: limit max active bullet impacts concurrently (max 30)
+      if (impactsContainerRef.current.children.length >= 30) {
+        const oldest = impactsContainerRef.current.firstElementChild;
+        if (oldest) oldest.remove();
+      }
+
       impactsContainerRef.current.appendChild(impact);
 
-      // Auto-cleanup impact node once animation completes (400ms)
+      // Auto-cleanup impact node once bullet mark fade animation completes (~2.8s)
       setTimeout(() => {
         if (impact.parentNode) {
           impact.parentNode.removeChild(impact);
         }
-      }, 420);
+      }, 2850);
     };
 
     const handleMouseLeave = () => {
@@ -376,17 +382,64 @@ export default function TacticalCrosshair() {
           animation: shockwaveExpand 0.28s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
         }
 
-        /* Fleeting bullet impact crater */
+        /* High-Visibility Tactical Bullet Crater & Scorch Mark */
         .tactical-bullet-hole {
           position: absolute;
-          width: 6px;
-          height: 6px;
-          left: -3px;
-          top: -3px;
+          width: 10px;
+          height: 10px;
+          left: -5px;
+          top: -5px;
           border-radius: 50%;
-          background: #090d0b;
-          border: 1px solid #10b981;
-          animation: bulletMarkFade 0.38s ease-in forwards;
+          background: radial-gradient(circle, #020403 25%, #064e3b 60%, #00f5a0 95%);
+          box-shadow: 0 0 0 1.5px #00f5a0, 0 0 8px #00f5a0, 0 0 14px rgba(0, 245, 160, 0.6);
+          pointer-events: none;
+          animation: bulletMarkFade 2.8s ease-out forwards;
+        }
+
+        /* Molten Radianite Ember Core */
+        .tactical-bullet-hole::before {
+          content: '';
+          position: absolute;
+          width: 3px;
+          height: 3px;
+          left: 3.5px;
+          top: 3.5px;
+          border-radius: 50%;
+          background-color: #e6fffa;
+          box-shadow: 0 0 4px #00f5a0, 0 0 6px #ffffff;
+          pointer-events: none;
+        }
+
+        /* Radianite Thermal Scorch Ring */
+        .tactical-bullet-hole::after {
+          content: '';
+          position: absolute;
+          inset: -6px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(0, 245, 160, 0.4) 0%, rgba(16, 185, 129, 0.2) 45%, transparent 70%);
+          pointer-events: none;
+        }
+
+        /* Dark Mode: Supercharged Luminescence on dark obsidian backgrounds */
+        html.dark .tactical-bullet-hole,
+        .dark .tactical-bullet-hole {
+          background: radial-gradient(circle, #020604 20%, #064e3b 55%, #00f5a0 90%, #ffffff 100%);
+          box-shadow: 
+            0 0 0 1.5px #00f5a0,
+            0 0 10px #00f5a0,
+            0 0 22px rgba(0, 245, 160, 0.85),
+            inset 0 0 4px #00f5a0;
+        }
+
+        html.dark .tactical-bullet-hole::before,
+        .dark .tactical-bullet-hole::before {
+          background-color: #ffffff;
+          box-shadow: 0 0 5px #00f5a0, 0 0 10px #ffffff;
+        }
+
+        html.dark .tactical-bullet-hole::after,
+        .dark .tactical-bullet-hole::after {
+          background: radial-gradient(circle, rgba(0, 245, 160, 0.55) 0%, rgba(0, 245, 160, 0.25) 50%, transparent 75%);
         }
 
         /* Flying high-velocity sparks */
@@ -421,9 +474,26 @@ export default function TacticalCrosshair() {
         }
 
         @keyframes bulletMarkFade {
-          0% { opacity: 0.9; transform: scale(1); }
-          60% { opacity: 0.6; transform: scale(0.9); }
-          100% { opacity: 0; transform: scale(0.4); }
+          0% {
+            opacity: 1;
+            transform: scale(1.15);
+          }
+          6% {
+            opacity: 0.95;
+            transform: scale(1);
+          }
+          70% {
+            opacity: 0.9;
+            transform: scale(1);
+          }
+          88% {
+            opacity: 0.35;
+            transform: scale(0.92);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(0.65);
+          }
         }
 
         @keyframes sparkFly {
