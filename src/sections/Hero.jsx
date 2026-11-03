@@ -87,11 +87,10 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
 
     if (portalContainerRef.current) {
       gsap.set(portalContainerRef.current, {
-        xPercent: -50,
-        yPercent: -50,
-        scale: 1,
+        scale: 0.94,
         rotation: 0,
-        opacity: 1,
+        opacity: 0,
+        y: 8,
         transformOrigin: '50% 50%',
         force3D: true,
       });
@@ -161,18 +160,20 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       entranceTl.to(fogRightRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.08);
     }
 
-    // B. BaemonPortalO in Center Stage: Seamless handover from WelcomeScreen (already at 1:1 scale and opacity 1)
+    // B. BaemonPortalO in Center Stage: Silky smooth docking animation from WelcomeScreen
     if (portalContainerRef.current) {
-      entranceTl.set(portalContainerRef.current, {
-        xPercent: -50,
-        yPercent: -50,
-        scale: 1,
+      entranceTl.to(portalContainerRef.current, {
+        scale: 1.0,
         rotation: 0,
         opacity: 1,
-      }, 0);
+        y: 0,
+        duration: 0.60,
+        ease: 'power3.out',
+        force3D: true,
+      }, 0.04);
     }
     if (portalAuraRef.current) {
-      entranceTl.to(portalAuraRef.current, { scale: 1, opacity: 0.85, duration: 1.0, ease: 'power2.out' }, 0.05);
+      entranceTl.to(portalAuraRef.current, { scale: 1, opacity: 0.85, duration: 0.85, ease: 'power2.out' }, 0.08);
     }
 
     // C. Top Row: Availability Beacon + Location Badge slide down
@@ -600,11 +601,10 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/80 to-transparent dark:from-[#0f1117] dark:via-[#0f1117]/60 pointer-events-none" />
       </div>
 
-      {/* 2. BaemonPortalO Emblem: Positioned at exact 50vw center to match WelcomeScreen with 0px scrollbar shift */}
+      {/* 2. BaemonPortalO Emblem: Centered in Hero section */}
       <div
         ref={portalContainerRef}
-        className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center will-change-transform"
-        style={{ left: 'calc(50% + (100vw - 100%) / 2)' }}
+        className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center will-change-transform opacity-0"
       >
         <BaemonPortalO
           ringScaleRef={ringScaleRef}

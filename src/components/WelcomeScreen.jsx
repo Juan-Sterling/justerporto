@@ -102,8 +102,6 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         },
       });
 
-      let deltaX = 0;
-
       // ------------------------------------------
       // 1. Initial State Setup (All Modes)
       // ------------------------------------------
@@ -134,16 +132,12 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         let initialScale = isMobile ? 0.14 : (isTablet ? 0.178 : 0.174);
         let initialY = isMobile ? -3.5 : (isTablet ? -6 : -8.5);
 
-        deltaX = 0;
         if (baemonGhostORef.current && baemonCenterORef.current) {
           const ghostRect = baemonGhostORef.current.getBoundingClientRect();
           const targetRect = baemonCenterORef.current.getBoundingClientRect();
           if (ghostRect.height > 0 && targetRect.width > 0) {
             initialScale = (ghostRect.height * 0.89) / targetRect.width;
             initialY = -ghostRect.height * 0.12;
-            const screenCenterX = window.innerWidth / 2;
-            const ghostCenterX = ghostRect.left + ghostRect.width / 2;
-            deltaX = screenCenterX - ghostCenterX;
           }
         }
 
@@ -333,7 +327,6 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           tl.to(baemonCenterORef.current, {
             scale: 1.0,
             rotation: 180,
-            x: deltaX,
             y: 0,
             duration: 0.48,
             ease: 'power3.out',
@@ -341,38 +334,99 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           }, 3.25);
         }
 
-        // 5. Exit starts at 3.75s (AFTER rotation & expansion is 100% complete and stationary)
-        const splitTime = 3.75;
-        // Mount Hero entrance right as background fades to reveal Hero section
+        // 5. THE SHEESH CLAW SLASH (Option 4):
+        // O finishes rotating 180° and expanding cleanly at 3.73s.
+        // Immediately at 3.73s, the 3-claw neon laser slashes diagonally across the screen!
+        const slashTime = 3.73;
+
+        // Micro-impact rumble on screen container
+        tl.to(containerRef.current, { scale: 0.99, duration: 0.08, ease: 'power2.out' }, slashTime);
+
+        // Ignite Laser SVG & Impact Flare
+        if (slashSvgRef.current) tl.set(slashSvgRef.current, { opacity: 1 }, slashTime + 0.04);
+        if (flareRef.current) {
+          tl.to(flareRef.current, { opacity: 0.9, scale: 1.3, duration: 0.12, ease: 'power2.out' }, slashTime + 0.04);
+        }
+
+        // 3-Claw Laser lines draw across diagonally with blazing GPU strokes
+        if (slashMainRef.current && clawTopRef.current && clawBottomRef.current) {
+          tl.to([slashMainRef.current, clawTopRef.current, clawBottomRef.current], {
+            strokeDashoffset: 0,
+            duration: 0.18,
+            ease: 'power4.inOut',
+          }, slashTime + 0.04);
+        }
+
+        // High-energy Crimson Flash across screen
+        if (flashRef.current) {
+          tl.to(flashRef.current, { opacity: 0.45, duration: 0.06, ease: 'power2.in' }, slashTime + 0.10);
+          tl.to(flashRef.current, { opacity: 0, duration: 0.20, ease: 'power2.out' }, slashTime + 0.16);
+        }
+
+        // "SHEESH!" Impact Typography pops in
+        if (sheeshBadgeRef.current) {
+          tl.to(sheeshBadgeRef.current, { opacity: 1, scale: 1, duration: 0.15, ease: 'back.out(2)' }, slashTime + 0.08);
+        }
+
+        // 6. Split Moment: Right as the laser completes cutting through (~3.90s)
+        const splitTime = slashTime + 0.16;
+
+        // Trigger Hero entrance
         tl.call(() => { onStartExitRef.current?.(); }, null, splitTime);
         tl.set(containerRef.current, { pointerEvents: 'none' }, splitTime);
 
-        // Clean fade out of solid screen panel (No diagonal cut/slash)
-        // Reveals Hero section behind it without any blink or flicker
+        // The two sliced panels aggressively fly apart diagonally along the cut angle
         if (topPanelRef.current) {
           tl.to(topPanelRef.current, {
+            xPercent: -35,
+            yPercent: -30,
             opacity: 0,
-            duration: 0.50,
-            ease: 'power2.inOut',
-            force3D: true,
-          }, splitTime);
-        }
-        if (bottomPanelRef.current) {
-          tl.to(bottomPanelRef.current, {
-            opacity: 0,
-            duration: 0.50,
-            ease: 'power2.inOut',
+            duration: 0.55,
+            ease: 'power3.in',
             force3D: true,
           }, splitTime);
         }
 
+        if (bottomPanelRef.current) {
+          tl.to(bottomPanelRef.current, {
+            xPercent: 35,
+            yPercent: 30,
+            opacity: 0,
+            duration: 0.55,
+            ease: 'power3.in',
+            force3D: true,
+          }, splitTime);
+        }
+
+        // Center O and Aura dissolve cleanly into Hero's portal under the flash
+        if (baemonCenterORef.current) {
+          tl.to(baemonCenterORef.current, {
+            opacity: 0,
+            scale: 1.06,
+            duration: 0.28,
+            ease: 'power2.out',
+            force3D: true,
+          }, splitTime);
+        }
+        if (baemonOAuraRef.current) {
+          tl.to(baemonOAuraRef.current, {
+            opacity: 0,
+            scale: 1.4,
+            duration: 0.32,
+            ease: 'power2.out',
+          }, splitTime);
+        }
+
+        // Laser lines, watermark, and flare dissipate
         if (sheeshBadgeRef.current) {
-          tl.to(sheeshBadgeRef.current, { scale: 1.5, opacity: 0, duration: 0.38, ease: 'power2.out' }, splitTime + 0.04);
+          tl.to(sheeshBadgeRef.current, { scale: 1.5, opacity: 0, duration: 0.38, ease: 'power2.out' }, splitTime + 0.08);
         }
         if (slashSvgRef.current) {
-          tl.to(slashSvgRef.current, { scale: 1.1, opacity: 0, duration: 0.4, ease: 'power2.out' }, splitTime + 0.04);
+          tl.to(slashSvgRef.current, { scale: 1.08, opacity: 0, duration: 0.38, ease: 'power2.out' }, splitTime + 0.08);
         }
-        tl.to(flareRef.current, { scale: 1.6, opacity: 0, duration: 0.42, ease: 'power2.out' }, splitTime);
+        if (flareRef.current) {
+          tl.to(flareRef.current, { scale: 1.6, opacity: 0, duration: 0.42, ease: 'power2.out' }, splitTime + 0.04);
+        }
 
       } else if (exitMode === 'batterup') {
         // ----------------------------------------
@@ -677,18 +731,29 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       {/* ---------------------------------------------------- */}
       {exitMode === 'sheesh' && (
         <>
-          {/* Solid Fullscreen Panel (No diagonal cut/slash) */}
+          {/* Upper-Left Sliced Panel */}
           <div
             ref={topPanelRef}
             className="absolute inset-0 bg-[#FAFAFA] dark:bg-[#0f1117] overflow-hidden will-change-transform"
+            style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 65.2%, 0% 35.2%)' }}
           >
-            {renderPanelContent('main')}
+            {renderPanelContent('top')}
+          </div>
+
+          {/* Lower-Right Sliced Panel */}
+          <div
+            ref={bottomPanelRef}
+            aria-hidden="true"
+            className="absolute inset-0 bg-[#FAFAFA] dark:bg-[#0f1117] overflow-hidden will-change-transform"
+            style={{ clipPath: 'polygon(0% 34.8%, 100% 64.8%, 100% 100%, 0% 100%)' }}
+          >
+            {renderPanelContent('bottom')}
           </div>
 
           {/* Grand BABYMONSTER -> O Transformation Stage (z-45, dead center) */}
           <div
             ref={baemonWordmarkRef}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-45 pointer-events-none select-none inline-flex items-center justify-center opacity-0 will-change-transform font-display font-black uppercase text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#09090B] dark:text-white whitespace-nowrap leading-none tracking-normal"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-45 pointer-events-none select-none inline-flex items-center justify-center opacity-0 will-change-transform font-display font-black uppercase text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#E11D2E] dark:text-white whitespace-nowrap leading-none tracking-normal"
             aria-label="BABYMONSTER"
           >
             {/* Left Wing: "BABYM" with isolated glow */}
@@ -748,6 +813,61 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
               className="inline-block will-change-transform drop-shadow-[0_0_16px_rgba(225,29,46,0.35)] dark:drop-shadow-[0_0_24px_rgba(225,29,46,0.7)]"
             >
               NSTER
+            </span>
+          </div>
+
+          {/* 3-Claw Laser Slash SVG (GPU-Accelerated CSS Filters) */}
+          <svg
+            ref={slashSvgRef}
+            viewBox="0 0 1000 1000"
+            preserveAspectRatio="none"
+            className="absolute inset-0 w-full h-full pointer-events-none z-50 opacity-0 overflow-visible will-change-transform"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="laser-core-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FF4D5E" />
+                <stop offset="50%" stopColor="#FFFFFF" />
+                <stop offset="100%" stopColor="#E11D2E" />
+              </linearGradient>
+            </defs>
+
+            <path
+              ref={clawTopRef}
+              d="M -50 250 L 1050 580"
+              stroke="#E11D2E"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              className="filter drop-shadow-[0_0_8px_rgba(225,29,46,0.85)]"
+              opacity="0.85"
+            />
+            <path
+              ref={slashMainRef}
+              d="M -100 320 L 1100 680"
+              stroke="url(#laser-core-grad)"
+              strokeWidth="6"
+              strokeLinecap="round"
+              className="filter drop-shadow-[0_0_12px_rgba(255,77,94,0.9)]"
+            />
+            <path
+              ref={clawBottomRef}
+              d="M -50 420 L 1050 750"
+              stroke="#E11D2E"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              className="filter drop-shadow-[0_0_8px_rgba(225,29,46,0.85)]"
+              opacity="0.85"
+            />
+          </svg>
+
+          {/* "SHEESH!" Impact Typography */}
+          <div
+            ref={sheeshBadgeRef}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-55 pointer-events-none select-none text-center opacity-0 will-change-transform"
+            aria-hidden="true"
+          >
+            <span className="font-display text-5xl sm:text-7xl md:text-8xl font-black italic tracking-widest text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.9)]">
+              SHEESH!
             </span>
           </div>
         </>
@@ -886,14 +1006,14 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       {/* Global Crimson Flash Overlay (Impact FX) */}
       <div
         ref={flashRef}
-        className="absolute inset-0 bg-[#E11D2E] opacity-0 pointer-events-none z-30"
+        className="absolute inset-0 bg-[#E11D2E] opacity-0 pointer-events-none z-60"
         aria-hidden="true"
       />
 
       {/* Global Impact Center Flare */}
       <div
         ref={flareRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-96 h-64 sm:h-96 bg-[#E11D2E]/25 rounded-full blur-[50px] sm:blur-[80px] opacity-0 pointer-events-none z-30 will-change-transform"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-96 h-64 sm:h-96 bg-[#E11D2E]/25 rounded-full blur-[50px] sm:blur-[80px] opacity-0 pointer-events-none z-58 will-change-transform"
         aria-hidden="true"
       />
     </aside>
