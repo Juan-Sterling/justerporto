@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Compass, ArrowRight } from 'lucide-react';
+import BehindTheDesignModal from './BehindTheDesignModal';
 
 const ROLES = [
   "Full Stack Developer",
@@ -22,6 +23,8 @@ export default function Footer({ onNavigateToSideProfile }) {
 
   const [taglineIndex, setTaglineIndex] = useState(0);
   const [isTaglineFading, setIsTaglineFading] = useState(false);
+
+  const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
 
   // Role rotator
   useEffect(() => {
@@ -140,22 +143,40 @@ export default function Footer({ onNavigateToSideProfile }) {
             &copy; {currentYear} Juan Sterling. All rights reserved.
           </div>
 
-          {/* BABYMONSTER Inspiration Credit */}
-          <p className="text-[11px] font-mono">
-            Design inspired by{' '}
-            <a
-              id="footer-babymonster-link"
-              href="https://ygfamily.com/en/artists/babymonster/main"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="BABYMONSTER"
-              className="text-[#E11D2E] font-semibold underline-offset-4 decoration-[#E11D2E]/60 hover:underline hover:text-[#FF3B4D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E]/50 rounded-sm transition-colors duration-200 cursor-pointer"
+          {/* BABYMONSTER Inspiration Credit & Design Case Study Modal */}
+          <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-end text-[11px] font-mono">
+            <span>
+              Design inspired by{' '}
+              <a
+                id="footer-babymonster-link"
+                href="https://ygfamily.com/en/artists/babymonster/main"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="BABYMONSTER"
+                className="text-[#E11D2E] font-semibold underline-offset-4 decoration-[#E11D2E]/60 hover:underline hover:text-[#FF3B4D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E]/50 rounded-sm transition-colors duration-200 cursor-pointer"
+              >
+                BABYMONSTER
+              </a>
+            </span>
+            <span className="text-[#A1A1AA] dark:text-[#3F3F46]">•</span>
+            <button
+              type="button"
+              id="footer-behind-design-trigger"
+              onClick={() => setIsDesignModalOpen(true)}
+              aria-label="Read Behind the Design case study"
+              className="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-mono font-medium tracking-wide uppercase transition-all duration-200 cursor-pointer text-[#E11D2E] dark:text-[#FF4A5A] bg-[#E11D2E]/10 hover:bg-[#E11D2E]/20 border border-[#E11D2E]/30 hover:border-[#E11D2E]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E11D2E]"
             >
-              BABYMONSTER
-            </a>
-          </p>
+              Behind the Design
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Behind The Design Modal */}
+      <BehindTheDesignModal
+        isOpen={isDesignModalOpen}
+        onClose={() => setIsDesignModalOpen(false)}
+      />
     </footer>
   );
 }
