@@ -58,6 +58,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
   const clawBottomRef = useRef(null);
   const sheeshBadgeRef = useRef(null);
   const baemonWordmarkRef = useRef(null);
+  const baemonInspiredRef = useRef(null);
   const baemonLeftRef = useRef(null);
   const baemonCenterORef = useRef(null);
   const baemonGhostORef = useRef(null);
@@ -123,6 +124,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         }
         if (sheeshBadgeRef.current) gsap.set(sheeshBadgeRef.current, { scale: 0.7, opacity: 0 });
         if (baemonWordmarkRef.current) gsap.set(baemonWordmarkRef.current, { opacity: 0, scale: 0.88 });
+        if (baemonInspiredRef.current) gsap.set(baemonInspiredRef.current, { opacity: 0, y: -8 });
         if (baemonLeftRef.current) gsap.set(baemonLeftRef.current, { xPercent: 0, yPercent: 0, rotation: 0, opacity: 1 });
         if (baemonRightRef.current) gsap.set(baemonRightRef.current, { xPercent: 0, yPercent: 0, rotation: 0, opacity: 1 });
 
@@ -292,7 +294,25 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           }, 2.15);
         }
 
-        // 3. Letters BABYM and NSTER dissolve away, leaving ONLY the center "O"
+        if (baemonInspiredRef.current) {
+          tl.to(baemonInspiredRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.32,
+            ease: 'power3.out',
+          }, 2.22);
+        }
+
+        // 3. Letters BABYM, NSTER and "CONCEPT & THEME INSPIRED BY" dissolve away, leaving ONLY the center "O"
+        if (baemonInspiredRef.current) {
+          tl.to(baemonInspiredRef.current, {
+            opacity: 0,
+            y: -10,
+            duration: 0.25,
+            ease: 'power2.in',
+          }, 3.00);
+        }
+
         if (baemonLeftRef.current) {
           tl.to(baemonLeftRef.current, {
             xPercent: -90,
@@ -693,9 +713,18 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           ))}
         </div>
 
-        {/* Subtitle */}
-        <div className={`flex items-center gap-2 font-mono text-xs sm:text-sm text-[#27272A] dark:text-[#E4E4E7] ${options.isDrip ? 'drip-collapse' : ''}`}>
-          <span className="tracking-wide font-medium">Juan Sterling — Software Developer</span>
+        {/* Portfolio Title: Juan Sterling — Personal Portfolio */}
+        <div className={`flex flex-col items-center justify-center text-center ${options.isDrip ? 'drip-collapse' : ''}`}>
+          <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-[#09090B] dark:text-white leading-tight drop-shadow-sm">
+            Juan Sterling
+          </h2>
+          <div className="flex items-center justify-center gap-2 mt-1 select-none">
+            <span className="h-[1.5px] w-5 sm:w-7 bg-gradient-to-r from-transparent to-[#E11D2E]" aria-hidden="true" />
+            <p className="font-mono text-xs sm:text-sm tracking-[0.22em] uppercase font-bold text-[#E11D2E]">
+              Personal Portfolio
+            </p>
+            <span className="h-[1.5px] w-5 sm:w-7 bg-gradient-to-l from-transparent to-[#E11D2E]" aria-hidden="true" />
+          </div>
         </div>
 
         {/* Laser Loading Bar (Batter Up Theme) */}
@@ -756,6 +785,14 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-45 pointer-events-none select-none inline-flex items-center justify-center opacity-0 will-change-transform font-display font-black uppercase text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#E11D2E] dark:text-white whitespace-nowrap leading-none tracking-normal"
             aria-label="BABYMONSTER"
           >
+            {/* Top Subtitle Credit: "CONCEPT & THEME INSPIRED BY" */}
+            <div
+              ref={baemonInspiredRef}
+              className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 sm:mb-3.5 flex items-center justify-center whitespace-nowrap font-mono text-[9px] sm:text-[11px] md:text-xs font-semibold uppercase tracking-[0.25em] sm:tracking-[0.32em] text-zinc-500 dark:text-zinc-400 opacity-0 pointer-events-none select-none will-change-transform"
+            >
+              CONCEPT & THEME INSPIRED BY
+            </div>
+
             {/* Left Wing: "BABYM" with isolated glow */}
             <span
               ref={baemonLeftRef}
