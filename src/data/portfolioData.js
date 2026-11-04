@@ -9,7 +9,7 @@ export const portfolioData = {
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
     location: "North Jakarta, Indonesia",
     availability: "Under Development • Feel Free to Explore",
-    resumeUrl: "https://drive.google.com/file/d/1g20NBQXWuKxJ4v7qwXC4Py855tLvzRNJ/view?usp=sharing",
+    resumeUrl: "https://drive.google.com/file/d/1JQx_EygR2_w3TFD-aB4nV1uyOE-D0yla/view?usp=sharing",
   },
 
   education: [
