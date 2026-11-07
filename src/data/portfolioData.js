@@ -3,13 +3,54 @@ export const portfolioData = {
     name: "Juan Sterling",
     role: "Software Developer",
     tagline: "Interested in Web and Android Development. I am ready to contribute to projects that require technical expertise, problem-solving skills, and innovative solutions.",
-    email: "[EMAIL_ADDRESS]",
+    email: "juansterling1409@gmail.com",
     github: "https://github.com/Juan-Sterling",
     github2: "https://github.com/juansterling",
     linkedin: "https://www.linkedin.com/in/juan-sterling-martua-1487b3287/",
     location: "North Jakarta, Indonesia",
     availability: "Under Development • Feel Free to Explore",
     resumeUrl: "https://drive.google.com/file/d/1JQx_EygR2_w3TFD-aB4nV1uyOE-D0yla/view?usp=sharing",
+  },
+
+  about: {
+    title: "Behind The Stage",
+    subtitle: "A backstage look into my background, core focus, and engineering journey.",
+    passDetails: {
+      name: "Juan Sterling",
+      role: "Software Developer",
+      photo: "https://res.cloudinary.com/og1jrvy3/image/upload/f_auto,q_auto/v1791215430/IMG_0996_gg.jpg",
+    },
+    headline: "Engineering Solutions with Rhythm & Precision",
+    narrative: [
+      "I am Juan Sterling, a software developer dedicated to crafting modern web and multiplatform applications. I bridge clean interface design with sturdy, scalable backend architectures.",
+      "Driven by curiosity and a problem-solving mindset, I enjoy transforming complex requirements into reliable, maintainable code and smooth digital experiences.",
+    ],
+    quickFacts: [
+      {
+        id: "origin",
+        label: "Origin",
+        value: "Bandung, Indonesia",
+        icon: "Home",
+      },
+      {
+        id: "location",
+        label: "Current Base",
+        value: "North Jakarta, Indonesia",
+        icon: "MapPin",
+      },
+      {
+        id: "birth",
+        label: "Birth Year",
+        value: "2001",
+        icon: "Calendar",
+      },
+      {
+        id: "focus",
+        label: "Core Focus",
+        value: "Web & Mobile Development",
+        icon: "Code2",
+      },
+    ],
   },
 
   education: [

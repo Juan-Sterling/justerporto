@@ -244,6 +244,7 @@ export default function SpotifySoundstage({ musicData = {}, isToxinActive = fals
           width="100%"
           height="450"
           frameBorder="0"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
           title={`Spotify Playlist: ${activePlaylist.title}`}
