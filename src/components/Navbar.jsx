@@ -199,9 +199,6 @@ export default function Navbar({ activeSection = '' }) {
                     }`}
                   >
                     <span>{item.label}</span>
-                    {isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#E11D2E] shadow-[0_0_6px_rgba(225,29,46,0.8)]" />
-                    )}
                   </a>
                 );
               })}

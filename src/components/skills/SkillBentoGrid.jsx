@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import SkillBentoCard from './SkillBentoCard';
 import {
   SKILL_CATEGORIES,
@@ -45,7 +45,7 @@ function BentoCluster({
         transition: 'opacity 700ms ease-out, transform 700ms ease-out',
         transitionDelay: `${catIdx * 100}ms`,
       }}
-      className="group/cluster relative flex flex-col justify-start p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#0E0E0E]/90 border border-[#E4E4E7] dark:border-[#242424] shadow-xs hover:border-[#E11D2E]/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden will-change-transform"
+      className="group/cluster relative flex flex-col justify-start p-3 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#0E0E0E]/90 border border-[#E4E4E7] dark:border-[#242424] shadow-xs hover:border-[#E11D2E]/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden will-change-transform"
     >
       {/* Top ambient highlight line on hover */}
       <div 
@@ -54,22 +54,21 @@ function BentoCluster({
       />
 
       {/* Bento Header */}
-      <div className="flex items-start justify-between gap-3 mb-3.5">
-        <div className="flex items-center gap-2.5">
-          <div className="relative w-8 h-8 rounded-lg bg-[#E11D2E]/10 dark:bg-[#E11D2E]/20 border border-[#E11D2E]/30 flex items-center justify-center text-[#E11D2E] shrink-0 group-hover/cluster:border-[#E11D2E] group-hover/cluster:shadow-[0_0_10px_rgba(225,29,46,0.3)] transition-all duration-300">
-            <Icon className="w-4 h-4 relative z-10" />
-            <span className="absolute inset-0 rounded-lg bg-[#E11D2E]/10 animate-pulse pointer-events-none" />
+      <div className="flex items-start justify-between gap-3 mb-2.5 sm:mb-3.5">
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E11D2E]/10 dark:bg-[#E11D2E]/20 border border-[#E11D2E]/30 flex items-center justify-center text-[#E11D2E] shrink-0 group-hover/cluster:border-[#E11D2E] group-hover/cluster:shadow-[0_0_10px_rgba(225,29,46,0.3)] transition-all duration-300">
+            <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 relative z-10" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-display text-base font-bold text-[#09090B] dark:text-white leading-tight">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <h3 className="font-display text-sm sm:text-base font-bold text-[#09090B] dark:text-white leading-tight">
                 {cat.label}
               </h3>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#F4F4F5] dark:bg-[#1E1E1E] text-[#71717A] dark:text-[#A1A1AA] border border-[#E4E4E7] dark:border-[#2C2C2C]">
+              <span className="text-[9px] sm:text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#F4F4F5] dark:bg-[#1E1E1E] text-[#71717A] dark:text-[#A1A1AA] border border-[#E4E4E7] dark:border-[#2C2C2C]">
                 {catSkills.length}
               </span>
             </div>
-            <p className="text-[11px] text-[#71717A] dark:text-[#A1A1AA] mt-0.5">
+            <p className="text-[10px] sm:text-[11px] text-[#71717A] dark:text-[#A1A1AA] mt-0.5">
               {cat.tagline}
             </p>
           </div>
@@ -78,7 +77,7 @@ function BentoCluster({
         <button
           type="button"
           onClick={() => onSelectCategory(cat.id)}
-          className="text-[11px] font-mono text-[#E11D2E] hover:underline cursor-pointer flex items-center gap-0.5 shrink-0 group-hover/cluster:translate-x-0.5 transition-transform"
+          className="text-[10px] sm:text-[11px] font-mono text-[#E11D2E] hover:underline cursor-pointer flex items-center gap-0.5 shrink-0 group-hover/cluster:translate-x-0.5 transition-transform pt-0.5"
         >
           <span>Focus</span>
           <ArrowUpRight className="w-3 h-3" />
@@ -86,7 +85,7 @@ function BentoCluster({
       </div>
 
       {/* Skills Mini-Grid inside Bento Cluster with Staggered Cascading Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-1.5 sm:gap-2.5">
         {catSkills.map((skill, sIdx) => (
           <SkillBentoCard
             key={skill.id}
@@ -173,6 +172,38 @@ export default function SkillBentoGrid() {
   const initialFilteredSkills = filteredSkills.slice(0, INITIAL_FILTERED_COUNT);
   const remainingFilteredSkills = filteredSkills.slice(INITIAL_FILTERED_COUNT);
 
+  // Permanent Mobile Scrollbar Tracker for Category Tabs
+  const tabsScrollRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [thumbRatio, setThumbRatio] = useState(0.38);
+  const [canScroll, setCanScroll] = useState(false);
+
+  const updateScrollState = () => {
+    const el = tabsScrollRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    if (max > 2) {
+      setCanScroll(true);
+      const ratio = Math.min(Math.max(el.clientWidth / el.scrollWidth, 0.2), 0.75);
+      setThumbRatio(ratio);
+      const progress = Math.min(Math.max(el.scrollLeft / max, 0), 1);
+      setScrollProgress(progress);
+    } else {
+      setCanScroll(false);
+    }
+  };
+
+  useEffect(() => {
+    updateScrollState();
+    const handleResize = () => updateScrollState();
+    window.addEventListener('resize', handleResize);
+    const timer = setTimeout(updateScrollState, 150);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <div className="space-y-4 sm:space-y-5">
       {/* ================================================================= */}
@@ -187,49 +218,65 @@ export default function SkillBentoGrid() {
         }}
         className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 will-change-transform"
       >
-        {/* Category Segmented Tabs */}
-        <div className="flex items-center gap-1 p-1 rounded-xl bg-[#F4F4F5] dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#262626] overflow-x-auto no-scrollbar scroll-smooth">
-          <button
-            type="button"
-            onClick={() => handleSelectCategory('all')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
-              selectedCategory === 'all'
-                ? 'bg-white dark:bg-[#202020] text-[#09090B] dark:text-white shadow-xs font-semibold ring-1 ring-[#E11D2E]/25'
-                : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white'
-            }`}
+        {/* Category Segmented Tabs with Permanent Mobile Scrollbar */}
+        <div className="flex flex-col rounded-xl bg-[#F4F4F5] dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#262626] overflow-hidden">
+          <div
+            ref={tabsScrollRef}
+            onScroll={updateScrollState}
+            className="flex items-center gap-1 p-1 overflow-x-auto no-scrollbar scroll-smooth"
           >
-            {selectedCategory === 'all' && (
-              <span className="w-1.5 h-1.5 rounded-full bg-[#E11D2E] animate-pulse shrink-0" />
-            )}
-            <span>All</span>
-            <span className="opacity-60 text-[10px]">({SKILLS_DATA.length})</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => handleSelectCategory('all')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
+                selectedCategory === 'all'
+                  ? 'bg-white dark:bg-[#202020] text-[#09090B] dark:text-white shadow-xs font-semibold ring-1 ring-[#E11D2E]/25'
+                  : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white'
+              }`}
+            >
+              <span>All</span>
+              <span className="opacity-60 text-[10px]">({SKILLS_DATA.length})</span>
+            </button>
 
-          {SKILL_CATEGORIES.map((cat) => {
-            const count = SKILLS_DATA.filter((s) => s.category === cat.id).length;
-            const Icon = CATEGORY_ICONS[cat.id] || Code2;
-            const isActive = selectedCategory === cat.id;
+            {SKILL_CATEGORIES.map((cat) => {
+              const count = SKILLS_DATA.filter((s) => s.category === cat.id).length;
+              const Icon = CATEGORY_ICONS[cat.id] || Code2;
+              const isActive = selectedCategory === cat.id;
 
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => handleSelectCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                  isActive
-                    ? 'bg-white dark:bg-[#202020] text-[#09090B] dark:text-white shadow-xs font-semibold ring-1 ring-[#E11D2E]/25'
-                    : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white'
-                }`}
-              >
-                {isActive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#E11D2E] animate-pulse shrink-0" />
-                )}
-                <Icon className={`w-3 h-3 transition-colors ${isActive ? 'text-[#E11D2E]' : ''}`} />
-                <span>{cat.label}</span>
-                <span className="opacity-60 text-[10px]">({count})</span>
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => handleSelectCategory(cat.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
+                    isActive
+                      ? 'bg-white dark:bg-[#202020] text-[#09090B] dark:text-white shadow-xs font-semibold ring-1 ring-[#E11D2E]/25'
+                      : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#09090B] dark:hover:text-white'
+                  }`}
+                >
+                  <Icon className={`w-3 h-3 transition-colors ${isActive ? 'text-[#E11D2E]' : ''}`} />
+                  <span>{cat.label}</span>
+                  <span className="opacity-60 text-[10px]">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Permanent Mobile Scrollbar Indicator (Never Disappears after scrolling!) */}
+          {canScroll && (
+            <div className="sm:hidden px-3 pb-1.5 pt-0 select-none pointer-events-none" aria-hidden="true">
+              <div className="h-1 w-full bg-black/10 dark:bg-white/10 rounded-full relative overflow-hidden">
+                <div
+                  className="absolute top-0 bottom-0 bg-[#E11D2E] rounded-full will-change-transform"
+                  style={{
+                    width: `${Math.round(thumbRatio * 100)}%`,
+                    left: `${scrollProgress * (100 - Math.round(thumbRatio * 100))}%`,
+                    transition: 'left 60ms linear',
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Quick Search Bar */}
@@ -346,7 +393,7 @@ export default function SkillBentoGrid() {
               )}
 
               {/* Grid of All Filtered Skills - Always 100% visible! */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5 sm:gap-3">
                 {filteredSkills.map((skill, index) => (
                   <SkillBentoCard
                     key={skill.id}

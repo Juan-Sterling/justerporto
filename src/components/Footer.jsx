@@ -101,7 +101,7 @@ export default function Footer({ onNavigateToSideProfile }) {
                 type="button"
                 id="footer-sideprofile-trigger"
                 aria-label="Access Side Profile: There's Another Side That You Don't Know"
-                className="group relative inline-flex items-center gap-3 px-3.5 py-2 rounded-xs bg-[#f0fdf4] dark:bg-[#090d0b] border border-[#10b981]/30 dark:border-[#00f59b]/35 hover:border-[#059669] dark:hover:border-[#00f59b] shadow-2xs hover:shadow-[0_0_15px_rgba(0,245,155,0.2)] transition-all duration-300 cursor-pointer overflow-hidden text-left"
+                className="group relative inline-flex items-center gap-3 px-3.5 py-2 rounded-xl bg-[#f0fdf4] dark:bg-[#090d0b] border border-[#10b981]/30 dark:border-[#00f59b]/35 hover:border-[#059669] dark:hover:border-[#00f59b] shadow-2xs hover:shadow-[0_0_15px_rgba(0,245,155,0.2)] transition-all duration-300 cursor-pointer overflow-hidden text-left"
               >
                 {/* Tactical diagonal hazard lines background */}
                 <div
@@ -114,7 +114,7 @@ export default function Footer({ onNavigateToSideProfile }) {
                 />
 
                 <div className="relative z-10 flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-xs bg-[#10b981]/15 dark:bg-[#00f59b]/20 border border-[#10b981]/30 dark:border-[#00f59b]/50 flex items-center justify-center text-[#059669] dark:text-[#00f59b] group-hover:scale-105 transition-transform shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-[#10b981]/15 dark:bg-[#00f59b]/20 border border-[#10b981]/30 dark:border-[#00f59b]/50 flex items-center justify-center text-[#059669] dark:text-[#00f59b] group-hover:scale-105 transition-transform shrink-0">
                     <Compass className="w-3.5 h-3.5" />
                   </div>
                   <div>
@@ -164,7 +164,7 @@ export default function Footer({ onNavigateToSideProfile }) {
               id="footer-behind-design-trigger"
               onClick={() => setIsDesignModalOpen(true)}
               aria-label="Read Behind the Design case study"
-              className="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-mono font-medium tracking-wide uppercase transition-all duration-200 cursor-pointer text-[#E11D2E] dark:text-[#FF4A5A] bg-[#E11D2E]/10 hover:bg-[#E11D2E]/20 border border-[#E11D2E]/30 hover:border-[#E11D2E]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E11D2E]"
+              className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-mono font-medium tracking-wide uppercase transition-all duration-200 cursor-pointer text-[#E11D2E] dark:text-[#FF4A5A] bg-[#E11D2E]/10 hover:bg-[#E11D2E]/20 border border-[#E11D2E]/30 hover:border-[#E11D2E]/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#E11D2E]"
             >
               Behind the Design
             </button>

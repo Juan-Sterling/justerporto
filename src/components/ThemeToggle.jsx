@@ -89,12 +89,6 @@ export default function ThemeToggle({ variant = 'icon', className = '' }) {
           <Moon className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-indigo-500 dark:text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
         )}
       </motion.div>
-      {isSystem && (
-        <span 
-          className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#E11D2E] ring-2 ring-white dark:ring-[#141414]" 
-          title="Following system theme" 
-        />
-      )}
     </motion.button>
   );
 }
