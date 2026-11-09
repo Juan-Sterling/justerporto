@@ -78,9 +78,10 @@ export default function TacticalCrosshair() {
       void crosshairRef.current.offsetWidth; // Force reflow to re-trigger rapid clicks
       crosshairRef.current.classList.add('recoil-kick');
 
-      // 2. High-Performance Bullet Impact Spawner
-      const x = e.clientX;
-      const y = e.clientY;
+      // 2. High-Performance Bullet Impact Spawner (Anchored to Document / Page Scroll)
+      const rect = impactsContainerRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
       const impact = document.createElement('div');
       impact.className = 'tactical-bullet-impact';
@@ -340,12 +341,14 @@ export default function TacticalCrosshair() {
           100% { transform: translateX(0); }
         }
 
-        /* 3. Bullet Impact & Spark VFX */
+        /* 3. Bullet Impact & Spark VFX (Anchored to Page Content) */
         .tactical-impacts-container {
-          position: fixed;
+          position: absolute;
           inset: 0;
+          width: 100%;
+          min-height: 100%;
           pointer-events: none;
-          z-index: 999998;
+          z-index: 35;
           overflow: hidden;
         }
 
