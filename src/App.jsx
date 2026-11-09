@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WelcomeScreen from './components/WelcomeScreen';
 import Navbar from './components/Navbar';
 import Hero from './sections/Hero';
+import About from './sections/About';
 import Education from './sections/Education';
 import Skills from './sections/Skills';
 import Experience from './sections/Experience';
@@ -208,7 +209,7 @@ export default function App() {
   useEffect(() => {
     if (currentRoute !== '/') return;
 
-    const sections = ['experience', 'skills', 'education', 'contact'];
+    const sections = ['about', 'experience', 'skills', 'education', 'contact'];
     let ticking = false;
 
     const handleScroll = () => {
@@ -230,7 +231,7 @@ export default function App() {
             }
           }
 
-          // If above experience, clear active section
+          // If above about, clear active section
           setActiveSection('');
           ticking = false;
         });
@@ -299,11 +300,12 @@ export default function App() {
 
             {/* Main Content Sections with Laser Horizon Transitions */}
             <main className="flex-1 w-full relative z-10">
-              {/* Hero Portal Zooms directly into Experience */}
               <Hero
                 welcomeActive={showWelcome && !welcomeExiting}
                 portalEntranceTrigger={portalEntranceTrigger}
               />
+              <About />
+              <LaserSectionDivider />
               <Experience />
               <LaserSectionDivider />
               <Skills />
