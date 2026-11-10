@@ -9,7 +9,7 @@ import ViperSectionDivider from '../components/sideprofile/ViperSectionDivider';
 import TacticalCrosshair from '../components/sideprofile/TacticalCrosshair';
 import TacticalRangeArena from '../components/sideprofile/TacticalRangeArena';
 import { sideProfileData } from '../data/sideProfileData';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Target, Crosshair, RotateCcw } from 'lucide-react';
 
 /**
  * GPU-Accelerated Page Entrance & Exit Animation Variants
@@ -208,27 +208,25 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
         onToggleToxin={handleToggleToxin}
       />
 
-      {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-12 sm:pb-16 space-y-12">
-        {/* Tactical Hero Banner: Viper Protocol Dossier */}
-        <section className="transform-gpu">
-          <ViperHeroDossier
-            profile={sideProfileData.profile}
-            fuel={fuel}
-            isToxinActive={isToxinActive}
-            onToggleToxin={handleToggleToxin}
-            isReady={isReady}
-            isExiting={isExiting}
-            isRangeActive={isRangeActive}
-            onToggleRange={() => setIsRangeActive((prev) => !prev)}
-            rangeScore={rangeScore}
-            onResetRangeScore={() => setRangeScore(0)}
-            isDesktop={isDesktop}
-          />
-        </section>
+      {/* Full-Bleed Hero Section (Edge-to-Edge Cinematic Stage, NO KOTAK) */}
+      <ViperHeroDossier
+        profile={sideProfileData.profile}
+        fuel={fuel}
+        isToxinActive={isToxinActive}
+        onToggleToxin={handleToggleToxin}
+        isReady={isReady}
+        isExiting={isExiting}
+        isRangeActive={isRangeActive}
+        onToggleRange={() => setIsRangeActive((prev) => !prev)}
+        rangeScore={rangeScore}
+        onResetRangeScore={() => setRangeScore(0)}
+        isDesktop={isDesktop}
+      />
 
+      {/* Main Content Sections (Gaming, Sports, Music) */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-16 space-y-14">
         {/* Section 1: Combat Simulation Protocols (Gaming Universe) */}
-        <section className="space-y-6">
+        <section id="sideprofile-content" className="space-y-6">
           <motion.div
             initial="hidden"
             whileInView={isExiting ? 'exit' : 'visible'}
@@ -349,6 +347,79 @@ export default function SideProfilePage({ onBackToPortfolio, isReady = true }) {
             <SpotifySoundstage musicData={sideProfileData.music} isToxinActive={isToxinActive} />
           </motion.div>
         </section>
+
+        {/* Tactical Practice Range Console (Footer Easter Egg • Desktop PC Exclusive) */}
+        {isDesktop && (
+          <motion.div
+            initial="hidden"
+            whileInView={isExiting ? 'exit' : 'visible'}
+            viewport={{ once: false, amount: 0.2 }}
+            variants={scrollSectionVariants}
+            className={`w-full max-w-4xl mx-auto p-5 sm:p-6 rounded-2xl border transition-all duration-300 shadow-md transform-gpu ${
+              isRangeActive
+                ? 'bg-[#c3e3ce] dark:bg-[#14231b] border-[#047857] dark:border-[#00f59b] shadow-[0_0_30px_rgba(4,120,87,0.3)] dark:shadow-[0_0_30px_rgba(0,245,155,0.25)]'
+                : 'bg-[#cbe7d5]/70 dark:bg-[#101b14]/70 border-[#047857]/30 dark:border-[#00f59b]/25 hover:border-[#047857]/50 dark:hover:border-[#00f59b]/40'
+            }`}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-mono tracking-widest uppercase font-bold text-[#064e3b] dark:text-[#00f59b] flex items-center gap-1.5">
+                    <Target className="w-4 h-4 text-[#047857] dark:text-[#00f59b]" />
+                    RANGE PROTOCOL // TARGET PRACTICE ARENA
+                  </span>
+                  <span className="text-[#047857] dark:text-zinc-600 text-xs">•</span>
+                  <span
+                    className={`text-xs font-mono font-bold ${
+                      isRangeActive
+                        ? 'text-[#047857] dark:text-[#00f59b]'
+                        : 'text-zinc-500 dark:text-gray-400'
+                    }`}
+                  >
+                    {isRangeActive ? 'SIMULATION ACTIVE' : 'STANDBY'}
+                  </span>
+                </div>
+                <div className="text-xs font-mono text-[#065f46] dark:text-gray-400 font-medium flex flex-wrap items-center gap-2.5">
+                  <span>
+                    {isRangeActive
+                      ? 'Radianite training targets deployed across the page. Aim and click to eliminate.'
+                      : 'Deploy holographic training targets across the viewport for precision aim practice.'}
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#047857]/15 dark:bg-[#00f59b]/15 text-[#047857] dark:text-[#00f59b] font-bold text-xs border border-[#047857]/30 dark:border-[#00f59b]/30">
+                    TARGETS ELIMINATED: {rangeScore}
+                  </span>
+                </div>
+              </div>
+
+              {/* Range Action Controls */}
+              <div className="flex items-center gap-2.5 shrink-0">
+                {rangeScore > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setRangeScore(0)}
+                    title="Reset practice score"
+                    className="p-2.5 rounded-xl bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setIsRangeActive((prev) => !prev)}
+                  className={`group inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer select-none ${
+                    isRangeActive
+                      ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-[0_0_20px_rgba(217,119,6,0.4)]'
+                      : 'bg-[#047857] hover:bg-[#065f46] dark:bg-[#00f59b] dark:hover:bg-[#34d399] text-white dark:text-black shadow-[0_4px_15px_rgba(4,120,87,0.3)] dark:shadow-[0_0_20px_rgba(0,245,155,0.3)]'
+                  }`}
+                >
+                  <Crosshair className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" />
+                  <span>{isRangeActive ? 'CEASE FIRE (OFF)' : 'START PRACTICE (ON)'}</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Bottom Navigation Return */}
         <motion.div

@@ -1,191 +1,303 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import {
+  ArrowDown,
   Crosshair,
+  Zap,
   Activity,
   Radio,
-  Zap,
-  Target,
-  RotateCcw,
+  MapPin,
+  Waves,
 } from 'lucide-react';
 
 /**
- * Tactical GPU-accelerated entrance and exit animation variants
- * Automatically triggers entrance on approach, exits on scroll-past, and re-entrances on return.
- * Synchronized with ToxicScreenTransition on initial page load / refresh.
+ * Ultra-lightweight GPU-accelerated motion variants
+ * 100% Zero-lag across 60Hz-144Hz+ displays.
  */
-const dossierContainerVariants = {
-  hidden: {
-    opacity: 0,
-    y: 30,
-    scale: 0.97,
-    transition: {
-      duration: 0.35,
-      ease: [0.32, 0, 0.67, 0],
-    },
-  },
+const heroVariants = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.65,
-      ease: [0.16, 1, 0.3, 1],
-    },
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
   },
-  exit: {
-    opacity: 0,
-    y: 20,
-    scale: 0.98,
-    transition: {
-      duration: 0.25,
-      ease: 'easeIn',
-    },
-  },
+  exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
-const cornerBracketTopVariants = {
-  hidden: { scale: 0, opacity: 0, x: 8, y: -8, transition: { duration: 0.2 } },
-  visible: {
-    scale: 1,
-    opacity: 0.9,
-    x: 0,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1], delay: 0.08 },
-  },
-  exit: { scale: 0, opacity: 0, transition: { duration: 0.2 } },
-};
-
-const cornerBracketBottomVariants = {
-  hidden: { scale: 0, opacity: 0, x: -8, y: 8, transition: { duration: 0.2 } },
-  visible: {
-    scale: 1,
-    opacity: 0.9,
-    x: 0,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1], delay: 0.08 },
-  },
-  exit: { scale: 0, opacity: 0, transition: { duration: 0.2 } },
-};
-
-const headerStripVariants = {
-  hidden: { opacity: 0, y: -16, transition: { duration: 0.25 } },
-  visible: {
+const textStaggerVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 },
-  },
-  exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
-};
-
-const nameVariants = {
-  hidden: { opacity: 0, y: 28, transition: { duration: 0.25 } },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 },
-  },
-  exit: { opacity: 0, y: 15, transition: { duration: 0.2 } },
-};
-
-const subtitleVariants = {
-  hidden: { opacity: 0, x: -22, transition: { duration: 0.25 } },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.2 },
-  },
-  exit: { opacity: 0, x: -15, transition: { duration: 0.2 } },
-};
-
-const bioVariants = {
-  hidden: { opacity: 0, y: 16, transition: { duration: 0.25 } },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.25 },
-  },
-  exit: { opacity: 0, y: 10, transition: { duration: 0.2 } },
-};
-
-const pillarItemVariants = {
-  hidden: { opacity: 0, y: 24, scale: 0.94, transition: { duration: 0.25 } },
-  visible: (customIndex = 0) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: [0.34, 1.3, 0.64, 1],
-      delay: 0.28 + customIndex * 0.07,
-    },
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0.05 + i * 0.06 },
   }),
-  exit: { opacity: 0, y: 15, scale: 0.96, transition: { duration: 0.2 } },
-};
-
-const consoleVariants = {
-  hidden: { opacity: 0, y: 22, scale: 0.97, transition: { duration: 0.25 } },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.42 },
-  },
-  exit: { opacity: 0, y: 15, scale: 0.98, transition: { duration: 0.2 } },
-};
-
-const keyArtCardVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.88,
-    x: 35,
-    y: 15,
-    rotate: 2,
-    transition: { duration: 0.3 },
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    x: 0,
-    y: 0,
-    rotate: 0,
-    transition: {
-      duration: 0.75,
-      ease: [0.16, 1, 0.3, 1],
-      delay: 0.18,
-    },
-  },
-  exit: { opacity: 0, scale: 0.92, y: 15, transition: { duration: 0.2 } },
-};
-
-const viperImageVariants = {
-  hidden: { opacity: 0, scale: 0.9, y: 25, transition: { duration: 0.3 } },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-      ease: [0.16, 1, 0.3, 1],
-      delay: 0.3,
-    },
-  },
-  exit: { opacity: 0, scale: 0.94, transition: { duration: 0.2 } },
+  exit: { opacity: 0, y: 10, transition: { duration: 0.15 } },
 };
 
 /**
- * ViperHeroDossier
- * Tactical personal dossier showcase framed in VALORANT Viper aesthetic.
- * Focuses directly on Juan Sterling's personal side profile, passions, and off-duty pursuits.
- * 
- * Design Standards:
- * - 100% English copywriting.
- * - Strictly zero double slashes ('//') and zero emoticons.
- * - Non-white clinical laboratory aesthetic in Light Mode and deep bunker in Dark Mode.
- * - Fully responsive: Mobile, Tablet, and Desktop.
- * - GPU-accelerated (transform and opacity only), ensuring locked 60 FPS.
- * - Multi-directional scroll entrance and exit: enters when viewed, exits when passed, re-enters on return.
+ * Parametric Fluid Soundwave Ribbon (Option 2)
+ * High-end 3D parametric undulating soundwave ribbon & digital silk fluid mesh.
+ * Combines acoustic frequency oscillation (Spotify/Music) with fluid toxic chemical vapor aesthetics.
+ * Undulates and ripples smoothly in 3D space with zero clipping across PC & HP.
  */
+function ParametricSoundwaveRibbon({ isToxinActive = false }) {
+  return (
+    <div className="relative w-72 h-64 sm:w-96 sm:h-80 lg:w-[440px] lg:h-[420px] xl:w-[500px] xl:h-[460px] flex items-center justify-center select-none pointer-events-none">
+
+      {/* Intense Ambient Radial Bloom behind the ribbons */}
+      <div
+        className={`absolute inset-0 bg-radial from-[#00f59b]/30 via-[#047857]/15 to-transparent blur-3xl pointer-events-none transform-gpu transition-opacity duration-700 ${isToxinActive ? 'opacity-100 scale-110' : 'opacity-70 scale-100'
+          }`}
+      />
+
+      <svg
+        viewBox="0 0 540 480"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full drop-shadow-[0_0_35px_rgba(0,245,155,0.4)]"
+      >
+        <defs>
+          {/* Ribbon 3D Surface Gradients */}
+          <linearGradient id="ribbonGradPrimary" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#00f59b" stopOpacity={isToxinActive ? 0.9 : 0.75} />
+            <stop offset="40%" stopColor="#10b981" stopOpacity={isToxinActive ? 0.6 : 0.45} />
+            <stop offset="75%" stopColor="#047857" stopOpacity={isToxinActive ? 0.35 : 0.2} />
+            <stop offset="100%" stopColor="#020805" stopOpacity="0.05" />
+          </linearGradient>
+
+          <linearGradient id="ribbonGradSecondary" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#34d399" stopOpacity={isToxinActive ? 0.85 : 0.65} />
+            <stop offset="50%" stopColor="#059669" stopOpacity={isToxinActive ? 0.5 : 0.35} />
+            <stop offset="100%" stopColor="#02140b" stopOpacity="0.1" />
+          </linearGradient>
+
+          <linearGradient id="ribbonGradUnder" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stopColor="#047857" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#022c22" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#010a05" stopOpacity="0" />
+          </linearGradient>
+
+          {/* Wireframe Contour Stroke Gradient */}
+          <linearGradient id="strandGlowGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#00f59b" stopOpacity="0.3" />
+            <stop offset="35%" stopColor="#00f59b" stopOpacity="0.95" />
+            <stop offset="70%" stopColor="#34d399" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#059669" stopOpacity="0.25" />
+          </linearGradient>
+
+          {/* Node Glow Flare */}
+          <radialGradient id="nodeGlowFlare" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+            <stop offset="40%" stopColor="#00f59b" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#00f59b" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* ============================================================== */}
+        {/* 1. ACOUSTIC TELEMETRY HUD ACCENTS                              */}
+        {/* ============================================================== */}
+        <g opacity="0.45">
+          <circle cx="270" cy="240" r="225" stroke="#00f59b" strokeWidth="0.8" strokeDasharray="4 8" />
+          <circle cx="270" cy="240" r="195" stroke="#047857" strokeWidth="0.6" strokeDasharray="16 12" />
+
+          {/* Telemetry Coordinate Readouts */}
+          <text x="270" y="32" fill="#34d399" fontSize="8" fontFamily="monospace" fontWeight="bold" textAnchor="middle" letterSpacing="2">
+            PARAMETRIC ACOUSTIC FLUID // 48.0 kHz
+          </text>
+          <text x="270" y="460" fill="#00f59b" fontSize="7.5" fontFamily="monospace" textAnchor="middle" letterSpacing="1.5">
+            {isToxinActive ? 'WAVE OSCILLATION : RESONANT SURGE' : 'HARMONIC FREQUENCY : STABLE'}
+          </text>
+        </g>
+
+        {/* ============================================================== */}
+        {/* 2. LAYERED TRANSLUCENT 3D RIBBON BODIES (Undulating Silk Waves) */}
+        {/* ============================================================== */}
+
+        {/* Ribbon Layer 1: Deep Translucent Base Underside */}
+        <path
+          d="M 50,290 C 140,170 220,150 310,250 C 400,350 450,320 490,200 L 490,240 C 450,360 400,390 310,290 C 220,190 140,210 50,330 Z"
+          fill="url(#ribbonGradUnder)"
+        >
+          <animate
+            attributeName="d"
+            values="
+              M 50,290 C 140,170 220,150 310,250 C 400,350 450,320 490,200 L 490,240 C 450,360 400,390 310,290 C 220,190 140,210 50,330 Z;
+              M 50,310 C 150,210 210,130 300,220 C 390,320 460,340 490,230 L 490,270 C 460,380 390,360 300,260 C 210,170 150,250 50,350 Z;
+              M 50,290 C 140,170 220,150 310,250 C 400,350 450,320 490,200 L 490,240 C 450,360 400,390 310,290 C 220,190 140,210 50,330 Z
+            "
+            dur="8s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* Ribbon Layer 2: Secondary Intertwining Counter-Wave */}
+        <path
+          d="M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290 L 485,250 C 455,150 415,110 325,200 C 235,300 145,270 55,160 Z"
+          fill="url(#ribbonGradSecondary)"
+        >
+          <animate
+            attributeName="d"
+            values="
+              M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290 L 485,250 C 455,150 415,110 325,200 C 235,300 145,270 55,160 Z;
+              M 55,170 C 135,270 245,360 335,270 C 425,170 445,150 485,260 L 485,220 C 445,120 425,140 335,230 C 245,320 135,230 55,130 Z;
+              M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290 L 485,250 C 455,150 415,110 325,200 C 235,300 145,270 55,160 Z
+            "
+            dur="7s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* Ribbon Layer 3: Primary Glowing Silk Mesh Surface */}
+        <path
+          d="M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160 L 485,195 C 445,315 405,345 315,245 C 225,145 135,165 45,285 Z"
+          fill="url(#ribbonGradPrimary)"
+        >
+          <animate
+            attributeName="d"
+            values="
+              M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160 L 485,195 C 445,315 405,345 315,245 C 225,145 135,165 45,285 Z;
+              M 45,270 C 145,170 215,90 305,180 C 395,280 455,300 485,190 L 485,225 C 455,335 395,315 305,215 C 215,125 145,205 45,305 Z;
+              M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160 L 485,195 C 445,315 405,345 315,245 C 225,145 135,165 45,285 Z
+            "
+            dur="6s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* ============================================================== */}
+        {/* 3. PARAMETRIC WIREFRAME STRANDS (Harmonic Silk Curves)         */}
+        {/* ============================================================== */}
+        {/* Strand 1: Main Crest Line */}
+        <path
+          d="M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160"
+          stroke="url(#strandGlowGrad)"
+          strokeWidth="3"
+          strokeLinecap="round"
+        >
+          <animate
+            attributeName="d"
+            values="
+              M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160;
+              M 45,270 C 145,170 215,90 305,180 C 395,280 455,300 485,190;
+              M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160
+            "
+            dur="6s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* Strand 2: Inner Contour Parallel Offset */}
+        <path
+          d="M 45,260 C 135,140 225,120 315,220 C 405,320 445,290 485,170"
+          stroke="#00f59b"
+          strokeWidth="1.8"
+          strokeDasharray="14 6"
+          opacity="0.85"
+        >
+          <animate
+            attributeName="d"
+            values="
+              M 45,260 C 135,140 225,120 315,220 C 405,320 445,290 485,170;
+              M 45,280 C 145,180 215,100 305,190 C 395,290 455,310 485,200;
+              M 45,260 C 135,140 225,120 315,220 C 405,320 445,290 485,170
+            "
+            dur="6s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* Strand 3: Counter-Wave Crest Line */}
+        <path
+          d="M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290"
+          stroke="#34d399"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          opacity="0.9"
+        >
+          <animate
+            attributeName="d"
+            values="
+              M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290;
+              M 55,170 C 135,270 245,360 335,270 C 425,170 445,150 485,260;
+              M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290
+            "
+            dur="7s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* Strand 4: Counter-Wave Dash Accent */}
+        <path
+          d="M 55,215 C 145,325 235,355 325,255 C 415,155 455,195 485,305"
+          stroke="#00f59b"
+          strokeWidth="1.5"
+          strokeDasharray="8 8"
+          opacity="0.7"
+        >
+          <animate
+            attributeName="d"
+            values="
+              M 55,215 C 145,325 235,355 325,255 C 415,155 455,195 485,305;
+              M 55,185 C 135,285 245,375 335,285 C 425,185 445,165 485,275;
+              M 55,215 C 145,325 235,355 325,255 C 415,155 455,195 485,305
+            "
+            dur="7s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* Strand 5 & 6: Ambient Background Filament Ribbons */}
+        <path
+          d="M 60,230 C 150,150 240,170 320,270 C 400,370 440,300 480,220"
+          stroke="#047857"
+          strokeWidth="1"
+          opacity="0.5"
+        />
+        <path
+          d="M 70,270 C 160,350 250,330 330,230 C 410,130 450,200 475,260"
+          stroke="#047857"
+          strokeWidth="1"
+          opacity="0.5"
+        />
+
+        {/* ============================================================== */}
+        {/* 4. HARMONIC FREQUENCY NODES (Glowing Crest Points)             */}
+        {/* ============================================================== */}
+        {/* Node 1 (Peak 1) */}
+        <g>
+          <circle cx="185" cy="120" r="5" fill="url(#nodeGlowFlare)">
+            <animate attributeName="r" values="3.5;6;3.5" dur="2s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="185" cy="120" r="2" fill="#ffffff" />
+        </g>
+
+        {/* Node 2 (Intersection Knot) */}
+        <g>
+          <circle cx="270" cy="225" r="5.5" fill="url(#nodeGlowFlare)">
+            <animate attributeName="r" values="4;7;4" dur="2.4s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="270" cy="225" r="2.5" fill="#ffffff" />
+        </g>
+
+        {/* Node 3 (Peak 2) */}
+        <g>
+          <circle cx="360" cy="305" r="5" fill="url(#nodeGlowFlare)">
+            <animate attributeName="r" values="3.5;6;3.5" dur="1.8s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="360" cy="305" r="2" fill="#ffffff" />
+        </g>
+
+        {/* Node 4 (Counter-Peak) */}
+        <g>
+          <circle cx="375" cy="155" r="4.5" fill="url(#nodeGlowFlare)">
+            <animate attributeName="r" values="3;5.5;3" dur="2.2s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="375" cy="155" r="1.8" fill="#ffffff" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export default function ViperHeroDossier({
   profile = {},
   fuel = 100,
@@ -193,299 +305,287 @@ export default function ViperHeroDossier({
   onToggleToxin,
   isReady = true,
   isExiting = false,
-  isRangeActive = false,
-  onToggleRange,
-  rangeScore = 0,
-  onResetRangeScore,
-  isDesktop = false,
 }) {
+  const handleScrollToContent = () => {
+    const target =
+      document.getElementById('sideprofile-content') ||
+      document.querySelector('main > section:nth-of-type(1)');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollBy({ top: 720, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <motion.div
-      variants={dossierContainerVariants}
+    <motion.section
+      variants={heroVariants}
       initial="hidden"
-      whileInView={isExiting ? 'exit' : (isReady ? 'visible' : 'hidden')}
-      viewport={{ once: false, amount: 0.15 }}
-      className={`relative rounded-lg p-5 sm:p-8 backdrop-blur-md overflow-hidden transition-all duration-500 transform-gpu ${isToxinActive
-        ? 'bg-[#d8eedf]/95 dark:bg-[#0c120e]/95 ring-2 ring-[#047857] dark:ring-[#00f59b] shadow-[0_0_40px_rgba(4,120,87,0.3)] dark:shadow-[0_0_40px_rgba(0,245,155,0.35)] border border-[#047857] dark:border-[#00f59b]'
-        : 'bg-[#e7f4eb]/95 dark:bg-[#0c120e]/95 border border-[#059669]/40 dark:border-[#00f59b]/35 shadow-[0_4px_30px_rgba(5,150,105,0.15)] dark:shadow-[0_0_35px_rgba(0,245,155,0.12)]'
+      whileInView={isExiting ? 'exit' : isReady ? 'visible' : 'hidden'}
+      viewport={{ once: false, amount: 0.1 }}
+      className={`relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden transition-colors duration-500 select-none ${isToxinActive ? 'bg-[#040e08]' : 'bg-[#030805]'
         }`}
     >
-      {/* Angular tactical corner cut brackets */}
-      <motion.div
-        variants={cornerBracketTopVariants}
-        className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-tr-lg m-0 z-10"
-      />
-      <motion.div
-        variants={cornerBracketBottomVariants}
-        className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#047857] dark:border-[#00f59b] opacity-90 pointer-events-none rounded-bl-lg m-0 z-10"
-      />
+      {/* ===================================================================== */}
+      {/* 1. SEAMLESS UNIFIED BACKGROUND (DIAGONAL TOXIC SMOKE WAVE)             */}
+      {/* ===================================================================== */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
 
-      {/* Top Classification Header Strip */}
-      <motion.div
-        variants={headerStripVariants}
-        className="flex flex-wrap items-center justify-between gap-3 pb-5 mb-6 border-b border-[#059669]/25 dark:border-[#00f59b]/20 text-xs font-mono"
-      >
-        <div className="flex items-center gap-4 text-zinc-600 dark:text-gray-400 text-[11px]">
-          <span className="hidden sm:inline font-medium">
-            LOCATION : JAKARTA, INDONESIA
-          </span>
-        </div>
-      </motion.div>
+        {/* Continuous Ambient Glow Blooms */}
+        <div className="absolute top-1/4 -left-20 w-[450px] sm:w-[550px] h-[450px] sm:h-[550px] bg-radial from-[#059669]/20 via-transparent to-transparent blur-3xl opacity-60 pointer-events-none transform-gpu" />
+        <div
+          className={`absolute top-1/3 right-1/4 w-[600px] sm:w-[750px] h-[600px] sm:h-[750px] bg-radial from-[#00f59b]/25 via-[#047857]/15 to-transparent blur-3xl pointer-events-none transform-gpu transition-opacity duration-700 ${isToxinActive ? 'opacity-100' : 'opacity-70'
+            }`}
+        />
+        <div className="absolute bottom-0 right-10 w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] bg-radial from-[#00f59b]/20 via-transparent to-transparent blur-3xl pointer-events-none transform-gpu" />
+        <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#020503] via-[#020503]/80 to-transparent z-10 pointer-events-none" />
 
-      {/* Main Grid: Left Personal Intel | Right Thematic Valorant Key Art */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Column: Personal Dossier & 3 Core Pillars */}
-        <div className="lg:col-span-7 space-y-6">
-          <div>
-            <motion.h1
-              variants={nameVariants}
-              className="font-display font-black text-3xl sm:text-4xl lg:text-5xl text-[#064e3b] dark:text-white tracking-tight uppercase leading-tight"
-            >
-              JUAN STERLING
-            </motion.h1>
-            <motion.p
-              variants={subtitleVariants}
-              className="font-mono text-sm sm:text-base font-bold text-[#047857] dark:text-[#00f59b] mt-1 tracking-wide"
-            >
-              PERSONAL SIDE PROFILE
-            </motion.p>
+        {/* Master Scalable Vector Canvas: Continuous Diagonal Smoke Flow */}
+        <svg
+          viewBox="0 0 1600 900"
+          preserveAspectRatio="xMidYMid slice"
+          className="w-full h-full object-cover pointer-events-none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <radialGradient id="smokeCloudDense" cx="45%" cy="45%" r="55%">
+              <stop offset="0%" stopColor="#00f59b" stopOpacity={isToxinActive ? 0.8 : 0.6} />
+              <stop offset="45%" stopColor="#10b981" stopOpacity={isToxinActive ? 0.5 : 0.35} />
+              <stop offset="80%" stopColor="#047857" stopOpacity={isToxinActive ? 0.25 : 0.12} />
+              <stop offset="100%" stopColor="#020805" stopOpacity="0" />
+            </radialGradient>
 
-            <motion.p
-              variants={bioVariants}
-              className="mt-4 text-sm sm:text-base font-mono text-[#143d2c] dark:text-gray-300 leading-relaxed font-medium"
-            >
-              {profile.bio || 'Coding is part of the story, not the whole story.'}
-            </motion.p>
-          </div>
+            <radialGradient id="smokeCloudDeep" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#34d399" stopOpacity={isToxinActive ? 0.75 : 0.5} />
+              <stop offset="50%" stopColor="#059669" stopOpacity={isToxinActive ? 0.4 : 0.25} />
+              <stop offset="85%" stopColor="#022c22" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
 
-          {/* Personal Pillar Badges (Gaming, Athletics, Audio) */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-            <motion.div
-              custom={0}
-              variants={pillarItemVariants}
-              className="p-3 rounded-xs bg-[#d9ece1] dark:bg-[#131c17] border border-[#059669]/30 dark:border-[#00f59b]/25 shadow-2xs hover:border-[#047857] dark:hover:border-[#00f59b] transition-colors"
-            >
-              <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#065f46] dark:text-gray-400 font-semibold">
-                <Crosshair className="w-3.5 h-3.5 text-[#047857] dark:text-[#00f59b]" />
-                <span>PILLAR 01 : GAMING</span>
-              </div>
-              <div className="font-display font-bold text-xs sm:text-sm text-[#064e3b] dark:text-white mt-1">
-                FAV GAMES
-              </div>
-            </motion.div>
+            <linearGradient id="smokeWaveCurtain" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#00f59b" stopOpacity={isToxinActive ? 0.75 : 0.55} />
+              <stop offset="40%" stopColor="#059669" stopOpacity={isToxinActive ? 0.55 : 0.35} />
+              <stop offset="80%" stopColor="#022c22" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#020503" stopOpacity="0" />
+            </linearGradient>
+          </defs>
 
-            <motion.div
-              custom={1}
-              variants={pillarItemVariants}
-              className="p-3 rounded-xs bg-[#d9ece1] dark:bg-[#131c17] border border-[#059669]/30 dark:border-[#00f59b]/25 shadow-2xs hover:border-[#047857] dark:hover:border-[#00f59b] transition-colors"
-            >
-              <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#065f46] dark:text-gray-400 font-semibold">
-                <Activity className="w-3.5 h-3.5 text-[#047857] dark:text-[#00f59b]" />
-                <span>PILLAR 02 : ATHLETICS</span>
-              </div>
-              <div className="font-display font-bold text-xs sm:text-sm text-[#064e3b] dark:text-white mt-1">
-                SPORT
-              </div>
-            </motion.div>
+          {/* Top-Left Framing Smoke Plume */}
+          <path
+            d="M 0,90 C 140,50 260,130 420,95 C 540,70 640,120 780,60 L 780,0 L 0,0 Z"
+            fill="url(#smokeWaveCurtain)"
+            opacity={isToxinActive ? 0.65 : 0.4}
+          />
+          <path
+            d="M 0,90 C 140,50 260,130 420,95 C 540,70 640,120 780,60"
+            stroke="#00f59b"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            opacity="0.75"
+          />
 
-            <motion.div
-              custom={2}
-              variants={pillarItemVariants}
-              className="p-3 rounded-xs bg-[#d9ece1] dark:bg-[#131c17] border border-[#059669]/30 dark:border-[#00f59b]/25 shadow-2xs hover:border-[#047857] dark:hover:border-[#00f59b] transition-colors"
-            >
-              <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#065f46] dark:text-gray-400 font-semibold">
-                <Radio className="w-3.5 h-3.5 text-[#047857] dark:text-[#00f59b]" />
-                <span>PILLAR 03 : AUDIO</span>
-              </div>
-              <div className="font-display font-bold text-xs sm:text-sm text-[#064e3b] dark:text-white mt-1">
-                SPOTIFY PUBLIC PLAYLIST
-              </div>
-            </motion.div>
-          </div>
+          {/* Diagonal Volumetric Clouds */}
+          <ellipse cx="1180" cy="180" rx="220" ry="140" fill="url(#smokeCloudDense)" />
+          <ellipse cx="960" cy="360" rx="260" ry="170" fill="url(#smokeCloudDeep)" />
+          <ellipse cx="740" cy="540" rx="290" ry="190" fill="url(#smokeCloudDense)" />
+          <ellipse cx="480" cy="720" rx="320" ry="210" fill="url(#smokeCloudDeep)" />
+          <ellipse cx="240" cy="860" rx="360" ry="240" fill="url(#smokeCloudDense)" />
 
-          {/* Interactive Valorant Toxin Fuel Console */}
-          <motion.div
-            variants={consoleVariants}
-            className="p-4 sm:p-5 rounded-xs bg-[#cbe7d5] dark:bg-[#121c16] border border-[#047857]/45 dark:border-[#00f59b]/35 shadow-xs"
+          {/* Deep Diagonal Smoke Curtain Fill */}
+          <path
+            d="M 1220,0 C 1060,180 900,280 760,450 C 620,620 480,750 220,900 L 1600,900 L 1600,0 Z"
+            fill="url(#smokeWaveCurtain)"
+            opacity={isToxinActive ? 0.75 : 0.55}
+          />
+
+          {/* Vivid Glowing Diagonal Smoke Ridge */}
+          <path
+            d="M 1220,0 C 1060,180 900,280 760,450 C 620,620 480,750 220,900"
+            stroke="#00f59b"
+            strokeWidth={isToxinActive ? 5 : 3.5}
+            strokeLinecap="round"
+            opacity={isToxinActive ? 1 : 0.85}
+          />
+
+          {/* Secondary Parallel Dashed Vapor Trace */}
+          <path
+            d="M 1255,0 C 1095,180 935,280 795,450 C 655,620 515,750 255,900"
+            stroke="#34d399"
+            strokeWidth="1.8"
+            strokeDasharray="8 6"
+            opacity="0.55"
+          />
+
+          {/* Swirling Smoke Tendrils */}
+          <path
+            d="M 880,310 Q 950,250 910,180 Q 860,120 920,50"
+            stroke="#00f59b"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            opacity="0.75"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono tracking-widest uppercase font-bold text-[#064e3b] dark:text-[#00f59b]">
-                    TOXIN CAPACITY
-                  </span>
-                  <span className="text-[#047857] dark:text-zinc-600 text-xs">•</span>
-                  <span className="text-xs font-mono font-bold text-[#064e3b] dark:text-[#34d399]">
-                    {Math.round(fuel)}% REMAINING
-                  </span>
-                </div>
-                <div className="text-xs font-mono text-[#065f46] dark:text-gray-400 mt-0.5 font-medium">
-                  {isToxinActive
-                    ? 'Toxic Screen active: Discharging dense chemical vapor wall.'
-                    : 'Ready to deploy interactive screen.'}
-                </div>
-              </div>
-
-              {/* Dynamic Action Button */}
-              <button
-                type="button"
-                onClick={onToggleToxin}
-                disabled={!isToxinActive && fuel < 15}
-                className={`group inline-flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xs text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer shrink-0 select-none ${isToxinActive
-                  ? 'bg-red-600 hover:bg-red-700 text-white shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse'
-                  : fuel < 15
-                    ? 'bg-zinc-300 dark:bg-zinc-800 text-zinc-500 cursor-not-allowed'
-                    : 'bg-[#047857] hover:bg-[#065f46] dark:bg-[#00f59b] dark:hover:bg-[#34d399] text-white dark:text-black shadow-[0_4px_15px_rgba(4,120,87,0.35)] dark:shadow-[0_0_20px_rgba(0,245,155,0.35)]'
-                  }`}
-              >
-                <Zap className="w-4 h-4 transition-transform group-hover:scale-110" />
-                <span>
-                  {isToxinActive
-                    ? 'VENT TOXIN SCREEN'
-                    : fuel < 15
-                      ? 'RECHARGING FUEL...'
-                      : 'DEPLOY TOXIC SCREEN'}
-                </span>
-              </button>
-            </div>
-
-            {/* Fuel Bar Progress */}
-            <div className="w-full bg-[#afd8bd] dark:bg-[#1b2820] h-2.5 rounded-full overflow-hidden border border-[#047857]/40 dark:border-[#00f59b]/30">
-              <div
-                className={`h-full transition-all duration-300 rounded-full ${isToxinActive
-                  ? 'bg-red-500 shadow-[0_0_10px_#ef4444]'
-                  : 'bg-[#047857] dark:bg-[#00f59b] shadow-[0_0_10px_rgba(4,120,87,0.6)]'
-                  }`}
-                style={{ width: `${fuel}%` }}
-              />
-            </div>
-          </motion.div>
-
-          {/* Tactical Practice Range Console (Easter Egg • Desktop PC Exclusive) */}
-          {isDesktop && (
-            <motion.div
-              variants={consoleVariants}
-              className={`p-4 sm:p-5 rounded-xs border transition-all duration-300 shadow-xs ${
-                isRangeActive
-                  ? 'bg-[#c3e3ce] dark:bg-[#14231b] border-[#047857] dark:border-[#00f59b] shadow-[0_0_25px_rgba(4,120,87,0.25)] dark:shadow-[0_0_25px_rgba(0,245,155,0.2)]'
-                  : 'bg-[#cbe7d5]/70 dark:bg-[#121c16]/70 border-[#047857]/30 dark:border-[#00f59b]/25 hover:border-[#047857]/50 dark:hover:border-[#00f59b]/40'
-              }`}
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono tracking-widest uppercase font-bold text-[#064e3b] dark:text-[#00f59b] flex items-center gap-1.5">
-                      <Target className="w-3.5 h-3.5 text-[#047857] dark:text-[#00f59b]" />
-                      RANGE PROTOCOL
-                    </span>
-                    <span className="text-[#047857] dark:text-zinc-600 text-xs">•</span>
-                    <span
-                      className={`text-xs font-mono font-bold ${
-                        isRangeActive
-                          ? 'text-[#047857] dark:text-[#00f59b]'
-                          : 'text-zinc-500 dark:text-gray-400'
-                      }`}
-                    >
-                      {isRangeActive ? 'SIMULATION ACTIVE' : 'STANDBY'}
-                    </span>
-                  </div>
-                  <div className="text-xs font-mono text-[#065f46] dark:text-gray-400 mt-0.5 font-medium flex flex-wrap items-center gap-2">
-                    <span>
-                      {isRangeActive
-                        ? 'Radianite training drones deployed. Aim and shoot to eliminate.'
-                        : 'Deploy holographic training drones for target practice.'}
-                    </span>
-                    {rangeScore > 0 && (
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-xs bg-[#047857]/15 dark:bg-[#00f59b]/15 text-[#047857] dark:text-[#00f59b] font-bold text-[10px]">
-                        SCORE: {rangeScore}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Range Action Buttons */}
-                <div className="flex items-center gap-2 shrink-0">
-                  {rangeScore > 0 && (
-                    <button
-                      type="button"
-                      onClick={onResetRangeScore}
-                      title="Reset practice score"
-                      className="p-2.5 rounded-xs bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                    </button>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={onToggleRange}
-                    className={`group inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xs text-xs font-mono font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer select-none ${
-                      isRangeActive
-                        ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-[0_0_15px_rgba(217,119,6,0.4)]'
-                        : 'bg-[#047857] hover:bg-[#065f46] dark:bg-[#00f59b] dark:hover:bg-[#34d399] text-white dark:text-black shadow-[0_4px_15px_rgba(4,120,87,0.3)] dark:shadow-[0_0_20px_rgba(0,245,155,0.3)]'
-                    }`}
-                  >
-                    <Crosshair className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" />
-                    <span>{isRangeActive ? 'CEASE FIRE (OFF)' : 'START PRACTICE (ON)'}</span>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Right Column: Tactical Valorant Theme Key Art Frame */}
-        <div className="lg:col-span-5 flex justify-center">
-          <motion.div
-            variants={keyArtCardVariants}
-            className="relative w-full max-w-sm rounded-lg overflow-hidden border border-[#047857]/45 dark:border-[#00f59b]/40 bg-gradient-to-b from-[#bce3cb] to-[#cee8d7] dark:from-[#131c17] dark:to-[#090d0b] shadow-[0_4px_25px_rgba(4,120,87,0.18)] dark:shadow-[0_0_35px_rgba(0,245,155,0.15)] group"
+            <animate
+              attributeName="d"
+              values="M 880,310 Q 950,250 910,180 Q 860,120 920,50; M 880,310 Q 920,270 950,190 Q 900,110 940,50; M 880,310 Q 950,250 910,180 Q 860,120 920,50"
+              dur="6.5s"
+              repeatCount="indefinite"
+            />
+          </path>
+          <path
+            d="M 640,580 Q 560,630 600,700 Q 640,760 580,820"
+            stroke="#00f59b"
+            strokeWidth="3"
+            strokeLinecap="round"
+            opacity="0.7"
           >
-            {/* Top Badge Overlay */}
-            <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between text-[10px] font-mono text-white dark:text-gray-300 bg-[#064e3b] dark:bg-black/60 backdrop-blur-md px-2.5 py-1.5 rounded-xs border border-[#047857]/40 dark:border-white/10 shadow-xs">
-              <span className="font-bold text-[#6ee7b7] dark:text-[#00f59b]">
-                THEMATIC INSPIRATION
-              </span>
-              <span>VIPER : VALORANT</span>
-            </div>
+            <animate
+              attributeName="d"
+              values="M 640,580 Q 560,630 600,700 Q 640,760 580,820; M 640,580 Q 590,610 570,680 Q 610,770 560,820; M 640,580 Q 560,630 600,700 Q 640,760 580,820"
+              dur="7s"
+              repeatCount="indefinite"
+            />
+          </path>
 
-            {/* Subtle Toxic Vapor Background Glow */}
-            <div className="absolute inset-0 bg-radial from-[#059669]/25 via-transparent to-transparent opacity-70 pointer-events-none" />
-
-            {/* Viper Full Portrait Artwork */}
-            <div className="relative pt-12 pb-4 px-4 flex items-center justify-center min-h-[300px] sm:min-h-[340px]">
-              <motion.img
-                variants={viperImageVariants}
-                src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png"
-                alt="Viper Valorant Agent Full Portrait"
-                loading="eager"
-                className="w-auto h-[280px] sm:h-[320px] object-contain drop-shadow-[0_8px_25px_rgba(4,120,87,0.4)] dark:drop-shadow-[0_8px_25px_rgba(0,245,155,0.3)] transition-transform duration-500 group-hover:scale-105 select-none pointer-events-none"
-                onError={(e) => {
-                  e.currentTarget.src =
-                    'https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/displayicon.png';
-                }}
-              />
-            </div>
-
-            {/* Bottom Telemetry Bar */}
-            <div className="p-3 bg-[#bce3cb]/90 dark:bg-[#0c120e]/90 border-t border-[#047857]/30 dark:border-[#00f59b]/25 flex items-center justify-between text-[11px] font-mono">
-              <div className="text-[#064e3b] dark:text-gray-400">
-                <span className="font-bold text-[#064e3b] dark:text-white">DESIGN THEME:</span> VALORANT CONTROLLER
-              </div>
-
-              {/* Vector Barcode Graphic */}
-              <div className="flex items-center gap-0.5 opacity-70 text-[#064e3b] dark:text-gray-300">
-                <span className="w-0.5 h-3 bg-current" />
-                <span className="w-1 h-3 bg-current" />
-                <span className="w-0.5 h-3 bg-current" />
-                <span className="w-1.5 h-3 bg-current" />
-                <span className="w-0.5 h-3 bg-current" />
-                <span className="w-1 h-3 bg-current" />
-                <span className="w-0.5 h-3 bg-current" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
+          {/* Floating Toxic Bubbles & Radianite Embers */}
+          {[
+            { cx: 1140, cy: 160, r: 4, dur: '3.6s', delay: '0s' },
+            { cx: 1010, cy: 280, r: 5.5, dur: '4.2s', delay: '0.5s' },
+            { cx: 880, cy: 390, r: 3.5, dur: '3.2s', delay: '1s' },
+            { cx: 760, cy: 510, r: 6, dur: '4.8s', delay: '0.2s' },
+            { cx: 620, cy: 630, r: 4.5, dur: '3.8s', delay: '1.2s' },
+            { cx: 480, cy: 750, r: 5, dur: '4.5s', delay: '0.7s' },
+            { cx: 340, cy: 850, r: 3.5, dur: '3.4s', delay: '1.5s' },
+            { cx: 1250, cy: 500, r: 4.5, dur: '5.0s', delay: '0.3s' },
+            { cx: 1380, cy: 640, r: 5, dur: '4.2s', delay: '0.8s' },
+            { cx: 940, cy: 720, r: 6.5, dur: '4.6s', delay: '0.4s' },
+            { cx: 1100, cy: 820, r: 4, dur: '3.9s', delay: '1.1s' },
+          ].map((bubble, i) => (
+            <g key={i}>
+              <circle cx={bubble.cx} cy={bubble.cy} r={bubble.r} fill="#00f59b" opacity="0.75">
+                <animate attributeName="opacity" values="0.2;0.85;0.2" dur={bubble.dur} begin={bubble.delay} repeatCount="indefinite" />
+                <animate attributeName="cy" values={`${bubble.cy};${bubble.cy - 45};${bubble.cy}`} dur={bubble.dur} begin={bubble.delay} repeatCount="indefinite" />
+                <animate attributeName="r" values={`${bubble.r * 0.75};${bubble.r * 1.25};${bubble.r * 0.75}`} dur={bubble.dur} begin={bubble.delay} repeatCount="indefinite" />
+              </circle>
+            </g>
+          ))}
+        </svg>
       </div>
-    </motion.div>
+
+      {/* ===================================================================== */}
+      {/* 2. FOREGROUND CONTENT: RESPONSIVE SPLIT ON PC, STACKED ON HP          */}
+      {/* ===================================================================== */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-28 sm:pt-32 pb-14 lg:pb-16 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-10">
+
+        {/* Left Column: Personal Intel & Interactive Controls */}
+        <div className="w-full lg:max-w-xl xl:max-w-2xl space-y-5 sm:space-y-7">
+
+          {/* Top Location Bar */}
+          <motion.div
+            custom={0}
+            variants={textStaggerVariants}
+            className="flex items-center gap-2 text-xs font-mono text-zinc-400 font-medium"
+          >
+            <MapPin className="w-3.5 h-3.5 text-[#00f59b] shrink-0" />
+            <span>JAKARTA, INDONESIA</span>
+          </motion.div>
+
+          {/* Headline Stage */}
+          <div className="space-y-2 sm:space-y-3">
+            <motion.p
+              custom={1}
+              variants={textStaggerVariants}
+              className="font-mono text-[11px] sm:text-sm font-bold tracking-widest uppercase text-[#34d399] drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]"
+            >
+              WELCOME TO MY SIDE PROFILE
+            </motion.p>
+
+            <motion.h1
+              custom={2}
+              variants={textStaggerVariants}
+              className="font-display font-black text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white tracking-tight uppercase leading-[0.98] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)] break-words"
+            >
+              {profile.name || 'JUAN STERLING'}
+            </motion.h1>
+          </div>
+
+          {/* Bio Mantra */}
+          <motion.p
+            custom={3}
+            variants={textStaggerVariants}
+            className="text-xs sm:text-base lg:text-lg font-mono text-zinc-300 leading-relaxed font-medium max-w-xl"
+          >
+            {profile.bio || 'Coding is part of the story, not the whole story.'}{' '}
+            An off-duty dossier covering competitive tactical FPS, physical bio-metrics, and audio soundstage curation.
+          </motion.p>
+
+          {/* 3 Core Pillars: Responsive Grid on HP, Row on PC */}
+          <motion.div
+            custom={4}
+            variants={textStaggerVariants}
+            className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-3.5 pt-1"
+          >
+            <div className="inline-flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-2.5 py-2 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-black/45 hover:bg-black/60 backdrop-blur-md border border-[#059669]/40 hover:border-[#00f59b] transition-all duration-300 text-[10px] sm:text-xs font-mono shadow-xs group cursor-default">
+              <Crosshair className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00f59b] shrink-0" />
+              <span className="font-bold text-white tracking-wide truncate">GAMING</span>
+            </div>
+
+            <div className="inline-flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-2.5 py-2 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-black/45 hover:bg-black/60 backdrop-blur-md border border-[#059669]/40 hover:border-[#00f59b] transition-all duration-300 text-[10px] sm:text-xs font-mono shadow-xs group cursor-default">
+              <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00f59b] shrink-0" />
+              <span className="font-bold text-white tracking-wide truncate">ATHLETICS</span>
+            </div>
+
+            <div className="inline-flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-2.5 py-2 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-black/45 hover:bg-black/60 backdrop-blur-md border border-[#059669]/40 hover:border-[#00f59b] transition-all duration-300 text-[10px] sm:text-xs font-mono shadow-xs group cursor-default">
+              <Radio className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00f59b] shrink-0" />
+              <span className="font-bold text-white tracking-wide truncate">AUDIO</span>
+            </div>
+          </motion.div>
+
+          {/* Action Row: Full-width stacked on HP, Side-by-side on PC */}
+          <motion.div
+            custom={5}
+            variants={textStaggerVariants}
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-5 pt-2"
+          >
+            {/* Main Glowing EXPLORE Action Button */}
+            <button
+              type="button"
+              onClick={handleScrollToContent}
+              className="group inline-flex items-center justify-center gap-3 px-6 sm:px-9 py-3 sm:py-4 rounded-xl font-mono text-xs sm:text-sm font-black uppercase tracking-widest text-black bg-[#00f59b] hover:bg-[#34d399] transition-all duration-300 shadow-[0_0_35px_rgba(0,245,155,0.7)] hover:shadow-[0_0_55px_rgba(0,245,155,0.95)] hover:scale-105 active:scale-95 cursor-pointer select-none"
+            >
+              <span>EXPLORE</span>
+              <ArrowDown className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-1" />
+            </button>
+
+            {/* Tactical Toxin Screen Deploy Trigger */}
+            <button
+              type="button"
+              onClick={onToggleToxin}
+              disabled={!isToxinActive && fuel < 15}
+              className={`group inline-flex items-center justify-center gap-2.5 px-5 py-3 sm:py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer select-none border backdrop-blur-md ${isToxinActive
+                  ? 'bg-red-600/90 hover:bg-red-700 text-white border-red-500 shadow-[0_0_25px_rgba(239,68,68,0.5)] animate-pulse'
+                  : fuel < 15
+                    ? 'bg-zinc-800/80 text-zinc-500 border-zinc-700 cursor-not-allowed'
+                    : 'bg-black/50 hover:bg-black/75 text-zinc-200 hover:text-white border-[#059669]/50 hover:border-[#00f59b] shadow-[0_0_20px_rgba(0,245,155,0.2)]'
+                }`}
+            >
+              <Zap className="w-4 h-4 text-[#00f59b] transition-transform group-hover:scale-110 shrink-0" />
+              <span>
+                {isToxinActive ? 'VENT TOXIN' : `TOXIN SCREEN (${Math.round(fuel)}%)`}
+              </span>
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Right Column: Parametric Fluid Soundwave Ribbon (Opsi 2: Perfectly fitted for both PC & HP) */}
+        <motion.div
+          custom={6}
+          variants={textStaggerVariants}
+          className="w-full lg:w-auto flex items-center justify-center select-none pointer-events-none py-2 lg:py-0"
+        >
+          <ParametricSoundwaveRibbon isToxinActive={isToxinActive} />
+        </motion.div>
+      </div>
+    </motion.section>
   );
 }
