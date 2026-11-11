@@ -306,6 +306,10 @@ export default function ViperHeroDossier({
   isReady = true,
   isExiting = false,
 }) {
+  const fullName = (profile.name || 'JUAN STERLING').trim() || 'JUAN STERLING';
+  const [firstName, ...restNameParts] = fullName.split(/\s+/);
+  const lastName = restNameParts.join(' ');
+
   const handleScrollToContent = () => {
     const target =
       document.getElementById('sideprofile-content') ||
@@ -503,9 +507,15 @@ export default function ViperHeroDossier({
             <motion.h1
               custom={2}
               variants={textStaggerVariants}
-              className="font-display font-black text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white tracking-tight uppercase leading-[0.98] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)] break-words"
+              className="font-display font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white tracking-tight uppercase leading-[0.98] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)] break-words"
             >
-              {profile.name || 'JUAN STERLING'}
+              <span className="block">{firstName}</span>
+              {lastName && (
+                <>
+                  {' '}
+                  <span className="block">{lastName}</span>
+                </>
+              )}
             </motion.h1>
           </div>
 
