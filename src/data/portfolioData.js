@@ -22,13 +22,14 @@ export const portfolioData = {
     passDetails: {
       name: "Juan Sterling",
       role: "Software Developer",
-      photo: "https://res.cloudinary.com/og1jrvy3/image/upload/f_auto,q_auto/v1791215430/IMG_0996_gg.jpg",
+      photo: "https://cdn.justermp.my.id/justerporto/1794471616671.jpg",
+      photoLight: "https://cdn.justermp.my.id/justerporto/1794472253352.jpg",
     },
-    headline: "Engineering Solutions with Rhythm & Precision",
+    headline: "Hi, I'm Juan Sterling Martua",
     narrative: [
       // "I am Juan Sterling, a software developer dedicated to crafting modern web and multiplatform applications. I bridge clean interface design with sturdy, scalable backend architectures.",
       // "Driven by curiosity and a problem-solving mindset, I enjoy transforming complex requirements into reliable, maintainable code and smooth digital experiences.",
-      "Hi, I'm Juan Sterling Martua, a Full-Stack Developer passionate about building web and Android applications. I enjoy solving problems, exploring new technologies, and creating innovative solutions that bring ideas to life."
+      "A Full-Stack Developer passionate about building web and Android applications. I enjoy solving problems, exploring new technologies, and creating innovative solutions that bring ideas to life."
     ],
     quickFacts: [
       {

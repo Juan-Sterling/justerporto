@@ -247,18 +247,6 @@ textarea:focus-visible {
   animation: heroRedBarExpand 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Soft 4-edge feathering mask so hero portrait blends cleanly in light & dark mode without oval clipping */
-.hero-portrait-mask {
-  -webkit-mask-image:
-    linear-gradient(to bottom, transparent 0%, #000 6%, #000 78%, transparent 100%),
-    linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to bottom, transparent 0%, #000 6%, #000 78%, transparent 100%),
-    linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
-  mask-composite: intersect;
-}
-
 /* GPU-Accelerated Viper Marquee Animation (Runs Off-Main-Thread for 60/120fps smoothness) */
 @keyframes viperMarqueeScroll {
   from {

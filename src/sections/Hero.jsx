@@ -3,18 +3,11 @@ import { motion } from 'motion/react';
 import { ArrowDown, FileText, ExternalLink, Mail, Code2, MapPin } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
-import { useTheme } from '../context/ThemeContext';
 import BaemonPortalO from '../components/BaemonPortalO';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { optimizeCloudinaryUrl } from '../utils/cloudinary';
-
 gsap.registerPlugin(ScrollTrigger);
-
-// const HERO_PHOTO_URL = optimizeCloudinaryUrl('https://res.cloudinary.com/og1jrvy3/image/upload/f_auto,q_auto/v1791215430/IMG_0996_gg.jpg');
-const HERO_PHOTO_URL = "https://cdn.justermp.my.id/justerporto/1794471616671.jpg";
-const HERO_PHOTO_URL2 = "https://cdn.justermp.my.id/justerporto/1794472253352.jpg";
 
 const ROLES = [
   "Full Stack Developer",
@@ -67,35 +60,87 @@ function parseTaglineLine(entry, index) {
 }
 
 /**
- * Renders the hero portrait with 4-edge mask feathering and adaptive light/dark
- * background integration so it melts naturally into the Hero canvas.
+ * Renders the multi-line editorial tagline block with vertical accent bar
+ * and sequential line-by-line scale highlight animation.
  */
-function BlendedPortrait({ src, auraClassName, imgClassName }) {
+function TaglineBlock({
+  isTaglineArray,
+  taglineEntries,
+  fallbackText,
+  desktop = false,
+  activeIndex = -1,
+}) {
+  const containerClass = desktop
+    ? 'pl-4 xl:pl-5 py-1 gap-2.5 xl:gap-3.5 items-start text-left'
+    : 'py-0.5 gap-1 sm:gap-1.5 items-center text-center';
+  const lineTextClass = desktop
+    ? 'lg:text-[19px] xl:text-[1.4rem] 2xl:text-[1.6rem] leading-snug'
+    : 'text-xs sm:text-sm md:text-base leading-snug';
+  const hasSpotlight = activeIndex >= 0;
+  const activeScale = desktop ? 1.1 : 1.06;
+
   return (
-    <div className="relative inline-flex items-center justify-center">
-      <div
-        aria-hidden="true"
-        className={`absolute rounded-full bg-radial pointer-events-none -z-10 ${auraClassName}`}
-      />
-      <div className="relative">
-        <img
-          src={src}
-          alt="Juan Sterling"
-          className={`hero-portrait-mask object-contain brightness-[1.02] contrast-[1.02] saturate-[0.98] dark:brightness-[0.94] dark:contrast-[1.06] dark:saturate-100 select-none pointer-events-none ${imgClassName}`}
-          loading="eager"
-          decoding="async"
-        />
-        {/* Adaptive outer-edge veil matching Light (#FAFAFA) and Dark (#07080B) Hero canvas */}
-        <div
+    <div className={`relative flex flex-col ${containerClass}`}>
+      {desktop ? (
+        <span
           aria-hidden="true"
-          className="hero-portrait-mask absolute inset-0 bg-radial from-transparent via-transparent to-[#FAFAFA]/70 dark:to-[#07080B]/65 pointer-events-none"
+          className="absolute left-0 top-0.5 bottom-0.5 w-[3px] rounded-full bg-gradient-to-b from-[#E11D2E] via-[#E11D2E] to-[#E11D2E]/35 dark:shadow-[0_0_10px_rgba(225,29,46,0.45)]"
         />
-        {/* Subtle crimson stage rim accent (Dark mode only) */}
-        <div
+      ) : (
+        <span
           aria-hidden="true"
-          className="hero-portrait-mask hidden dark:block absolute inset-0 bg-radial from-transparent via-transparent to-[#E11D2E]/20 mix-blend-soft-light pointer-events-none"
+          className="w-10 h-[2px] mb-1 rounded-full bg-gradient-to-r from-[#E11D2E]/25 via-[#E11D2E] to-[#E11D2E]/25 dark:shadow-[0_0_8px_rgba(225,29,46,0.45)]"
         />
-      </div>
+      )}
+      {isTaglineArray ? (
+        taglineEntries.map(({ prefix, keyword, variant }, index) => {
+          const [splitLead, splitTail] = variant === 'split' && keyword
+            ? splitKeywordHalves(keyword)
+            : ['', ''];
+          const variantClass = TAGLINE_VARIANT_CLASSES[variant] || TAGLINE_VARIANT_CLASSES.solid;
+          const isActive = hasSpotlight && index === activeIndex;
+
+          return (
+            <motion.p
+              key={`${index}-${keyword}`}
+              animate={{
+                scale: isActive ? activeScale : 1,
+                opacity: !hasSpotlight || isActive ? 1 : 0.68,
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 260,
+                damping: 22,
+                mass: 0.9,
+              }}
+              style={{ transformOrigin: desktop ? 'left center' : 'center center' }}
+              className={`${lineTextClass} font-sans will-change-transform`}
+            >
+              {prefix && (
+                <span className="font-light tracking-[0.08em] text-zinc-600 dark:text-zinc-400 mr-1">
+                  {prefix}{' '}
+                </span>
+              )}
+              {keyword && (
+                variant === 'split' ? (
+                  <span className="font-extrabold tracking-[0.05em]">
+                    <span className={TAGLINE_VARIANT_CLASSES.crimson}>{splitLead}</span>
+                    <span className={TAGLINE_VARIANT_CLASSES.solid}>{splitTail}</span>
+                  </span>
+                ) : (
+                  <span className={`font-extrabold tracking-[0.05em] ${variantClass}`}>
+                    {keyword}
+                  </span>
+                )
+              )}
+            </motion.p>
+          );
+        })
+      ) : (
+        <p className={`${lineTextClass} text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans font-normal`}>
+          {fallbackText}
+        </p>
+      )}
     </div>
   );
 }
@@ -103,19 +148,13 @@ function BlendedPortrait({ src, auraClassName, imgClassName }) {
 export default function Hero({ welcomeActive = false, portalEntranceTrigger = null }) {
   const { personal } = portfolioData;
   const { scrollTo } = useSmoothScroll();
-  const { isDark } = useTheme();
-  const heroPhotoSrc = isDark ? HERO_PHOTO_URL : HERO_PHOTO_URL2;
-
-  useEffect(() => {
-    const preloadImg = new Image();
-    preloadImg.src = isDark ? HERO_PHOTO_URL2 : HERO_PHOTO_URL;
-  }, [isDark]);
 
   // Root Hero Section Ref (Pinned by ScrollTrigger)
   const heroRef = useRef(null);
 
   // BaemonPortalO Animated Refs
   const portalContainerRef = useRef(null);
+  const portalEntranceRef = useRef(null);
   const ringScaleRef = useRef(null);
   const leftHalfRef = useRef(null);
   const rightHalfRef = useRef(null);
@@ -131,9 +170,8 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
   const taglineRef = useRef(null);
   const ctaRef = useRef(null);
 
-  // Hero Portrait Photo Card Refs (Desktop Right Column & Mobile Top-Right)
-  const photoCardRef = useRef(null);
-  const mobilePhotoRef = useRef(null);
+  // Hero Right-Column Tagline Ref (Desktop)
+  const desktopTaglineRef = useRef(null);
 
   // Dedicated Stage Aurora & Crimson Fog Atmosphere Refs (RESTORED)
   const auroraContainerRef = useRef(null);
@@ -146,6 +184,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
+  const [activeTaglineIndex, setActiveTaglineIndex] = useState(0);
 
   // 0. Synchronously prime all initial hidden states for ALL Hero elements
   const primeAllHeroElements = useCallback(() => {
@@ -155,14 +194,14 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       fogLeftRef.current,
       fogRightRef.current,
       portalContainerRef.current,
+      portalEntranceRef.current,
       portalAuraRef.current,
       badgesRef.current?.children,
       emblemRef.current,
       roleRef.current,
       taglineRef.current,
       ctaRef.current?.children,
-      photoCardRef.current,
-      mobilePhotoRef.current,
+      desktopTaglineRef.current,
     ].filter(Boolean);
     gsap.killTweensOf(elementsToKill);
     if (heroRef.current) {
@@ -176,10 +215,18 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
 
     if (portalContainerRef.current) {
       gsap.set(portalContainerRef.current, {
-        scale: 0.94,
+        autoAlpha: 1,
+        scale: 1,
         rotation: 0,
-        opacity: 0,
-        y: 8,
+        y: 0,
+      });
+    }
+    if (portalEntranceRef.current) {
+      gsap.set(portalEntranceRef.current, {
+        scale: 0.82,
+        rotation: -90,
+        autoAlpha: 0,
+        y: 0,
         transformOrigin: '50% 50%',
         force3D: true,
       });
@@ -187,7 +234,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
     if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1, transformOrigin: '50% 50%', force3D: true });
     if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
     if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
-    if (portalAuraRef.current) gsap.set(portalAuraRef.current, { scale: 0.5, opacity: 0, force3D: true });
+    if (portalAuraRef.current) gsap.set(portalAuraRef.current, { scale: 0.8, opacity: 0, force3D: true });
 
     if (contentWrapperRef.current) {
       gsap.set(contentWrapperRef.current, {
@@ -209,22 +256,11 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
     if (roleRef.current) gsap.set(roleRef.current, { x: -20, opacity: 0 });
     if (taglineRef.current) gsap.set(taglineRef.current, { y: 22, opacity: 0 });
     if (ctaRef.current?.children) gsap.set(ctaRef.current.children, { y: 22, opacity: 0, scale: 0.96 });
-    if (photoCardRef.current) {
-      gsap.set(photoCardRef.current, {
-        scale: 0.88,
+    if (desktopTaglineRef.current) {
+      gsap.set(desktopTaglineRef.current, {
+        x: 24,
+        y: 16,
         opacity: 0,
-        x: 35,
-        y: 15,
-        rotation: 2,
-      });
-    }
-    if (mobilePhotoRef.current) {
-      gsap.set(mobilePhotoRef.current, {
-        scale: 0.86,
-        opacity: 0,
-        x: 18,
-        y: 12,
-        rotation: 2,
       });
     }
 
@@ -249,20 +285,20 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       entranceTl.to(fogRightRef.current, { scale: 1, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.08);
     }
 
-    // B. BaemonPortalO in Center Stage: Silky smooth docking animation from WelcomeScreen
-    if (portalContainerRef.current) {
-      entranceTl.to(portalContainerRef.current, {
-        scale: 1.0,
+    // B. BaemonPortalO in Center Stage Scales in with 90° rotation into upright alignment
+    if (portalEntranceRef.current) {
+      entranceTl.to(portalEntranceRef.current, {
+        scale: 1,
         rotation: 0,
-        opacity: 1,
+        autoAlpha: 1,
         y: 0,
-        duration: 0.60,
+        duration: 1.25,
         ease: 'power3.out',
         force3D: true,
-      }, 0.04);
+      }, 0.08);
     }
     if (portalAuraRef.current) {
-      entranceTl.to(portalAuraRef.current, { scale: 1, opacity: 0.85, duration: 0.85, ease: 'power2.out' }, 0.08);
+      entranceTl.to(portalAuraRef.current, { scale: 1, opacity: 0.85, duration: 0.9, ease: 'power2.out' }, 0.12);
     }
 
     // C. Top Row: Availability Beacon + Location Badge slide down
@@ -300,9 +336,9 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       entranceTl.to(roleRef.current, { x: 0, opacity: 1, duration: 0.55 }, 0.55);
     }
 
-    // G. Professional Tagline fade & float up
+    // G. Mobile Editorial Tagline fade & float up (below BaemonPortalO on mobile)
     if (taglineRef.current) {
-      entranceTl.to(taglineRef.current, { y: 0, opacity: 1, duration: 0.65 }, 0.65);
+      entranceTl.to(taglineRef.current, { y: 0, opacity: 1, duration: 0.65 }, 0.60);
     }
 
     // H. CTAs with spring stagger
@@ -317,28 +353,15 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       }, 0.75);
     }
 
-    // I. Portrait Photo Card entrance (Desktop & Mobile)
-    if (photoCardRef.current) {
-      entranceTl.to(photoCardRef.current, {
-        scale: 1,
+    // I. Desktop Right-Column Tagline entrance
+    if (desktopTaglineRef.current) {
+      entranceTl.to(desktopTaglineRef.current, {
         opacity: 1,
         x: 0,
         y: 0,
-        rotation: 0,
-        duration: 1.05,
+        duration: 0.75,
         ease: 'power3.out',
-      }, 0.30);
-    }
-    if (mobilePhotoRef.current) {
-      entranceTl.to(mobilePhotoRef.current, {
-        scale: 1,
-        opacity: 1,
-        x: 0,
-        y: 0,
-        rotation: 0,
-        duration: 0.95,
-        ease: 'power3.out',
-      }, 0.30);
+      }, 0.50);
     }
 
     return entranceTl;
@@ -385,8 +408,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             if (contentWrapperRef.current) gsap.set(contentWrapperRef.current, { opacity: 1, scale: 1, x: 0, y: 0, visibility: 'visible' });
             if (leftColRef.current) gsap.set(leftColRef.current, { opacity: 1, x: 0, y: 0, visibility: 'visible' });
             if (portalContainerRef.current) gsap.set(portalContainerRef.current, { opacity: 1, scale: 1, rotation: 0, visibility: 'visible' });
-            if (photoCardRef.current) gsap.set(photoCardRef.current, { opacity: 1, scale: 1, rotation: 0, x: 0, y: 0, visibility: 'visible' });
-            if (mobilePhotoRef.current) gsap.set(mobilePhotoRef.current, { opacity: 1, scale: 1, rotation: 0, x: 0, y: 0, visibility: 'visible' });
+            if (desktopTaglineRef.current) gsap.set(desktopTaglineRef.current, { opacity: 1, x: 0, y: 0, visibility: 'visible' });
             if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1 });
             if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0 });
             if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0 });
@@ -420,9 +442,9 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
         );
       }
 
-      if (photoCardRef.current) {
+      if (desktopTaglineRef.current) {
         scrollTl.fromTo(
-          photoCardRef.current,
+          desktopTaglineRef.current,
           {
             autoAlpha: 1,
             x: 0,
@@ -431,26 +453,6 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             autoAlpha: 0,
             x: 35,
             duration: 0.24,
-            ease: 'sine.out',
-            immediateRender: false,
-          },
-          0
-        );
-      }
-
-      if (mobilePhotoRef.current) {
-        scrollTl.fromTo(
-          mobilePhotoRef.current,
-          {
-            autoAlpha: 1,
-            scale: 1,
-            y: 0,
-          },
-          {
-            autoAlpha: 0,
-            scale: 0.94,
-            y: -10,
-            duration: 0.22,
             ease: 'sine.out',
             immediateRender: false,
           },
@@ -577,6 +579,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       // Step 7: Portal Fade-out and layer deactivation as it clears the screen (0.48 -> 0.70)
       // autoAlpha automatically toggles visibility: 'hidden' to eliminate compositing overhead
       if (portalContainerRef.current) {
+        scrollTl.set(portalContainerRef.current, { autoAlpha: 1 }, 0);
         scrollTl.fromTo(
           portalContainerRef.current,
           {
@@ -649,6 +652,26 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
   const taglineEntries = isTaglineArray
     ? personal.tagline.filter(Boolean).map(parseTaglineLine)
     : [];
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const effectiveTaglineIndex =
+    prefersReducedMotion || !isTaglineArray || taglineEntries.length <= 1
+      ? -1
+      : activeTaglineIndex;
+
+  useEffect(() => {
+    if (welcomeActive || prefersReducedMotion || !isTaglineArray || taglineEntries.length <= 1) {
+      return;
+    }
+
+    const lineCount = taglineEntries.length;
+    const intervalId = window.setInterval(() => {
+      setActiveTaglineIndex((prev) => (prev + 1) % lineCount);
+    }, 1350);
+
+    return () => window.clearInterval(intervalId);
+  }, [welcomeActive, prefersReducedMotion, isTaglineArray, taglineEntries.length]);
 
   const scrollToSection = (id) => {
     scrollTo(`#${id}`, { offset: -70 });
@@ -696,31 +719,36 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       {/* 2. BaemonPortalO Emblem: Centered in Hero section */}
       <div
         ref={portalContainerRef}
-        className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center will-change-transform opacity-0"
+        className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center will-change-transform"
       >
-        <BaemonPortalO
-          ringScaleRef={ringScaleRef}
-          leftHalfRef={leftHalfRef}
-          rightHalfRef={rightHalfRef}
-          portalAuraRef={portalAuraRef}
-        />
+        <div
+          ref={portalEntranceRef}
+          className="flex items-center justify-center will-change-transform opacity-0"
+        >
+          <BaemonPortalO
+            ringScaleRef={ringScaleRef}
+            leftHalfRef={leftHalfRef}
+            rightHalfRef={rightHalfRef}
+            portalAuraRef={portalAuraRef}
+          />
+        </div>
       </div>
 
       {/* 3. Hero Content Wrapper: Split cleanly above/below portal on mobile, left column on desktop */}
       <div
         ref={contentWrapperRef}
-        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pointer-events-auto will-change-transform h-full flex flex-col justify-between py-20 sm:py-24 lg:h-auto lg:block lg:py-0"
+        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pointer-events-auto will-change-transform h-full flex flex-col justify-between pt-24 pb-7 sm:pt-28 sm:pb-10 lg:h-auto lg:block lg:py-0"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full h-full lg:h-auto">
           {/* Left Column / Mobile Responsive Wrapper */}
           <div
             ref={leftColRef}
-            className="lg:col-span-5 xl:col-span-5 flex flex-col justify-between h-full lg:h-auto lg:justify-start lg:space-y-6 max-w-lg lg:max-w-[500px] xl:max-w-[540px] text-center sm:text-left items-center sm:items-start mx-auto sm:mx-0 w-full will-change-transform"
+            className="lg:col-span-5 xl:col-span-5 flex flex-col justify-between h-full lg:h-auto lg:justify-start lg:space-y-6 max-w-lg lg:max-w-[500px] xl:max-w-[540px] text-center lg:text-left items-center lg:items-start mx-auto lg:mx-0 w-full will-change-transform"
           >
-            {/* Upper Group (Above portal on mobile, top of column on desktop) */}
-            <div className="flex flex-col items-start text-left space-y-2.5 sm:space-y-3.5 w-full">
+            {/* Upper Group (Centered above portal on mobile, top of column on desktop) */}
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-1.5 sm:space-y-2.5 w-full">
               {/* Top Row: Location Badge + Live Availability Status (Side-by-Side & Mobile Responsive) */}
-              <div ref={badgesRef} className="flex items-center justify-start gap-1.5 sm:gap-2.5 w-full flex-nowrap">
+              <div ref={badgesRef} className="flex items-center justify-center lg:justify-start gap-1.5 sm:gap-2.5 w-full flex-nowrap">
                 {/* 1. Current Location Badge */}
                 <motion.div
                   whileHover={{ y: -2 }}
@@ -749,13 +777,13 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                 </motion.div>
               </div>
 
-              {/* Identity Row: On mobile, Name + Typewriter on Left, Photo Card on Right (Level with Name!) */}
-              <div className="flex items-start justify-between gap-3 sm:gap-4 w-full pt-1">
+              {/* Identity Row: Centered horizontal name above portal on mobile, stacked left on desktop */}
+              <div className="flex flex-col items-center lg:items-start w-full pt-1">
                 {/* Primary Identity with Dynamic Typewriter Role */}
-                <div className="flex-1 space-y-1.5 sm:space-y-2.5 min-w-0">
+                <div className="space-y-1.5 sm:space-y-2.5 min-w-0 flex flex-col items-center lg:items-start">
                   <h1
                     ref={headlineRef}
-                    className="font-display text-[2.2rem] xs:text-4xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.05] tracking-tighter will-change-transform flex flex-col items-start gap-0.5 sm:gap-1"
+                    className="font-display text-[1.9rem] xs:text-[2.2rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.05] tracking-tighter will-change-transform flex flex-row flex-wrap items-center justify-center gap-x-2 sm:gap-x-3 gap-y-0.5 lg:flex-col lg:items-start lg:justify-start lg:gap-1"
                   >
                     <span className="sr-only">{personal.name}</span>
                     <span aria-hidden="true" className="block overflow-hidden py-0.5 -my-0.5">
@@ -763,7 +791,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                         Juan
                       </span>
                     </span>
-                    <div aria-hidden="true" className="flex items-center gap-2 sm:gap-2.5 flex-nowrap justify-start">
+                    <div aria-hidden="true" className="flex items-center gap-1.5 sm:gap-2.5 flex-nowrap justify-center lg:justify-start">
                       <span className="inline-block overflow-hidden py-0.5 -my-0.5">
                         <span className="hero-word-inner inline-block will-change-transform opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
                           Sterling
@@ -804,75 +832,26 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                     <span className="inline-block w-2 sm:w-2.5 h-3.5 sm:h-6 bg-[#E11D2E] animate-pulse rounded-xs shadow-[0_0_6px_rgba(225,29,46,0.6)] dark:shadow-[0_0_8px_rgba(225,29,46,0.8)]" aria-hidden="true" />
                   </div>
                 </div>
-
-                {/* Mobile / Tablet Blended Portrait (Sejajar dengan nama pada HP) */}
-                <div
-                  ref={mobilePhotoRef}
-                  className="lg:hidden shrink-0 self-start -mt-1 sm:mt-0 opacity-0 will-change-transform"
-                >
-                  <BlendedPortrait
-                    src={heroPhotoSrc}
-                    auraClassName="inset-1 from-zinc-400/20 via-[#E11D2E]/6 to-transparent opacity-60 dark:from-[#E11D2E]/28 dark:via-[#FF3B4D]/10 dark:to-transparent dark:opacity-90 blur-xl"
-                    imgClassName="h-[126px] sm:h-[156px] md:h-[182px] w-auto max-w-[120px] sm:max-w-[150px] md:max-w-[175px]"
-                  />
-                </div>
               </div>
             </div>
 
-            {/* Lower Group (Below portal on mobile, bottom of column on desktop) */}
-            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 sm:space-y-4 w-full pt-4 sm:pt-6 lg:pt-0">
-              {/* Concise Editorial Statement / Tagline */}
+            {/* Lower Group (Centered below portal on mobile, CTAs on left column for desktop) */}
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 sm:space-y-9 lg:space-y-4 w-full lg:pt-0">
+              {/* Mobile / Tablet Editorial Tagline (Centered below BaemonPortalO) */}
               <div
                 ref={taglineRef}
-                className="opacity-0 will-change-transform self-start text-left max-w-xs sm:max-w-md lg:max-w-[420px] xl:max-w-[460px]"
+                className="lg:hidden opacity-0 will-change-transform self-center text-center max-w-xs sm:max-w-md"
               >
-                <div className="relative pl-3 sm:pl-3.5 py-0.5 flex flex-col gap-1 sm:gap-1.5">
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-0 top-0.5 bottom-0.5 w-[2px] rounded-full bg-gradient-to-b from-[#E11D2E] via-[#E11D2E] to-[#E11D2E]/35 dark:shadow-[0_0_10px_rgba(225,29,46,0.45)]"
-                  />
-                  {isTaglineArray ? (
-                    taglineEntries.map(({ prefix, keyword, variant }, index) => {
-                      const [splitLead, splitTail] = variant === 'split' && keyword
-                        ? splitKeywordHalves(keyword)
-                        : ['', ''];
-                      const variantClass = TAGLINE_VARIANT_CLASSES[variant] || TAGLINE_VARIANT_CLASSES.solid;
-
-                      return (
-                        <p
-                          key={`${index}-${keyword}`}
-                          className="text-[13px] sm:text-base md:text-lg leading-snug font-sans"
-                        >
-                          {prefix && (
-                            <span className="font-light tracking-[0.08em] text-zinc-600 dark:text-zinc-400 mr-1">
-                              {prefix}{' '}
-                            </span>
-                          )}
-                          {keyword && (
-                            variant === 'split' ? (
-                              <span className="font-extrabold tracking-[0.05em]">
-                                <span className={TAGLINE_VARIANT_CLASSES.crimson}>{splitLead}</span>
-                                <span className={TAGLINE_VARIANT_CLASSES.solid}>{splitTail}</span>
-                              </span>
-                            ) : (
-                              <span className={`font-extrabold tracking-[0.05em] ${variantClass}`}>
-                                {keyword}
-                              </span>
-                            )
-                          )}
-                        </p>
-                      );
-                    })
-                  ) : (
-                    <p className="text-xs sm:text-base md:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans font-normal">
-                      {personal.tagline}
-                    </p>
-                  )}
-                </div>
+                <TaglineBlock
+                  isTaglineArray={isTaglineArray}
+                  taglineEntries={taglineEntries}
+                  fallbackText={personal.tagline}
+                  activeIndex={effectiveTaglineIndex}
+                />
               </div>
 
               {/* CTAs with Motion Micro-Animations */}
-              <div ref={ctaRef} className="pt-1 sm:pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 w-full max-w-[420px]">
+              <div ref={ctaRef} className="pt-2 sm:pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 w-full max-w-[420px]">
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.03, y: -1 }}
@@ -918,16 +897,20 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             </div>
           </div>
 
-          {/* Right Column: Blended Hero Portrait on Desktop */}
+          {/* Right Column: Editorial Tagline Replacing Hero Portrait on Desktop */}
           <div
-            ref={photoCardRef}
-            className="hidden lg:flex lg:col-span-7 xl:col-span-7 justify-end items-center h-full will-change-transform opacity-0 pointer-events-auto lg:pr-2 xl:pr-4"
+            ref={desktopTaglineRef}
+            className="hidden lg:flex lg:col-span-7 xl:col-span-7 justify-end items-center h-full will-change-transform opacity-0 pointer-events-auto lg:pr-6 xl:pr-8"
           >
-            <BlendedPortrait
-              src={heroPhotoSrc}
-              auraClassName="inset-2 from-zinc-400/20 via-[#E11D2E]/6 to-transparent opacity-65 dark:from-[#E11D2E]/28 dark:via-[#FF3B4D]/12 dark:to-transparent dark:opacity-95 blur-3xl"
-              imgClassName="h-[360px] lg:h-[390px] xl:h-[450px] 2xl:h-[500px] max-h-[66vh] w-auto max-w-[360px] xl:max-w-[420px] 2xl:max-w-[460px]"
-            />
+            <div className="text-left max-w-[380px] xl:max-w-[460px] 2xl:max-w-[520px]">
+              <TaglineBlock
+                isTaglineArray={isTaglineArray}
+                taglineEntries={taglineEntries}
+                fallbackText={personal.tagline}
+                desktop
+                activeIndex={effectiveTaglineIndex}
+              />
+            </div>
           </div>
         </div>
       </div>

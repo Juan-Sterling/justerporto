@@ -418,12 +418,12 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           }, splitTime);
         }
 
-        // Center O and Aura dissolve cleanly into Hero's portal under the flash
+        // Center O and Aura dissolve cleanly under the flash so Hero's BaemonPortalO can animate in
         if (baemonCenterORef.current) {
           tl.to(baemonCenterORef.current, {
             opacity: 0,
-            scale: 1.06,
-            duration: 0.28,
+            scale: 1.12,
+            duration: 0.16,
             ease: 'power2.out',
             force3D: true,
           }, splitTime);
@@ -431,8 +431,8 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         if (baemonOAuraRef.current) {
           tl.to(baemonOAuraRef.current, {
             opacity: 0,
-            scale: 1.4,
-            duration: 0.32,
+            scale: 1.35,
+            duration: 0.18,
             ease: 'power2.out',
           }, splitTime);
         }
