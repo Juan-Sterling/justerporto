@@ -34,3 +34,7 @@ dist-ssr
 
 # Antigravity AI rules
 .antigravityrules
+
+# Local markdown files (keep only README.md in repo)
+*.md
+!README.md
