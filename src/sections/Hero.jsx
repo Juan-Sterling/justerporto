@@ -737,7 +737,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       {/* 3. Hero Content Wrapper: Split cleanly above/below portal on mobile, left column on desktop */}
       <div
         ref={contentWrapperRef}
-        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pointer-events-auto will-change-transform h-full flex flex-col justify-between pt-[86px] pb-14 sm:pt-24 sm:pb-16 lg:h-auto lg:block lg:py-0"
+        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pointer-events-auto will-change-transform h-full flex flex-col justify-between pt-[86px] pb-24 sm:pt-24 sm:pb-28 lg:h-auto lg:block lg:py-0"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full h-full lg:h-auto">
           {/* Left Column / Mobile Responsive Wrapper */}
