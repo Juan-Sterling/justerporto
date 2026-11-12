@@ -737,7 +737,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       {/* 3. Hero Content Wrapper: Split cleanly above/below portal on mobile, left column on desktop */}
       <div
         ref={contentWrapperRef}
-        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pointer-events-auto will-change-transform h-full flex flex-col justify-between pt-24 pb-7 sm:pt-28 sm:pb-10 lg:h-auto lg:block lg:py-0"
+        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pointer-events-auto will-change-transform h-full flex flex-col justify-between pt-[86px] pb-14 sm:pt-24 sm:pb-16 lg:h-auto lg:block lg:py-0"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full h-full lg:h-auto">
           {/* Left Column / Mobile Responsive Wrapper */}
@@ -777,31 +777,31 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                 </motion.div>
               </div>
 
-              {/* Identity Row: Centered horizontal name above portal on mobile, stacked left on desktop */}
-              <div className="flex flex-col items-center lg:items-start w-full pt-1">
+              {/* Identity Row: Side-by-side name above portal on mobile (horn centered below), stacked left on desktop */}
+              <div className="flex flex-col items-center lg:items-start w-full pt-3 sm:pt-4 lg:pt-1">
                 {/* Primary Identity with Dynamic Typewriter Role */}
                 <div className="space-y-1.5 sm:space-y-2.5 min-w-0 flex flex-col items-center lg:items-start">
                   <h1
                     ref={headlineRef}
-                    className="font-display text-[1.9rem] xs:text-[2.2rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.05] tracking-tighter will-change-transform flex flex-row flex-wrap items-center justify-center gap-x-2 sm:gap-x-3 gap-y-0.5 lg:flex-col lg:items-start lg:justify-start lg:gap-1"
+                    className="font-display text-[2.1rem] xs:text-4xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.05] tracking-tighter will-change-transform flex flex-row flex-wrap items-center justify-center gap-x-2 sm:gap-x-3 gap-y-1.5 lg:grid lg:grid-cols-[auto_auto] lg:items-center lg:justify-start lg:gap-x-2.5 lg:gap-y-1"
                   >
                     <span className="sr-only">{personal.name}</span>
-                    <span aria-hidden="true" className="block overflow-hidden py-0.5 -my-0.5">
+                    <span aria-hidden="true" className="block overflow-hidden py-0.5 -my-0.5 lg:col-span-2 lg:justify-self-start">
                       <span className="hero-word-inner inline-block will-change-transform opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
                         Juan
                       </span>
                     </span>
-                    <div aria-hidden="true" className="flex items-center gap-1.5 sm:gap-2.5 flex-nowrap justify-center lg:justify-start">
-                      <span className="inline-block overflow-hidden py-0.5 -my-0.5">
-                        <span className="hero-word-inner inline-block will-change-transform opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
-                          Sterling
-                        </span>
+                    <span aria-hidden="true" className="block overflow-hidden py-0.5 -my-0.5 lg:justify-self-start">
+                      <span className="hero-word-inner inline-block will-change-transform opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
+                        Sterling
                       </span>
+                    </span>
 
-                      {/* BABYMONSTER Devil Emblem */}
+                    {/* BABYMONSTER Devil Emblem */}
+                    <div aria-hidden="true" className="basis-full flex justify-center lg:basis-auto lg:inline-flex lg:justify-start">
                       <div
                         ref={emblemRef}
-                        className="relative inline-flex flex-col items-center justify-center shrink-0 -mt-0.5 sm:-mt-1 select-none group cursor-default will-change-transform opacity-0"
+                        className="relative inline-flex flex-col items-center justify-center shrink-0 mt-0.5 lg:-mt-1 select-none group cursor-default will-change-transform opacity-0"
                         title="BAEMON // 07"
                       >
                         {/* Stylized Devil Horns */}
@@ -836,7 +836,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             </div>
 
             {/* Lower Group (Centered below portal on mobile, CTAs on left column for desktop) */}
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 sm:space-y-9 lg:space-y-4 w-full lg:pt-0">
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 sm:space-y-7 lg:space-y-4 w-full lg:pt-0">
               {/* Mobile / Tablet Editorial Tagline (Centered below BaemonPortalO) */}
               <div
                 ref={taglineRef}
@@ -851,7 +851,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
               </div>
 
               {/* CTAs with Motion Micro-Animations */}
-              <div ref={ctaRef} className="pt-2 sm:pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 w-full max-w-[420px]">
+              <div ref={ctaRef} className="pt-1 sm:pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 w-full max-w-[420px]">
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.03, y: -1 }}
