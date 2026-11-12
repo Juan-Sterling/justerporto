@@ -69,10 +69,6 @@ export default function About() {
                       <h3 className="font-display font-bold text-base sm:text-lg text-zinc-900 dark:text-white tracking-tight">
                         {passDetails.name}
                       </h3>
-                      {/* BABYMONSTER Devil Horns Mini Motif */}
-                      <svg className="w-3.5 h-3.5 text-[#E11D2E]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M12 2C9 7 4 14 3 22C7 19 11 15 12 2Z" />
-                      </svg>
                     </div>
                     <span className="font-mono text-[10px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
                       STAGE ID

@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { ArrowDown, FileText, ExternalLink, Mail, Code2, MapPin } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
+import { useTheme } from '../context/ThemeContext';
 import BaemonPortalO from '../components/BaemonPortalO';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -11,16 +12,104 @@ import { optimizeCloudinaryUrl } from '../utils/cloudinary';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const HERO_PHOTO_URL = optimizeCloudinaryUrl('https://res.cloudinary.com/og1jrvy3/image/upload/f_auto,q_auto/v1791215430/IMG_0996_gg.jpg');
+// const HERO_PHOTO_URL = optimizeCloudinaryUrl('https://res.cloudinary.com/og1jrvy3/image/upload/f_auto,q_auto/v1791215430/IMG_0996_gg.jpg');
+const HERO_PHOTO_URL = "https://cdn.justermp.my.id/justerporto/1794471616671.jpg";
+const HERO_PHOTO_URL2 = "https://cdn.justermp.my.id/justerporto/1794472253352.jpg";
 
 const ROLES = [
   "Full Stack Developer",
   "Software Developer",
 ];
 
+const TAGLINE_VARIANT_ORDER = ['solid', 'crimson', 'split'];
+
+const TAGLINE_VARIANT_CLASSES = {
+  solid: 'text-zinc-950 dark:text-white',
+  crimson: 'text-[#E11D2E] dark:drop-shadow-[0_0_12px_rgba(225,29,46,0.55)]',
+};
+
+/**
+ * Splits a keyword into two halves for the dual-tone split variant (e.g. TECH + NOLOGY).
+ */
+function splitKeywordHalves(keyword) {
+  const lower = keyword.toLowerCase();
+  const splitIndex = lower.startsWith('tech') && keyword.length > 4
+    ? 4
+    : Math.ceil(keyword.length / 2);
+
+  return [keyword.slice(0, splitIndex), keyword.slice(splitIndex)];
+}
+
+/**
+ * Splits a tagline entry into a light connector prefix and bold emphasized keyword.
+ */
+function parseTaglineLine(entry, index) {
+  const defaultVariant = TAGLINE_VARIANT_ORDER[index % TAGLINE_VARIANT_ORDER.length];
+  if (entry && typeof entry === 'object') {
+    return {
+      prefix: entry.prefix ?? '',
+      keyword: entry.keyword ?? '',
+      variant: entry.variant ?? defaultVariant,
+    };
+  }
+
+  const text = String(entry ?? '').trim();
+  const splitAt = text.lastIndexOf(' ');
+  if (splitAt === -1) {
+    return { prefix: '', keyword: text, variant: defaultVariant };
+  }
+
+  return {
+    prefix: text.slice(0, splitAt),
+    keyword: text.slice(splitAt + 1),
+    variant: defaultVariant,
+  };
+}
+
+/**
+ * Renders the hero portrait with 4-edge mask feathering and adaptive light/dark
+ * background integration so it melts naturally into the Hero canvas.
+ */
+function BlendedPortrait({ src, auraClassName, imgClassName }) {
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <div
+        aria-hidden="true"
+        className={`absolute rounded-full bg-radial pointer-events-none -z-10 ${auraClassName}`}
+      />
+      <div className="relative">
+        <img
+          src={src}
+          alt="Juan Sterling"
+          className={`hero-portrait-mask object-contain brightness-[1.02] contrast-[1.02] saturate-[0.98] dark:brightness-[0.94] dark:contrast-[1.06] dark:saturate-100 select-none pointer-events-none ${imgClassName}`}
+          loading="eager"
+          decoding="async"
+        />
+        {/* Adaptive outer-edge veil matching Light (#FAFAFA) and Dark (#07080B) Hero canvas */}
+        <div
+          aria-hidden="true"
+          className="hero-portrait-mask absolute inset-0 bg-radial from-transparent via-transparent to-[#FAFAFA]/70 dark:to-[#07080B]/65 pointer-events-none"
+        />
+        {/* Subtle crimson stage rim accent (Dark mode only) */}
+        <div
+          aria-hidden="true"
+          className="hero-portrait-mask hidden dark:block absolute inset-0 bg-radial from-transparent via-transparent to-[#E11D2E]/20 mix-blend-soft-light pointer-events-none"
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function Hero({ welcomeActive = false, portalEntranceTrigger = null }) {
   const { personal } = portfolioData;
   const { scrollTo } = useSmoothScroll();
+  const { isDark } = useTheme();
+  const heroPhotoSrc = isDark ? HERO_PHOTO_URL : HERO_PHOTO_URL2;
+
+  useEffect(() => {
+    const preloadImg = new Image();
+    preloadImg.src = isDark ? HERO_PHOTO_URL2 : HERO_PHOTO_URL;
+  }, [isDark]);
 
   // Root Hero Section Ref (Pinned by ScrollTrigger)
   const heroRef = useRef(null);
@@ -556,6 +645,10 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
   }, [charIndex, isDeleting, isWaiting, roleIndex]);
 
   const displayedRole = ROLES[roleIndex].slice(0, charIndex);
+  const isTaglineArray = Array.isArray(personal.tagline);
+  const taglineEntries = isTaglineArray
+    ? personal.tagline.filter(Boolean).map(parseTaglineLine)
+    : [];
 
   const scrollToSection = (id) => {
     scrollTo(`#${id}`, { offset: -70 });
@@ -566,9 +659,8 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       ref={heroRef}
       id="hero"
       style={{ opacity: 0 }}
-      className={`relative w-full h-screen min-h-[620px] flex items-center justify-center overflow-hidden select-none will-change-transform z-10 ${
-        welcomeActive ? 'pointer-events-none' : ''
-      }`}
+      className={`relative w-full h-screen min-h-[620px] flex items-center justify-center overflow-hidden select-none will-change-transform z-10 ${welcomeActive ? 'pointer-events-none' : ''
+        }`}
     >
       {/* 1. Dedicated Stage Aurora / Crimson Fog Atmosphere (RESTORED & Guaranteed on Scroll-Up) */}
       <div
@@ -679,7 +771,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                       </span>
 
                       {/* BABYMONSTER Devil Emblem */}
-                      <div 
+                      <div
                         ref={emblemRef}
                         className="relative inline-flex flex-col items-center justify-center shrink-0 -mt-0.5 sm:-mt-1 select-none group cursor-default will-change-transform opacity-0"
                         title="BAEMON // 07"
@@ -713,38 +805,70 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                   </div>
                 </div>
 
-                {/* Mobile / Tablet Portrait Photo Card (Sejajar dengan nama pada HP!) */}
+                {/* Mobile / Tablet Blended Portrait (Sejajar dengan nama pada HP) */}
                 <div
                   ref={mobilePhotoRef}
-                  className="lg:hidden shrink-0 self-start mt-0.5 sm:mt-1 opacity-0 will-change-transform"
+                  className="lg:hidden shrink-0 self-start -mt-1 sm:mt-0 opacity-0 will-change-transform"
                 >
-                  <div className="relative group">
-                    {/* Soft crimson ambient backlight */}
-                    <div className="absolute -inset-1.5 bg-gradient-to-tr from-[#E11D2E]/25 via-[#FF3B4D]/15 to-transparent blur-md rounded-2xl -z-10 dark:opacity-80 opacity-40 pointer-events-none" />
-
-                    {/* Frame */}
-                    <div className="relative w-[84px] h-[116px] sm:w-24 sm:h-34 rounded-2xl overflow-hidden border border-zinc-200/90 dark:border-white/10 shadow-lg shadow-black/10 dark:shadow-[#E11D2E]/20 bg-zinc-100 dark:bg-[#121214]">
-                      <img
-                        src={HERO_PHOTO_URL}
-                        alt="Juan Sterling"
-                        className="w-full h-full object-cover object-center"
-                        loading="eager"
-                        decoding="async"
-                      />
-                      <div className="absolute inset-0 ring-1 ring-inset ring-white/20 dark:ring-white/10 rounded-2xl pointer-events-none" />
-                    </div>
-                  </div>
+                  <BlendedPortrait
+                    src={heroPhotoSrc}
+                    auraClassName="inset-1 from-zinc-400/20 via-[#E11D2E]/6 to-transparent opacity-60 dark:from-[#E11D2E]/28 dark:via-[#FF3B4D]/10 dark:to-transparent dark:opacity-90 blur-xl"
+                    imgClassName="h-[126px] sm:h-[156px] md:h-[182px] w-auto max-w-[120px] sm:max-w-[150px] md:max-w-[175px]"
+                  />
                 </div>
               </div>
             </div>
 
             {/* Lower Group (Below portal on mobile, bottom of column on desktop) */}
             <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 sm:space-y-4 w-full pt-4 sm:pt-6 lg:pt-0">
-              {/* Concise Professional Introduction */}
-              <div ref={taglineRef} className="opacity-0 will-change-transform max-w-xs sm:max-w-md lg:max-w-[390px] xl:max-w-[420px]">
-                <p className="text-xs sm:text-base md:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans font-normal">
-                  {personal.tagline}
-                </p>
+              {/* Concise Editorial Statement / Tagline */}
+              <div
+                ref={taglineRef}
+                className="opacity-0 will-change-transform self-start text-left max-w-xs sm:max-w-md lg:max-w-[420px] xl:max-w-[460px]"
+              >
+                <div className="relative pl-3 sm:pl-3.5 py-0.5 flex flex-col gap-1 sm:gap-1.5">
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-0 top-0.5 bottom-0.5 w-[2px] rounded-full bg-gradient-to-b from-[#E11D2E] via-[#E11D2E] to-[#E11D2E]/35 dark:shadow-[0_0_10px_rgba(225,29,46,0.45)]"
+                  />
+                  {isTaglineArray ? (
+                    taglineEntries.map(({ prefix, keyword, variant }, index) => {
+                      const [splitLead, splitTail] = variant === 'split' && keyword
+                        ? splitKeywordHalves(keyword)
+                        : ['', ''];
+                      const variantClass = TAGLINE_VARIANT_CLASSES[variant] || TAGLINE_VARIANT_CLASSES.solid;
+
+                      return (
+                        <p
+                          key={`${index}-${keyword}`}
+                          className="text-[13px] sm:text-base md:text-lg leading-snug font-sans"
+                        >
+                          {prefix && (
+                            <span className="font-light tracking-[0.08em] text-zinc-600 dark:text-zinc-400 mr-1">
+                              {prefix}{' '}
+                            </span>
+                          )}
+                          {keyword && (
+                            variant === 'split' ? (
+                              <span className="font-extrabold tracking-[0.05em]">
+                                <span className={TAGLINE_VARIANT_CLASSES.crimson}>{splitLead}</span>
+                                <span className={TAGLINE_VARIANT_CLASSES.solid}>{splitTail}</span>
+                              </span>
+                            ) : (
+                              <span className={`font-extrabold tracking-[0.05em] ${variantClass}`}>
+                                {keyword}
+                              </span>
+                            )
+                          )}
+                        </p>
+                      );
+                    })
+                  ) : (
+                    <p className="text-xs sm:text-base md:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans font-normal">
+                      {personal.tagline}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* CTAs with Motion Micro-Animations */}
@@ -794,29 +918,16 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             </div>
           </div>
 
-          {/* Right Column: High-End Portrait Photo Card on Desktop (Refined Compact Size) */}
+          {/* Right Column: Blended Hero Portrait on Desktop */}
           <div
             ref={photoCardRef}
-            className="hidden lg:flex lg:col-span-7 xl:col-span-7 justify-end items-center h-full will-change-transform opacity-0 pointer-events-auto"
+            className="hidden lg:flex lg:col-span-7 xl:col-span-7 justify-end items-center h-full will-change-transform opacity-0 pointer-events-auto lg:pr-2 xl:pr-4"
           >
-            <div className="relative">
-              {/* Volumetric Soft Crimson Aura behind Portrait */}
-              <div className="absolute -inset-4 bg-gradient-to-tr from-[#E11D2E]/20 via-[#FF3B4D]/10 to-transparent blur-2xl rounded-3xl -z-10 dark:opacity-90 opacity-40 pointer-events-none" />
-
-              {/* Minimalist Precision Photo Frame (Refined compact dimensions for PC) */}
-              <div className="relative w-[210px] lg:w-[230px] xl:w-[255px] 2xl:w-[280px] aspect-[3/4] rounded-2xl xl:rounded-3xl overflow-hidden border border-zinc-200/90 dark:border-white/10 shadow-2xl shadow-zinc-950/15 dark:shadow-black/70 bg-zinc-100 dark:bg-[#121214]">
-                <img
-                  src={HERO_PHOTO_URL}
-                  alt="Juan Sterling"
-                  className="w-full h-full object-cover object-center"
-                  loading="eager"
-                  decoding="async"
-                />
-
-                {/* Subtle Inner Glass Highlight */}
-                <div className="absolute inset-0 ring-1 ring-inset ring-white/25 dark:ring-white/10 rounded-2xl xl:rounded-3xl pointer-events-none" />
-              </div>
-            </div>
+            <BlendedPortrait
+              src={heroPhotoSrc}
+              auraClassName="inset-2 from-zinc-400/20 via-[#E11D2E]/6 to-transparent opacity-65 dark:from-[#E11D2E]/28 dark:via-[#FF3B4D]/12 dark:to-transparent dark:opacity-95 blur-3xl"
+              imgClassName="h-[360px] lg:h-[390px] xl:h-[450px] 2xl:h-[500px] max-h-[66vh] w-auto max-w-[360px] xl:max-w-[420px] 2xl:max-w-[460px]"
+            />
           </div>
         </div>
       </div>
