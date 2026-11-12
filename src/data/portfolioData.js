@@ -50,6 +50,12 @@ export const portfolioData = {
         value: "2002",
         icon: "Calendar",
       },
+      {
+        id: "alias",
+        label: "Alias",
+        value: "juster / justermp",
+        icon: "AtSign",
+      },
       // {
       //   id: "focus",
       //   label: "Core Focus",

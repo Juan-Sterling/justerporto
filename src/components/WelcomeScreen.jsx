@@ -657,11 +657,11 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
 
         {/* Dynamic Multilingual Greeting Headline (EN -> KR -> JP) with Red Glow */}
         <div className={`min-h-[5.5rem] sm:min-h-[7.5rem] md:min-h-[9rem] lg:min-h-[11rem] flex items-center justify-center py-2 sm:py-3 ${options.isDrip ? 'drip-collapse' : ''}`}>
-          <h1
+          <p
             className="welcome-greeting-text font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tight text-[#09090B] dark:text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.3)] dark:drop-shadow-[0_0_35px_rgba(225,29,46,0.6)] select-none will-change-transform leading-[1.15] pt-1 sm:pt-2"
           >
             {activeGreeting}
-          </h1>
+          </p>
         </div>
 
         {/* Catchphrase Homage: "BABY, I'M A MONSTER -> DEVELOPER" */}

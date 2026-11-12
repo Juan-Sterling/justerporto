@@ -4,13 +4,14 @@ import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
 import { optimizeCloudinaryUrl } from '../utils/cloudinary';
 import { useTheme } from '../context/ThemeContext';
-import { Home, MapPin, Calendar, Code2, Sparkles } from 'lucide-react';
+import { Home, MapPin, Calendar, Code2, Sparkles, AtSign } from 'lucide-react';
 
 const ICON_MAP = {
   Home,
   MapPin,
   Calendar,
   Code2,
+  AtSign,
 };
 
 /**
