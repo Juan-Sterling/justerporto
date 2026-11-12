@@ -76,12 +76,14 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
       const isTop = target === 0 || target === '#hero' || target === 'top';
       const defaultOffset = isTop ? 0 : -70;
       const offset = options.offset !== undefined ? options.offset : defaultOffset;
-      const duration = options.duration ?? (isTop ? 1.4 : 1.2);
+      const duration = options.duration ?? 2.2;
 
       lenisRef.current.scrollTo(target, {
         offset,
         duration,
-        easing: options.easing ?? ((t) => Math.min(1, 1.001 - Math.pow(2, -8 * t))),
+        easing:
+          options.easing ??
+          ((t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)),
         immediate: options.immediate ?? false,
       });
     } else {

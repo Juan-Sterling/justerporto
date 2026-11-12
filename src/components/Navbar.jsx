@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Menu, X, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
@@ -17,9 +17,18 @@ export default function Navbar({ activeSection = '' }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [clickedSection, setClickedSection] = useState(null);
+  const clearClickTimerRef = useRef(null);
   const { scrollTo } = useSmoothScroll();
 
   const effectiveActive = clickedSection && clickedSection !== activeSection ? clickedSection : activeSection;
+
+  useEffect(() => {
+    return () => {
+      if (clearClickTimerRef.current) {
+        clearTimeout(clearClickTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,10 +62,13 @@ export default function Navbar({ activeSection = '' }) {
     const offset = id === 'about' ? 2 : -15;
     scrollTo(`#${id}`, { offset });
 
-    // Safety clear clicked override after transition & scroll completes
-    setTimeout(() => {
+    // Safety clear clicked override after 2.2s scroll completes
+    if (clearClickTimerRef.current) {
+      clearTimeout(clearClickTimerRef.current);
+    }
+    clearClickTimerRef.current = setTimeout(() => {
       setClickedSection(null);
-    }, 1000);
+    }, 2300);
   };
 
   return (
@@ -81,8 +93,11 @@ export default function Navbar({ activeSection = '' }) {
             href="#hero"
             onClick={(e) => {
               e.preventDefault();
+              if (clearClickTimerRef.current) {
+                clearTimeout(clearClickTimerRef.current);
+              }
               setClickedSection(null);
-              scrollTo(0, { offset: 0, duration: 1.4 });
+              scrollTo(0, { offset: 0 });
             }}
             className="group flex items-center gap-2 sm:gap-2.5 text-[#09090B] dark:text-white font-semibold tracking-tight text-sm sm:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] rounded-full py-1 px-1.5 sm:px-2 hover:bg-white/40 dark:hover:bg-white/[0.06] transition-colors"
             aria-label="Juan Sterling Home"
