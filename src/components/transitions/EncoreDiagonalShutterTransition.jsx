@@ -24,6 +24,7 @@ export default function EncoreDiagonalShutterTransition() {
   const watermarkRef = useRef(null);
   const stageAuraRef = useRef(null);
   const stageContentRef = useRef(null);
+  const diagonalAccentRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -32,8 +33,9 @@ export default function EncoreDiagonalShutterTransition() {
       gsap.set(rightShutterRef.current, { xPercent: 0, yPercent: 0, force3D: true });
       gsap.set(diagonalLaserRef.current, { opacity: 0.9, scale: 1 });
       gsap.set(watermarkRef.current, { scale: 0.95, opacity: 0.95, force3D: true });
-      gsap.set(stageAuraRef.current, { scale: 0.6, opacity: 0 });
-      gsap.set(stageContentRef.current, { y: 24, opacity: 0 });
+      gsap.set(stageAuraRef.current, { scale: 0.7, opacity: 0, force3D: true });
+      gsap.set(stageContentRef.current, { y: 22, opacity: 0, force3D: true });
+      gsap.set(diagonalAccentRef.current, { scaleY: 0.3, opacity: 0, force3D: true });
 
       // 2. Scroll-driven Pin & Scrub Timeline
       const tl = gsap.timeline({
@@ -64,8 +66,8 @@ export default function EncoreDiagonalShutterTransition() {
 
       // Step 2: Inner Stage lights up behind the shutters
       tl.to(stageAuraRef.current, {
-        scale: 1.25,
-        opacity: 0.85,
+        scale: 1.1,
+        opacity: 0.9,
         duration: 0.35,
         ease: 'power2.out',
       }, 0.18)
@@ -74,7 +76,13 @@ export default function EncoreDiagonalShutterTransition() {
         opacity: 1,
         duration: 0.35,
         ease: 'power3.out',
-      }, 0.22);
+      }, 0.22)
+      .to(diagonalAccentRef.current, {
+        scaleY: 1,
+        opacity: 1,
+        duration: 0.38,
+        ease: 'power3.out',
+      }, 0.24);
 
       // Step 3: Watermark expands and disperses
       tl.to(watermarkRef.current, {
@@ -120,34 +128,58 @@ export default function EncoreDiagonalShutterTransition() {
       {/* ----------------------------------------------------------- */}
       {/* INNER STAGE: Revealed as the diagonal shutters split open   */}
       {/* ----------------------------------------------------------- */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none overflow-hidden">
-        {/* Stage Aurora / Ambient Crimson Flare */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none overflow-hidden px-5 sm:px-8">
+        {/* Diagonal Spotlight Wash (Lightweight radial ellipse) */}
         <div
           ref={stageAuraRef}
-          className="absolute w-[320px] sm:w-[540px] h-[320px] sm:h-[540px] rounded-full bg-[radial-gradient(circle,rgba(225,29,46,0.30)_0%,rgba(225,29,46,0.06)_50%,transparent_75%)] blur-2xl pointer-events-none will-change-transform transform-gpu"
+          className="absolute w-[340px] sm:w-[600px] h-[220px] sm:h-[320px] -rotate-12 bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.22)_0%,rgba(225,29,46,0.05)_50%,transparent_75%)] pointer-events-none will-change-transform transform-gpu"
         />
 
-        {/* Stage Headline Beacon (Clean, no red dots beside STAGE title) */}
+        {/* Stage Headline Beacon: Diagonal Spotlight & Final Callout */}
         <div
           ref={stageContentRef}
-          className="relative z-10 flex flex-col items-center text-center px-4 will-change-transform transform-gpu"
+          className="relative z-10 w-full max-w-2xl will-change-transform transform-gpu"
         >
-          <div className="flex items-center justify-center mb-3">
-            <span className="font-mono text-xs sm:text-sm font-semibold tracking-widest text-[#E11D2E] uppercase">
+          {/* Subtle Diagonal Laser Slash Echoing Shutter Cut Angle */}
+          <div
+            ref={diagonalAccentRef}
+            aria-hidden="true"
+            className="hidden sm:block pointer-events-none absolute -top-6 right-8 w-[1.5px] h-40 bg-gradient-to-b from-transparent via-[#E11D2E]/75 to-transparent rotate-[26deg] will-change-transform transform-gpu"
+          />
+
+          <div className="flex flex-col items-start sm:items-end text-left sm:text-right">
+            <span className="inline-block pb-1 border-b border-[#E11D2E]/60 font-mono text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#E11D2E] uppercase">
               FINAL STAGE · DIRECT DISPATCH
             </span>
           </div>
 
-          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white max-w-xl">
-            Get In Touch & Connect
-          </h2>
+          <div className="mt-4 sm:mt-5 text-left sm:text-center">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+              Get In Touch & Connect
+            </h2>
 
-          <p className="mt-2 text-xs sm:text-sm font-mono text-zinc-500 dark:text-zinc-400">
-            Open for software roles, technical collaborations, and inquiries
-          </p>
+            <p className="mt-2.5 text-xs sm:text-sm font-mono text-zinc-600 dark:text-zinc-400 max-w-lg sm:mx-auto leading-relaxed">
+              Open for software roles, technical collaborations, and inquiries
+            </p>
+          </div>
 
-          {/* Downward laser beacon line */}
-          <div className="w-[1.5px] h-12 sm:h-16 mt-4 bg-gradient-to-b from-[#E11D2E] via-[#FF3B4D] to-transparent shadow-[0_0_10px_rgba(225,29,46,0.8)]" />
+          <div className="mt-6 flex items-center justify-start sm:justify-start">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#E11D2E]/40 bg-[#E11D2E]/10 font-mono text-[10px] sm:text-xs font-semibold tracking-[0.18em] text-[#E11D2E] uppercase">
+              <span>STATUS · OPEN FOR COLLABORATION</span>
+              <svg
+                className="w-3.5 h-3.5 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.25"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </span>
+          </div>
         </div>
       </div>
 

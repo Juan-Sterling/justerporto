@@ -24,6 +24,7 @@ export default function MonolithSplitTransition() {
   const watermarkRef = useRef(null);
   const stageAuraRef = useRef(null);
   const stageContentRef = useRef(null);
+  const centerSpineRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -32,8 +33,9 @@ export default function MonolithSplitTransition() {
       gsap.set(rightGateRef.current, { xPercent: 0, force3D: true });
       gsap.set(verticalLaserRef.current, { scaleY: 0, opacity: 0, transformOrigin: 'center center' });
       gsap.set(watermarkRef.current, { scale: 0.9, opacity: 0.9, force3D: true });
-      gsap.set(stageAuraRef.current, { scale: 0.5, opacity: 0 });
-      gsap.set(stageContentRef.current, { y: 20, opacity: 0 });
+      gsap.set(stageAuraRef.current, { scaleY: 0.6, opacity: 0, force3D: true });
+      gsap.set(stageContentRef.current, { y: 18, opacity: 0, force3D: true });
+      gsap.set(centerSpineRef.current, { scaleY: 0, opacity: 0, transformOrigin: 'center center', force3D: true });
 
       // 2. Scroll-driven Pin & Scrub Timeline
       const tl = gsap.timeline({
@@ -66,8 +68,8 @@ export default function MonolithSplitTransition() {
 
       // Step 2: Inner Stage lights up behind the gates
       tl.to(stageAuraRef.current, {
-        scale: 1.25,
-        opacity: 0.85,
+        scaleY: 1,
+        opacity: 0.9,
         duration: 0.35,
         ease: 'power2.out',
       }, 0.2)
@@ -75,6 +77,12 @@ export default function MonolithSplitTransition() {
         y: 0,
         opacity: 1,
         duration: 0.35,
+        ease: 'power3.out',
+      }, 0.25)
+      .to(centerSpineRef.current, {
+        scaleY: 1,
+        opacity: 1,
+        duration: 0.4,
         ease: 'power3.out',
       }, 0.25);
 
@@ -121,34 +129,57 @@ export default function MonolithSplitTransition() {
       {/* ----------------------------------------------------------- */}
       {/* INNER STAGE: Revealed behind the gates                      */}
       {/* ----------------------------------------------------------- */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none overflow-hidden">
-        {/* Stage Aurora / Ambient Crimson Flare */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none overflow-hidden px-5 sm:px-8">
+        {/* Vertical Monolith Shaft Wash (Lightweight radial ellipse) */}
         <div
           ref={stageAuraRef}
-          className="absolute w-[320px] sm:w-[540px] h-[320px] sm:h-[540px] rounded-full bg-[radial-gradient(circle,rgba(225,29,46,0.30)_0%,rgba(225,29,46,0.06)_50%,transparent_75%)] blur-2xl pointer-events-none will-change-transform transform-gpu"
+          className="absolute w-64 sm:w-96 h-[68vh] bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.16)_0%,rgba(225,29,46,0.04)_48%,transparent_72%)] pointer-events-none will-change-transform transform-gpu"
         />
 
-        {/* Stage Headline Beacon */}
+        {/* Stage Headline Beacon: Dual-Column Split Around Vertical Seam */}
         <div
           ref={stageContentRef}
-          className="relative z-10 flex flex-col items-center text-center px-4 will-change-transform transform-gpu"
+          className="relative z-10 w-full max-w-3xl flex flex-col sm:grid sm:grid-cols-[1fr_1.5px_1.35fr] sm:items-center gap-4 sm:gap-8 will-change-transform transform-gpu"
         >
-          <div className="flex items-center justify-center mb-3">
-            <span className="font-mono text-xs sm:text-sm font-semibold tracking-widest text-[#E11D2E] uppercase">
-              STAGE 04 · ACADEMIC ROOTS
+          {/* Left Column: Stage Number & Origin Classification */}
+          <div className="flex flex-col items-start sm:items-end text-left sm:text-right">
+            <div className="flex items-baseline sm:flex-col sm:items-end gap-3 sm:gap-1">
+              <span className="font-display text-4xl sm:text-6xl md:text-7xl font-black leading-none tracking-tighter text-zinc-900 dark:text-white">
+                04
+              </span>
+              <span className="font-mono text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#E11D2E] uppercase">
+                STAGE 04 · ACADEMIC ROOTS
+              </span>
+            </div>
+
+            <span className="mt-2 font-mono text-[10px] sm:text-xs tracking-widest text-zinc-500 dark:text-zinc-400 uppercase">
+              DISCIPLINE · ENGINEERING
             </span>
           </div>
 
-          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white max-w-xl">
-            Formal Education & Credentials
-          </h2>
+          {/* Mobile Horizontal Hairline Divider */}
+          <div
+            className="sm:hidden w-full h-[1px] bg-gradient-to-r from-[#E11D2E] via-zinc-300 dark:via-zinc-700 to-transparent"
+            aria-hidden="true"
+          />
 
-          <p className="mt-2 text-xs sm:text-sm font-mono text-zinc-500 dark:text-zinc-400">
-            Academic foundation, coursework, and degree milestones
-          </p>
+          {/* Desktop Center Vertical Seam Spine (Echoes Monolith Split) */}
+          <div
+            ref={centerSpineRef}
+            className="hidden sm:block w-[1.5px] h-32 md:h-36 bg-gradient-to-b from-transparent via-[#E11D2E] to-transparent will-change-transform transform-gpu"
+            aria-hidden="true"
+          />
 
-          {/* Downward laser beacon line */}
-          <div className="w-[1.5px] h-12 sm:h-16 mt-4 bg-gradient-to-b from-[#E11D2E] via-[#FF3B4D] to-transparent shadow-[0_0_10px_rgba(225,29,46,0.8)]" />
+          {/* Right Column: Section Title & Description */}
+          <div className="flex flex-col items-start text-left">
+            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-900 dark:text-white">
+              Formal Education & Credentials
+            </h2>
+
+            <p className="mt-2.5 text-xs sm:text-sm font-mono text-zinc-600 dark:text-zinc-400 max-w-md leading-relaxed">
+              Academic foundation, coursework, and degree milestones
+            </p>
+          </div>
         </div>
       </div>
 

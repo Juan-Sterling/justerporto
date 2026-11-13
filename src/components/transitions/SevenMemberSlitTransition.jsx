@@ -60,14 +60,16 @@ export default function SevenMemberSlitTransition() {
   const watermarkRef = useRef(null);
   const stageAuraRef = useRef(null);
   const stageContentRef = useRef(null);
+  const stageTicksRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       // 1. Initial Setup
       gsap.set(slitRefs.current, { yPercent: 0, force3D: true });
       gsap.set(watermarkRef.current, { scale: 0.9, opacity: 0.9, force3D: true });
-      gsap.set(stageAuraRef.current, { scale: 0.5, opacity: 0 });
-      gsap.set(stageContentRef.current, { y: 20, opacity: 0 });
+      gsap.set(stageAuraRef.current, { scale: 0.65, opacity: 0, force3D: true });
+      gsap.set(stageContentRef.current, { y: 20, opacity: 0, force3D: true });
+      gsap.set(stageTicksRef.current, { scaleX: 0.4, opacity: 0, transformOrigin: 'left center', force3D: true });
 
       // 2. Scroll-driven Pin & Scrub Timeline
       const tl = gsap.timeline({
@@ -94,8 +96,8 @@ export default function SevenMemberSlitTransition() {
 
       // Step 2: Inner Stage Entrance lights up behind the slits
       tl.to(stageAuraRef.current, {
-        scale: 1.25,
-        opacity: 0.85,
+        scale: 1.15,
+        opacity: 0.9,
         duration: 0.4,
         ease: 'power2.out',
       }, 0.2)
@@ -104,7 +106,13 @@ export default function SevenMemberSlitTransition() {
           opacity: 1,
           duration: 0.35,
           ease: 'power3.out',
-        }, 0.25);
+        }, 0.25)
+        .to(stageTicksRef.current, {
+          scaleX: 1,
+          opacity: 1,
+          duration: 0.35,
+          ease: 'power2.out',
+        }, 0.32);
 
       // Step 3: Watermark expands and disperses
       tl.to(watermarkRef.current, {
@@ -151,33 +159,59 @@ export default function SevenMemberSlitTransition() {
         ref={stageRef}
         className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none overflow-hidden"
       >
-        {/* Stage Aurora / Ambient Crimson Flare */}
+        {/* Stage Left-Biased Ambient Crimson Wash (GPU-friendly, no heavy blur filter) */}
         <div
           ref={stageAuraRef}
-          className="absolute w-[320px] sm:w-[540px] h-[320px] sm:h-[540px] rounded-full bg-[radial-gradient(circle,rgba(225,29,46,0.32)_0%,rgba(225,29,46,0.08)_50%,transparent_75%)] blur-2xl pointer-events-none will-change-transform transform-gpu"
+          className="absolute w-[340px] sm:w-[640px] h-[340px] sm:h-[520px] rounded-full bg-[radial-gradient(ellipse_at_28%_50%,rgba(225,29,46,0.20)_0%,rgba(225,29,46,0.05)_48%,transparent_72%)] pointer-events-none will-change-transform transform-gpu"
         />
 
-        {/* Stage Headline Beacon */}
+        {/* Stage Headline Beacon: Editorial Career Ledger */}
         <div
           ref={stageContentRef}
-          className="relative z-10 flex flex-col items-center text-center px-4 will-change-transform transform-gpu"
+          className="relative z-10 w-full max-w-2xl px-6 sm:px-10 text-left will-change-transform transform-gpu"
         >
-          <div className="flex items-center justify-center mb-3">
-            <span className="font-mono text-xs sm:text-sm font-semibold tracking-widest text-[#E11D2E] uppercase">
-              STAGE 02 · WORK HISTORY
-            </span>
+          {/* Giant Background Stage Index */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none select-none absolute -top-8 sm:-top-12 left-4 sm:left-6 font-display text-[5.5rem] sm:text-[8rem] font-black leading-none tracking-tighter text-zinc-900/[0.06] dark:text-white/[0.06]"
+          >
+            02
+          </span>
+
+          {/* Left Crimson Timeline Accent Block */}
+          <div className="relative border-l-2 border-[#E11D2E] pl-4 sm:pl-6">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-mono text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#E11D2E] uppercase">
+                STAGE 02 · WORK HISTORY
+              </span>
+            </div>
+
+            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] text-zinc-900 dark:text-white">
+              Engineering Roles & Experience
+            </h2>
+
+            <p className="mt-2.5 text-xs sm:text-sm font-mono text-zinc-600 dark:text-zinc-400 max-w-lg leading-relaxed">
+              Scroll down to explore production contributions and software milestones
+            </p>
           </div>
 
-          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white max-w-xl">
-            Engineering Roles & Experience
-          </h2>
-
-          <p className="mt-2 text-xs sm:text-sm font-mono text-zinc-500 dark:text-zinc-400">
-            Scroll down to explore production contributions and software milestones
-          </p>
-
-          {/* Downward laser beacon line */}
-          <div className="w-[1.5px] h-12 sm:h-16 mt-4 bg-gradient-to-b from-[#E11D2E] via-[#FF3B4D] to-transparent shadow-[0_0_10px_rgba(225,29,46,0.8)]" />
+          {/* 7-Column Staggered Sequence Bar (Echoing 7 Slit Curtains) */}
+          <div
+            ref={stageTicksRef}
+            className="mt-6 pl-4 sm:pl-6 flex items-center gap-1.5 sm:gap-2 will-change-transform transform-gpu"
+            aria-hidden="true"
+          >
+            {MEMBERS.map((m, idx) => (
+              <span
+                key={`tick-${m.id}`}
+                className={
+                  idx === 1
+                    ? 'h-[3px] w-8 sm:w-12 rounded-full bg-[#E11D2E]'
+                    : 'h-[2px] w-4 sm:w-6 rounded-full bg-zinc-300 dark:bg-zinc-700'
+                }
+              />
+            ))}
+          </div>
         </div>
       </div>
 

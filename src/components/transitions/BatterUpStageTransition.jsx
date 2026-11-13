@@ -24,6 +24,7 @@ export default function BatterUpStageTransition() {
   const watermarkRef = useRef(null);
   const stageAuraRef = useRef(null);
   const stageContentRef = useRef(null);
+  const hudRulesRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -32,8 +33,9 @@ export default function BatterUpStageTransition() {
       gsap.set(bottomDoorRef.current, { yPercent: 0, force3D: true });
       gsap.set(laserBeamRef.current, { scaleX: 0, opacity: 0, transformOrigin: 'center center' });
       gsap.set(watermarkRef.current, { scale: 0.9, opacity: 0.9, force3D: true });
-      gsap.set(stageAuraRef.current, { scale: 0.5, opacity: 0 });
-      gsap.set(stageContentRef.current, { y: 20, opacity: 0 });
+      gsap.set(stageAuraRef.current, { scaleX: 0.55, opacity: 0, force3D: true });
+      gsap.set(stageContentRef.current, { y: 18, opacity: 0, force3D: true });
+      gsap.set(hudRulesRef.current, { scaleX: 0.3, opacity: 0, transformOrigin: 'center center', force3D: true });
 
       // 2. Scroll-driven Pin & Scrub Timeline
       const tl = gsap.timeline({
@@ -66,8 +68,8 @@ export default function BatterUpStageTransition() {
 
       // Step 2: Inner Stage lights up behind the blast doors
       tl.to(stageAuraRef.current, {
-        scale: 1.25,
-        opacity: 0.85,
+        scaleX: 1,
+        opacity: 0.9,
         duration: 0.35,
         ease: 'power2.out',
       }, 0.2)
@@ -75,6 +77,12 @@ export default function BatterUpStageTransition() {
         y: 0,
         opacity: 1,
         duration: 0.35,
+        ease: 'power3.out',
+      }, 0.25)
+      .to(hudRulesRef.current, {
+        scaleX: 1,
+        opacity: 1,
+        duration: 0.4,
         ease: 'power3.out',
       }, 0.25);
 
@@ -121,34 +129,46 @@ export default function BatterUpStageTransition() {
       {/* ----------------------------------------------------------- */}
       {/* INNER STAGE: Revealed behind the blast doors                */}
       {/* ----------------------------------------------------------- */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none overflow-hidden">
-        {/* Stage Aurora / Ambient Crimson Flare */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none overflow-hidden px-4 sm:px-6">
+        {/* Horizontal Stadium Spotlight Wash (Lightweight radial ellipse) */}
         <div
           ref={stageAuraRef}
-          className="absolute w-[320px] sm:w-[540px] h-[320px] sm:h-[540px] rounded-full bg-[radial-gradient(circle,rgba(225,29,46,0.30)_0%,rgba(225,29,46,0.06)_50%,transparent_75%)] blur-2xl pointer-events-none will-change-transform transform-gpu"
+          className="absolute w-full max-w-4xl h-44 sm:h-60 bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.22)_0%,rgba(225,29,46,0.05)_50%,transparent_75%)] pointer-events-none will-change-transform transform-gpu"
         />
 
-        {/* Stage Headline Beacon */}
-        <div
-          ref={stageContentRef}
-          className="relative z-10 flex flex-col items-center text-center px-4 will-change-transform transform-gpu"
-        >
-          <div className="flex items-center justify-center mb-3">
-            <span className="font-mono text-xs sm:text-sm font-semibold tracking-widest text-[#E11D2E] uppercase">
-              STAGE 03 · TECHNICAL CAPABILITIES
-            </span>
+        {/* Stage Headline Beacon: Wide Stadium HUD Frame */}
+        <div className="relative z-10 w-full max-w-2xl">
+          {/* Top & Bottom Expanding Horizontal Laser Rules */}
+          <div
+            ref={hudRulesRef}
+            className="pointer-events-none absolute inset-0 will-change-transform transform-gpu"
+            aria-hidden="true"
+          >
+            <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#E11D2E]/80 to-transparent" />
+            <div className="absolute bottom-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#E11D2E]/80 to-transparent" />
+            {/* Corner HUD Brackets */}
+            <span className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#E11D2E]" />
+            <span className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#E11D2E]" />
+            <span className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#E11D2E]" />
+            <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#E11D2E]" />
           </div>
 
-          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white max-w-xl">
-            Engineering Arsenal & Skills
-          </h2>
+          <div
+            ref={stageContentRef}
+            className="relative flex flex-col items-center text-center px-5 py-7 sm:px-10 sm:py-9 will-change-transform transform-gpu"
+          >
+            <span className="inline-flex items-center px-2.5 py-1 border border-[#E11D2E]/50 bg-[#E11D2E]/10 font-mono text-[10px] sm:text-xs font-semibold tracking-[0.2em] text-[#E11D2E] uppercase">
+              STAGE 03 · TECHNICAL CAPABILITIES
+            </span>
 
-          <p className="mt-2 text-xs sm:text-sm font-mono text-zinc-500 dark:text-zinc-400">
-            Unlocking languages, frameworks, architecture and development proficiencies
-          </p>
+            <h2 className="mt-4 font-display text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+              Engineering Arsenal & Skills
+            </h2>
 
-          {/* Downward laser beacon line */}
-          <div className="w-[1.5px] h-12 sm:h-16 mt-4 bg-gradient-to-b from-[#E11D2E] via-[#FF3B4D] to-transparent shadow-[0_0_10px_rgba(225,29,46,0.8)]" />
+            <p className="mt-2.5 text-xs sm:text-sm font-mono text-zinc-600 dark:text-zinc-400 max-w-lg leading-relaxed">
+              Unlocking languages, frameworks, architecture and development proficiencies
+            </p>
+          </div>
         </div>
       </div>
 
