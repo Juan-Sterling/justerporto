@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WelcomeScreen from './components/WelcomeScreen';
@@ -17,7 +17,10 @@ import BaemonBackground from './components/BaemonBackground';
 // import BaemonRainBackground from './components/BaemonRainBackground';
 // import WorkBackground from './components/WorkBackground';
 import ReactiveAmbientGlow from './components/ReactiveAmbientGlow';
-import LaserSectionDivider from './components/LaserSectionDivider';
+import SevenMemberSlitTransition from './components/transitions/SevenMemberSlitTransition';
+import BatterUpStageTransition from './components/transitions/BatterUpStageTransition';
+import MonolithSplitTransition from './components/transitions/MonolithSplitTransition';
+import EncoreDiagonalShutterTransition from './components/transitions/EncoreDiagonalShutterTransition';
 import { SkillModalProvider } from './context/SkillModalContext';
 import { SmoothScrollProvider } from './context/SmoothScrollContext';
 import SideProfilePage from './pages/SideProfilePage';
@@ -305,13 +308,13 @@ export default function App() {
                 portalEntranceTrigger={portalEntranceTrigger}
               />
               <About />
-              <LaserSectionDivider />
+              <SevenMemberSlitTransition />
               <Experience />
-              <LaserSectionDivider />
+              <BatterUpStageTransition />
               <Skills />
-              <LaserSectionDivider />
+              <MonolithSplitTransition />
               <Education />
-              <LaserSectionDivider />
+              <EncoreDiagonalShutterTransition />
               <Contact />
             </main>
 
