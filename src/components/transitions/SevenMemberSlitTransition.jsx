@@ -13,7 +13,7 @@ const MEMBERS = [
   {
     id: '02',
     name: 'PHARITA',
-    roles: ['Lead Vocalist', 'Main Visual'],
+    roles: ['Lead Vocalist', 'Visual'],
   },
   {
     id: '03',
@@ -33,12 +33,12 @@ const MEMBERS = [
   {
     id: '06',
     name: 'RORA',
-    roles: ['Vocalist', 'Dancer'],
+    roles: ['Vocalist', 'Dancer', 'Visual'],
   },
   {
     id: '07',
     name: 'CHIQUITA',
-    roles: ['Vocalist', 'Dancer', 'Maknae'],
+    roles: ['Vocalist', 'Dancer'],
   },
 ];
 
@@ -99,12 +99,12 @@ export default function SevenMemberSlitTransition() {
         duration: 0.4,
         ease: 'power2.out',
       }, 0.2)
-      .to(stageContentRef.current, {
-        y: 0,
-        opacity: 1,
-        duration: 0.35,
-        ease: 'power3.out',
-      }, 0.25);
+        .to(stageContentRef.current, {
+          y: 0,
+          opacity: 1,
+          duration: 0.35,
+          ease: 'power3.out',
+        }, 0.25);
 
       // Step 3: Watermark expands and disperses
       tl.to(watermarkRef.current, {
@@ -236,18 +236,15 @@ export default function SevenMemberSlitTransition() {
       </div>
 
       {/* ----------------------------------------------------------- */}
-      {/* "7 MONSTERS" CENTER WATERMARK (Zooms and disperses)        */}
+      {/* "BABY, I’M A MONSTER" CENTER WATERMARK (Zooms and disperses) */}
       {/* ----------------------------------------------------------- */}
       <div
         ref={watermarkRef}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none text-center px-4 will-change-transform transform-gpu"
         aria-hidden="true"
       >
-        <span className="block font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-widest text-zinc-950 dark:text-white drop-shadow-[0_0_24px_rgba(225,29,46,0.85)]">
-          7 MONSTERS
-        </span>
-        <span className="mt-1 block font-mono text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.3em] text-[#E11D2E] uppercase">
-          BABYMONS7ER · STAGE TRANSITION
+        <span className="block font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase tracking-widest text-zinc-950 dark:text-white drop-shadow-[0_0_24px_rgba(225,29,46,0.85)]">
+          BABY, I’M A MONSTER
         </span>
       </div>
     </div>

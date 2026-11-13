@@ -144,7 +144,7 @@ export default function MonolithSplitTransition() {
           </h2>
 
           <p className="mt-2 text-xs sm:text-sm font-mono text-zinc-500 dark:text-zinc-400">
-            Information Technology foundation at Universitas Kristen Maranatha
+            Academic foundation, coursework, and degree milestones
           </p>
 
           {/* Downward laser beacon line */}
@@ -159,22 +159,14 @@ export default function MonolithSplitTransition() {
         ref={leftGateRef}
         className="absolute top-0 bottom-0 left-0 w-[50.2%] bg-[#F4F4F6] dark:bg-[#0B0C10] border-r border-zinc-300 dark:border-zinc-800 shadow-2xl flex flex-col justify-between p-6 sm:p-12 overflow-hidden will-change-transform transform-gpu z-20"
       >
-        {/* Top Header Tag */}
+        {/* Top-Left Tag */}
         <div className="font-mono text-[10px] sm:text-xs text-zinc-400 dark:text-zinc-500 tracking-wider uppercase">
-          BABYMONSTER · MONOLITH GATE L
+          04 · ORIGIN
         </div>
 
-        {/* Center Vertical Barcode Motif */}
-        <div className="my-auto opacity-30 dark:opacity-40">
-          <div className="font-mono text-[9px] tracking-widest text-[#E11D2E] mb-1">
-            ORIGIN · SPEC-04
-          </div>
-          <div className="h-6 w-24 bg-gradient-to-r from-zinc-700 via-zinc-400 to-zinc-700 dark:from-zinc-300 dark:via-zinc-500 dark:to-zinc-300 mask-barcode" />
-        </div>
-
-        {/* Bottom Tag */}
+        {/* Bottom-Left Tag */}
         <div className="font-mono text-[10px] sm:text-xs text-zinc-400 dark:text-zinc-500 tracking-wider uppercase">
-          FOUNDATION ROOTS
+          ACADEMIC BACKGROUND
         </div>
       </div>
 
@@ -185,24 +177,14 @@ export default function MonolithSplitTransition() {
         ref={rightGateRef}
         className="absolute top-0 bottom-0 right-0 w-[50.2%] bg-[#F4F4F6] dark:bg-[#0B0C10] border-l border-zinc-300 dark:border-zinc-800 shadow-2xl flex flex-col justify-between p-6 sm:p-12 text-right overflow-hidden will-change-transform transform-gpu z-20"
       >
-        {/* Top Header Tag */}
+        {/* Top-Right Tag */}
         <div className="font-mono text-[10px] sm:text-xs text-zinc-400 dark:text-zinc-500 tracking-wider uppercase">
-          BABYMONSTER · MONOLITH GATE R
+          ARCHIVE
         </div>
 
-        {/* Center Spec Tag */}
-        <div className="my-auto ml-auto opacity-30 dark:opacity-40">
-          <div className="font-mono text-[9px] tracking-widest text-[#E11D2E] mb-1">
-            DEBUT · DEGREE
-          </div>
-          <div className="font-mono text-xs font-bold text-zinc-700 dark:text-zinc-300">
-            S.Kom. INFORMATICS
-          </div>
-        </div>
-
-        {/* Bottom Tag */}
+        {/* Bottom-Right Tag */}
         <div className="font-mono text-[10px] sm:text-xs text-zinc-400 dark:text-zinc-500 tracking-wider uppercase">
-          MARANATHA ALUMNI
+          STAGE 04
         </div>
       </div>
 
