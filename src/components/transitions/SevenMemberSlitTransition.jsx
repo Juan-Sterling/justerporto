@@ -5,13 +5,41 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const MEMBERS = [
-  { id: '01', name: 'RUKA', role: 'RAP' },
-  { id: '02', name: 'PHARITA', role: 'VOCAL' },
-  { id: '03', name: 'ASA', role: 'RAP' },
-  { id: '04', name: 'AHYEON', role: 'ALL ROUND' },
-  { id: '05', name: 'RAMI', role: 'VOCAL' },
-  { id: '06', name: 'RORA', role: 'VOCAL' },
-  { id: '07', name: 'CHIQUITA', role: 'DANCE' },
+  {
+    id: '01',
+    name: 'RUKA',
+    roles: ['Main Dancer', 'Main Rapper'],
+  },
+  {
+    id: '02',
+    name: 'PHARITA',
+    roles: ['Lead Vocalist', 'Main Visual'],
+  },
+  {
+    id: '03',
+    name: 'ASA',
+    roles: ['Main Rapper', 'Lead Dancer', 'Sub-Vocalist'],
+  },
+  {
+    id: '04',
+    name: 'AHYEON',
+    roles: ['Center', 'Main Vocalist', 'Lead Rapper', 'Lead Dancer', 'Visual'],
+  },
+  {
+    id: '05',
+    name: 'RAMI',
+    roles: ['Main Vocalist', 'Lead Dancer', 'Sub-Rapper', 'Visual'],
+  },
+  {
+    id: '06',
+    name: 'RORA',
+    roles: ['Vocalist', 'Dancer'],
+  },
+  {
+    id: '07',
+    name: 'CHIQUITA',
+    roles: ['Vocalist', 'Dancer', 'Maknae'],
+  },
 ];
 
 /**
@@ -165,7 +193,7 @@ export default function SevenMemberSlitTransition() {
             <div
               key={member.id}
               ref={(el) => { slitRefs.current[i] = el; }}
-              className="absolute top-0 bottom-0 bg-[#F4F4F6] dark:bg-[#0B0C10] border-r border-zinc-300/80 dark:border-zinc-800/90 shadow-2xl flex flex-col items-center justify-between py-8 sm:py-14 overflow-hidden will-change-transform transform-gpu z-20"
+              className="absolute top-0 bottom-0 bg-[#F4F4F6] dark:bg-[#0B0C10] border-r border-zinc-300/80 dark:border-zinc-800/90 shadow-2xl flex flex-col items-center justify-between py-6 sm:py-10 md:py-12 overflow-hidden will-change-transform transform-gpu z-20"
               style={{
                 left: `${leftPercent}%`,
                 width: `${widthPercent}%`,
@@ -175,26 +203,32 @@ export default function SevenMemberSlitTransition() {
               <div className="absolute top-0 bottom-0 right-0 w-[1.5px] bg-gradient-to-b from-transparent via-[#E11D2E]/75 to-transparent pointer-events-none shadow-[0_0_8px_rgba(225,29,46,0.6)]" />
 
               {/* Top Member Number */}
-              <div className="flex flex-col items-center gap-1 z-10">
+              <div className="flex flex-col items-center gap-1 z-10 shrink-0">
                 <span className="font-mono text-[10px] sm:text-xs font-bold text-[#E11D2E] tracking-widest">
                   {member.id}
                 </span>
-                <span className="w-1 h-3 rounded-full bg-[#E11D2E]/40" />
+                <span className="w-1 h-2.5 sm:h-3 rounded-full bg-[#E11D2E]/40" />
               </div>
 
               {/* Center Member Name in Elegant Vertical Typography */}
-              <div className="z-10 flex flex-col items-center justify-center my-auto">
+              <div className="z-10 flex flex-col items-center justify-center my-auto py-2">
                 <span className="[writing-mode:vertical-rl] rotate-180 font-display text-[11px] sm:text-sm md:text-base lg:text-lg font-black tracking-[0.25em] text-zinc-800 dark:text-zinc-200 uppercase select-none">
                   {member.name}
                 </span>
               </div>
 
-              {/* Bottom Role Micro-Tag */}
-              <div className="flex flex-col items-center gap-1 z-10">
-                <span className="w-1 h-3 rounded-full bg-[#E11D2E]/40" />
-                <span className="font-mono text-[8px] sm:text-[9px] font-semibold text-zinc-500 dark:text-zinc-400 tracking-tighter uppercase">
-                  {member.role}
-                </span>
+              {/* Bottom Roles Stack */}
+              <div className="flex flex-col items-center gap-0.5 sm:gap-1 z-10 w-full px-0.5 sm:px-1 text-center shrink-0">
+                <span className="w-1 h-2 sm:h-2.5 rounded-full bg-[#E11D2E]/40 mb-0.5" />
+                {member.roles.map((roleText, rIdx) => (
+                  <span
+                    key={`${member.id}-role-${rIdx}`}
+                    className="font-sans sm:font-mono text-[6.5px] sm:text-[7.5px] md:text-[8.5px] lg:text-[9.5px] font-semibold text-zinc-600 dark:text-zinc-400 tracking-tight leading-tight uppercase max-w-full truncate block"
+                    title={roleText}
+                  >
+                    {roleText}
+                  </span>
+                ))}
               </div>
             </div>
           );
