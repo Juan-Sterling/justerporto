@@ -108,7 +108,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       // ------------------------------------------
       gsap.set('.welcome-emblem', { scale: 0, rotation: -25, opacity: 0 });
       gsap.set('.welcome-laser', { width: '0%' });
-      gsap.set('.welcome-dev-word', { maxWidth: '0px', opacity: 0, scale: 0.9 });
+      gsap.set('.welcome-dev-word', { maxWidth: '0px', opacity: 0, scale: 0.9, overflow: 'hidden' });
       gsap.set('.welcome-progress-bar', { width: '0%' });
       gsap.set(flashRef.current, { opacity: 0 });
       gsap.set(flareRef.current, { scale: 0.4, opacity: 0 });
@@ -214,11 +214,14 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       // 5. Expand "DEVELOPER"
       // ------------------------------------------
       tl.to('.welcome-dev-word', {
-        maxWidth: '160px',
+        maxWidth: '185px',
         opacity: 1,
         scale: 1,
         duration: 0.65,
         ease: 'power3.out',
+        onComplete: () => {
+          gsap.set('.welcome-dev-word', { overflow: 'visible' });
+        },
       }, 0.95);
 
       // ------------------------------------------
@@ -688,8 +691,8 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           </span>
 
           {/* Smoothly expanding DEVELOPER Word */}
-          <span className="welcome-dev-word inline-flex items-center overflow-hidden will-change-transform">
-            <span className="pl-0.5 sm:pl-1.5 tracking-wider sm:tracking-widest uppercase font-extrabold text-[#E11D2E] whitespace-nowrap drop-shadow-[0_0_10px_rgba(225,29,46,0.7)]">
+          <span className="welcome-dev-word inline-flex items-center overflow-hidden py-3 -my-3 pr-3 -mr-3 will-change-transform">
+            <span className="pl-0.5 sm:pl-1.5 tracking-wider sm:tracking-widest uppercase font-extrabold text-[#E11D2E] whitespace-nowrap [text-shadow:0_0_5px_rgba(225,29,46,0.75),0_0_12px_rgba(225,29,46,0.45)]">
               DEVELOPER
             </span>
           </span>
