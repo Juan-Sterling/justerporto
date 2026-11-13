@@ -22,8 +22,8 @@ export const portfolioData = {
     passDetails: {
       name: "Juan Sterling",
       role: "Software Developer",
-      photo: "https://cdn.justermp.my.id/justerporto/1794471616671.jpg",
-      photoLight: "https://cdn.justermp.my.id/justerporto/1794472253352.jpg",
+      photo: "/images/profile/pass-photo-dark.jpg",
+      photoLight: "/images/profile/pass-photo-light.jpg",
     },
     headline: "Hi, I'm Juan Sterling Martua",
     narrative: [
