@@ -273,7 +273,7 @@ export default function App() {
           {/* MAIN BABYMONSTER PORTFOLIO: Kept mounted in the DOM to eliminate heavy re-mount lag */}
           <div
             style={{ display: isSideProfile ? 'none' : 'flex' }}
-            className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex-col selection:bg-[#E11D2E]/30 selection:text-white overflow-x-hidden w-full max-w-full"
+            className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex-col selection:bg-[#E11D2E]/30 selection:text-white overflow-x-clip w-full max-w-full"
           >
             {/* Opening Welcome Screen Animation */}
             {showWelcome && (

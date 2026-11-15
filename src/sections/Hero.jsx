@@ -18,7 +18,7 @@ const TAGLINE_VARIANT_ORDER = ['solid', 'crimson', 'split'];
 
 const TAGLINE_VARIANT_CLASSES = {
   solid: 'text-zinc-950 dark:text-white',
-  crimson: 'text-[#E11D2E] dark:drop-shadow-[0_0_12px_rgba(225,29,46,0.55)]',
+  crimson: 'text-[#E11D2E] dark:[text-shadow:0_0_12px_rgba(225,29,46,0.55)]',
 };
 
 /**
@@ -114,7 +114,7 @@ function TaglineBlock({
                 mass: 0.9,
               }}
               style={{ transformOrigin: desktop ? 'left center' : 'center center' }}
-              className={`${lineTextClass} font-sans will-change-transform`}
+              className={`${lineTextClass} font-sans`}
             >
               {prefix && (
                 <span className="font-light tracking-[0.08em] text-zinc-600 dark:text-zinc-400 mr-1">
@@ -228,13 +228,12 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
         autoAlpha: 0,
         y: 0,
         transformOrigin: '50% 50%',
-        force3D: true,
       });
     }
-    if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1, transformOrigin: '50% 50%', force3D: true });
-    if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
-    if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0, transformOrigin: '200px 200px', force3D: true });
-    if (portalAuraRef.current) gsap.set(portalAuraRef.current, { scale: 0.8, opacity: 0, force3D: true });
+    if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1, transformOrigin: '50% 50%' });
+    if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0, transformOrigin: '200px 200px' });
+    if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0, transformOrigin: '200px 200px' });
+    if (portalAuraRef.current) gsap.set(portalAuraRef.current, { scale: 0.8, opacity: 0 });
 
     if (contentWrapperRef.current) {
       gsap.set(contentWrapperRef.current, {
@@ -294,7 +293,6 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
         y: 0,
         duration: 1.25,
         ease: 'power3.out',
-        force3D: true,
       }, 0.08);
     }
     if (portalAuraRef.current) {
@@ -384,6 +382,21 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       // 1. Entrance Timeline (Plays once welcome screen dismisses)
       playFullHeroEntrance();
 
+      const restoreHeroAtTop = () => {
+        if (auroraContainerRef.current) gsap.set(auroraContainerRef.current, { autoAlpha: 1 });
+        if (auroraCenterRef.current) gsap.set(auroraCenterRef.current, { opacity: 1, scale: 1 });
+        if (fogLeftRef.current) gsap.set(fogLeftRef.current, { opacity: 1, scale: 1 });
+        if (fogRightRef.current) gsap.set(fogRightRef.current, { opacity: 1, scale: 1 });
+        if (contentWrapperRef.current) gsap.set(contentWrapperRef.current, { autoAlpha: 1, scale: 1, x: 0, y: 0 });
+        if (leftColRef.current) gsap.set(leftColRef.current, { autoAlpha: 1, x: 0, y: 0 });
+        if (portalContainerRef.current) gsap.set(portalContainerRef.current, { autoAlpha: 1, scale: 1, rotation: 0 });
+        if (desktopTaglineRef.current) gsap.set(desktopTaglineRef.current, { autoAlpha: 1, x: 0, y: 0 });
+        if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1 });
+        if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0 });
+        if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0 });
+        if (portalAuraRef.current) gsap.set(portalAuraRef.current, { opacity: 0.85, scale: 1 });
+      };
+
       // 2. Seamless Portal Zoom Timeline with pinSpacing: false
       // Explicitly locks all properties at timeline time 0 so that on SCROLL UP,
       // the Stage Aurora & Crimson Fog and all elements return 100% to their full opacity
@@ -397,22 +410,17 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
           pinSpacing: false, // Eliminates the 800px gap completely!
           scrub: 0.65, // Silky smooth inertial damping matching Lenis scroll momentum
           fastScrollEnd: false, // CRITICAL: NEVER force to progress 1 on rapid scroll-up!
-          preventOverlaps: true,
           anticipatePin: 1,
-          onLeaveBack: () => {
-            // Guarantee that when scrolled all the way to top, Hero & Aurora & Photos are 100% restored
-            if (auroraContainerRef.current) gsap.set(auroraContainerRef.current, { opacity: 1, visibility: 'visible' });
-            if (auroraCenterRef.current) gsap.set(auroraCenterRef.current, { opacity: 1, scale: 1 });
-            if (fogLeftRef.current) gsap.set(fogLeftRef.current, { opacity: 1, scale: 1 });
-            if (fogRightRef.current) gsap.set(fogRightRef.current, { opacity: 1, scale: 1 });
-            if (contentWrapperRef.current) gsap.set(contentWrapperRef.current, { opacity: 1, scale: 1, x: 0, y: 0, visibility: 'visible' });
-            if (leftColRef.current) gsap.set(leftColRef.current, { opacity: 1, x: 0, y: 0, visibility: 'visible' });
-            if (portalContainerRef.current) gsap.set(portalContainerRef.current, { opacity: 1, scale: 1, rotation: 0, visibility: 'visible' });
-            if (desktopTaglineRef.current) gsap.set(desktopTaglineRef.current, { opacity: 1, x: 0, y: 0, visibility: 'visible' });
-            if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1 });
-            if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0 });
-            if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0 });
-            if (portalAuraRef.current) gsap.set(portalAuraRef.current, { opacity: 0, scale: 0.8 });
+          onScrubComplete: (self) => {
+            // Fires only after scrub inertia settles, preventing race between scrub and instant reset
+            if (self.progress <= 0.001) {
+              restoreHeroAtTop();
+            }
+          },
+          onLeaveBack: (self) => {
+            if (self.progress <= 0.001) {
+              restoreHeroAtTop();
+            }
           },
         },
       });
@@ -507,9 +515,9 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       }
 
       // Step 4: BaemonPortalO GPU-Safe Scale-Up Zoom (0.04 -> 0.66)
-      // Responsive scale (12 on mobile, 15 on desktop) guarantees the aperture engulfs
-      // the screen while keeping the GPU texture well within hardware cache limits (<4096px)
-      const targetScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 12 : 15;
+      // Capped scale (9 on mobile, 10 on tablet/desktop) + wider half-split (±56) clears
+      // the viewport cleanly while staying safely under mobile/tablet 4096px GPU texture limits
+      const targetScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 9 : 10;
       if (ringScaleRef.current) {
         scrollTl.fromTo(
           ringScaleRef.current,
@@ -534,7 +542,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             x: 0,
           },
           {
-            x: -48,
+            x: -56,
             duration: 0.62,
             ease: 'sine.inOut',
             immediateRender: false,
@@ -549,7 +557,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
             x: 0,
           },
           {
-            x: 48,
+            x: 56,
             duration: 0.62,
             ease: 'sine.inOut',
             immediateRender: false,
@@ -682,13 +690,13 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       ref={heroRef}
       id="hero"
       style={{ opacity: 0 }}
-      className={`relative w-full h-screen min-h-[620px] flex items-center justify-center overflow-hidden select-none will-change-transform z-10 ${welcomeActive ? 'pointer-events-none' : ''
+      className={`relative w-full h-screen min-h-[620px] flex items-center justify-center overflow-hidden select-none z-10 ${welcomeActive ? 'pointer-events-none' : ''
         }`}
     >
       {/* 1. Dedicated Stage Aurora / Crimson Fog Atmosphere (RESTORED & Guaranteed on Scroll-Up) */}
       <div
         ref={auroraContainerRef}
-        className="absolute inset-0 pointer-events-none overflow-hidden select-none will-change-transform bg-[#FAFAFA] dark:bg-[#07080B] z-0"
+        className="absolute inset-0 pointer-events-none overflow-hidden select-none bg-[#FAFAFA] dark:bg-[#07080B] z-0"
         aria-hidden="true"
       >
         {/* Soft Stage Vignette Mask */}
@@ -697,19 +705,19 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
         {/* Primary Volumetric Crimson Aurora Fog (Center Top) */}
         <div
           ref={auroraCenterRef}
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] sm:w-[50rem] h-[22rem] sm:h-[30rem] rounded-[100%] bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.14)_0%,rgba(225,29,46,0.05)_45%,transparent_75%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.34)_0%,rgba(225,29,46,0.12)_50%,transparent_80%)] blur-xl sm:blur-2xl pointer-events-none will-change-transform transform-gpu"
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] sm:w-[50rem] h-[22rem] sm:h-[30rem] rounded-[100%] bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.14)_0%,rgba(225,29,46,0.05)_45%,transparent_75%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.34)_0%,rgba(225,29,46,0.12)_50%,transparent_80%)] blur-xl sm:blur-2xl pointer-events-none"
         />
 
         {/* Deep Ruby Ambient Smoke (Left Flank) */}
         <div
           ref={fogLeftRef}
-          className="absolute top-1/3 left-[15%] -translate-x-1/2 -translate-y-1/2 w-[22rem] sm:w-[28rem] h-[18rem] sm:h-[24rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(225,29,46,0.08)_0%,rgba(136,8,21,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(136,8,21,0.26)_0%,rgba(225,29,46,0.10)_45%,transparent_70%)] blur-lg sm:blur-xl pointer-events-none will-change-transform transform-gpu"
+          className="absolute top-1/3 left-[15%] -translate-x-1/2 -translate-y-1/2 w-[22rem] sm:w-[28rem] h-[18rem] sm:h-[24rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(225,29,46,0.08)_0%,rgba(136,8,21,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(136,8,21,0.26)_0%,rgba(225,29,46,0.10)_45%,transparent_70%)] blur-lg sm:blur-xl pointer-events-none"
         />
 
         {/* Soft Peach-Crimson Rim Glow (Right Flank) */}
         <div
           ref={fogRightRef}
-          className="absolute top-1/4 left-[85%] -translate-x-1/2 -translate-y-1/2 w-[20rem] sm:w-[26rem] h-[16rem] sm:h-[22rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,59,77,0.08)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,59,77,0.20)_0%,transparent_70%)] blur-lg sm:blur-xl pointer-events-none will-change-transform transform-gpu"
+          className="absolute top-1/4 left-[85%] -translate-x-1/2 -translate-y-1/2 w-[20rem] sm:w-[26rem] h-[16rem] sm:h-[22rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,59,77,0.08)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,59,77,0.20)_0%,transparent_70%)] blur-lg sm:blur-xl pointer-events-none"
         />
 
         {/* Smooth Bottom Dissolve to blend seamlessly with main page */}
@@ -719,11 +727,11 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       {/* 2. BaemonPortalO Emblem: Centered in Hero section */}
       <div
         ref={portalContainerRef}
-        className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center will-change-transform"
+        className="absolute inset-0 pointer-events-none z-10 flex items-center justify-center"
       >
         <div
           ref={portalEntranceRef}
-          className="flex items-center justify-center will-change-transform opacity-0"
+          className="flex items-center justify-center opacity-0"
         >
           <BaemonPortalO
             ringScaleRef={ringScaleRef}
@@ -737,13 +745,13 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
       {/* 3. Hero Content Wrapper: Split cleanly above/below portal on mobile, left column on desktop */}
       <div
         ref={contentWrapperRef}
-        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pointer-events-auto will-change-transform h-full flex flex-col justify-between pt-[86px] pb-24 sm:pt-24 sm:pb-28 lg:h-auto lg:block lg:py-0"
+        className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pointer-events-auto h-full flex flex-col justify-between pt-[86px] pb-24 sm:pt-24 sm:pb-28 lg:h-auto lg:block lg:py-0"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full h-full lg:h-auto">
           {/* Left Column / Mobile Responsive Wrapper */}
           <div
             ref={leftColRef}
-            className="lg:col-span-5 xl:col-span-5 flex flex-col justify-between h-full lg:h-auto lg:justify-start lg:space-y-6 max-w-lg lg:max-w-[500px] xl:max-w-[540px] text-center lg:text-left items-center lg:items-start mx-auto lg:mx-0 w-full will-change-transform"
+            className="lg:col-span-5 xl:col-span-5 flex flex-col justify-between h-full lg:h-auto lg:justify-start lg:space-y-6 max-w-lg lg:max-w-[500px] xl:max-w-[540px] text-center lg:text-left items-center lg:items-start mx-auto lg:mx-0 w-full"
           >
             {/* Upper Group (Centered above portal on mobile, top of column on desktop) */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-1.5 sm:space-y-2.5 w-full">
@@ -753,7 +761,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                 <motion.div
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-[11px] sm:text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform cursor-default shrink-0"
+                  className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-[11px] sm:text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors cursor-default shrink-0"
                 >
                   <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#E11D2E]" />
                   <span className="font-medium whitespace-nowrap">
@@ -765,7 +773,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                 <motion.div
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-[11px] sm:text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors will-change-transform cursor-default shrink-0"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/95 dark:bg-[#141414] border border-zinc-200/90 dark:border-[#2A2A2A] text-[11px] sm:text-xs font-mono text-zinc-700 dark:text-[#D4D4D8] shadow-xs hover:border-[#E11D2E]/40 transition-colors cursor-default shrink-0"
                 >
                   <span className="relative flex h-2 w-2 shrink-0">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
@@ -783,16 +791,16 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                 <div className="space-y-1.5 sm:space-y-2.5 min-w-0 flex flex-col items-center lg:items-start">
                   <h1
                     ref={headlineRef}
-                    className="font-display text-[2.1rem] xs:text-4xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.05] tracking-tighter will-change-transform flex flex-row flex-wrap items-center justify-center gap-x-2 sm:gap-x-3 gap-y-1.5 lg:grid lg:grid-cols-[auto_auto] lg:items-center lg:justify-start lg:gap-x-2.5 lg:gap-y-1"
+                    className="font-display text-[2.1rem] xs:text-4xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold tracking-tight text-zinc-950 dark:text-white leading-[1.05] tracking-tighter flex flex-row flex-wrap items-center justify-center gap-x-2 sm:gap-x-3 gap-y-1.5 lg:grid lg:grid-cols-[auto_auto] lg:items-center lg:justify-start lg:gap-x-2.5 lg:gap-y-1"
                   >
                     <span className="sr-only">{personal.name}</span>
                     <span aria-hidden="true" className="block overflow-hidden py-0.5 -my-0.5 lg:col-span-2 lg:justify-self-start">
-                      <span className="hero-word-inner inline-block will-change-transform opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
+                      <span className="hero-word-inner inline-block opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
                         Juan
                       </span>
                     </span>
                     <span aria-hidden="true" className="block overflow-hidden py-0.5 -my-0.5 lg:justify-self-start">
-                      <span className="hero-word-inner inline-block will-change-transform opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
+                      <span className="hero-word-inner inline-block opacity-0 text-zinc-950 dark:text-white hover:text-[#E11D2E] transition-colors">
                         Sterling
                       </span>
                     </span>
@@ -801,7 +809,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                     <div aria-hidden="true" className="basis-full flex justify-center lg:basis-auto lg:inline-flex lg:justify-start">
                       <div
                         ref={emblemRef}
-                        className="relative inline-flex flex-col items-center justify-center shrink-0 mt-0.5 lg:-mt-1 select-none group cursor-default will-change-transform opacity-0"
+                        className="relative inline-flex flex-col items-center justify-center shrink-0 mt-0.5 lg:-mt-1 select-none group cursor-default opacity-0"
                         title="BAEMON // 07"
                       >
                         {/* Stylized Devil Horns */}
@@ -824,7 +832,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                   </h1>
 
                   {/* Dynamic Role with Typewriter & Blinking Caret */}
-                  <div ref={roleRef} className="inline-flex items-center gap-2 font-mono text-xs sm:text-base md:text-xl font-semibold tracking-tight min-h-[1.75rem] sm:min-h-[2.25rem] opacity-0 will-change-transform">
+                  <div ref={roleRef} className="inline-flex items-center gap-2 font-mono text-xs sm:text-base md:text-xl font-semibold tracking-tight min-h-[1.75rem] sm:min-h-[2.25rem] opacity-0">
                     <span className="text-[#E11D2E] font-bold select-none">//</span>
                     <span className="text-zinc-900 dark:text-zinc-100 font-medium tracking-normal">
                       {displayedRole}
@@ -840,7 +848,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
               {/* Mobile / Tablet Editorial Tagline (Centered below BaemonPortalO) */}
               <div
                 ref={taglineRef}
-                className="lg:hidden opacity-0 will-change-transform self-center text-center max-w-xs sm:max-w-md"
+                className="lg:hidden opacity-0 self-center text-center max-w-xs sm:max-w-md"
               >
                 <TaglineBlock
                   isTaglineArray={isTaglineArray}
@@ -858,7 +866,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                   whileTap={{ scale: 0.96 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   onClick={() => scrollToSection('experience')}
-                  className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 h-10 sm:h-12 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] text-white font-medium text-xs sm:text-sm transition-colors duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer overflow-hidden whitespace-nowrap will-change-transform"
+                  className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2 px-5 sm:px-6 h-10 sm:h-12 rounded-md bg-[#E11D2E] hover:bg-[#FF3B4D] text-white font-medium text-xs sm:text-sm transition-colors duration-200 shadow-md shadow-[#E11D2E]/25 hover:shadow-[#E11D2E]/50 cursor-pointer overflow-hidden whitespace-nowrap"
                 >
                   {/* Shimmer sweep effect */}
                   <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
@@ -873,7 +881,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                   whileHover={{ scale: 1.03, y: -1 }}
                   whileTap={{ scale: 0.96 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                  className="flex-1 sm:flex-initial group inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 h-10 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-colors duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform"
+                  className="flex-1 sm:flex-initial group inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 h-10 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-colors duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap"
                   aria-label="View CV Juan Sterling"
                 >
                   <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
@@ -887,7 +895,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
                   whileTap={{ scale: 0.96 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   onClick={() => scrollToSection('contact')}
-                  className="flex-1 sm:flex-initial group inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 h-10 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-colors duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap will-change-transform"
+                  className="flex-1 sm:flex-initial group inline-flex items-center justify-center gap-2 px-3.5 sm:px-5 h-10 sm:h-12 rounded-md bg-white/95 dark:bg-[#141414] hover:bg-zinc-50 dark:hover:bg-[#1c1c1c] text-zinc-900 dark:text-white border border-zinc-200/90 dark:border-[#2A2A2A] hover:border-[#E11D2E]/60 font-medium text-xs sm:text-sm transition-colors duration-200 cursor-pointer shadow-xs hover:shadow-sm whitespace-nowrap"
                 >
                   <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-[#A1A1AA] group-hover:text-[#E11D2E] transition-colors shrink-0" />
                   <span>Contact Me</span>
@@ -900,7 +908,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
           {/* Right Column: Editorial Tagline Replacing Hero Portrait on Desktop */}
           <div
             ref={desktopTaglineRef}
-            className="hidden lg:flex lg:col-span-7 xl:col-span-7 justify-end items-center h-full will-change-transform opacity-0 pointer-events-auto lg:pr-6 xl:pr-8"
+            className="hidden lg:flex lg:col-span-7 xl:col-span-7 justify-end items-center h-full opacity-0 pointer-events-auto lg:pr-6 xl:pr-8"
           >
             <div className="text-left max-w-[380px] xl:max-w-[460px] 2xl:max-w-[520px]">
               <TaglineBlock

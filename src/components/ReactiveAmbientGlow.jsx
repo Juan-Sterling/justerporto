@@ -52,7 +52,6 @@ export default function ReactiveAmbientGlow() {
           end: 'bottom bottom',
           scrub: 0.35, // Snappy, responsive scrub without trailing animation lag
           fastScrollEnd: true,
-          preventOverlaps: true,
         },
       });
 
