@@ -31,7 +31,7 @@
  * =============================================================================
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Code2 } from 'lucide-react';
 import gsap from 'gsap';
 
@@ -89,26 +89,34 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
     onCompleteRef.current = onComplete;
   });
 
-  const [activeGreeting, setActiveGreeting] = useState(GREETINGS[0].text);
+  const initialGreeting = GREETINGS[0].text;
 
   useEffect(() => {
     // Prevent background scrolling while welcome screen is active
     document.body.style.overflow = 'hidden';
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          document.body.style.overflow = '';
-          onCompleteRef.current?.();
-        },
-      });
+    let ctx;
+    let raf1 = 0;
+    let raf2 = 0;
+    let cancelled = false;
+
+    const startTimeline = () => {
+      if (cancelled) return;
+
+      ctx = gsap.context(() => {
+        const tl = gsap.timeline({
+          onComplete: () => {
+            document.body.style.overflow = '';
+            onCompleteRef.current?.();
+          },
+        });
 
       // ------------------------------------------
       // 1. Initial State Setup (All Modes)
       // ------------------------------------------
       gsap.set('.welcome-emblem', { scale: 0, rotation: -25, opacity: 0 });
       gsap.set('.welcome-laser', { width: '0%' });
-      gsap.set('.welcome-dev-word', { maxWidth: '0px', opacity: 0, scale: 0.9 });
+      gsap.set('.welcome-dev-word', { maxWidth: '0px', opacity: 0, scale: 0.9, overflow: 'hidden' });
       gsap.set('.welcome-progress-bar', { width: '0%' });
       gsap.set(flashRef.current, { opacity: 0 });
       gsap.set(flareRef.current, { scale: 0.4, opacity: 0 });
@@ -183,16 +191,17 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       // 3. Progress Counter (0% to 100%)
       // ------------------------------------------
       const progressObj = { value: 0 };
+      const progressBars = containerRef.current?.querySelectorAll('.welcome-progress-bar');
+      const progressTexts = containerRef.current?.querySelectorAll('.welcome-progress-text');
+      const greetingEls = containerRef.current?.querySelectorAll('.welcome-greeting-text');
       tl.to(progressObj, {
         value: 100,
         duration: 1.95,
         ease: 'power2.inOut',
         onUpdate: () => {
           const rounded = Math.round(progressObj.value);
-          const bars = containerRef.current?.querySelectorAll('.welcome-progress-bar');
-          const texts = containerRef.current?.querySelectorAll('.welcome-progress-text');
-          if (bars) bars.forEach(b => { b.style.width = `${rounded}%`; });
-          if (texts) texts.forEach(t => { t.textContent = `${rounded}%`; });
+          if (progressBars) progressBars.forEach(b => { b.style.width = `${rounded}%`; });
+          if (progressTexts) progressTexts.forEach(t => { t.textContent = `${rounded}%`; });
         },
       }, 0.1);
 
@@ -214,11 +223,14 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
       // 5. Expand "DEVELOPER"
       // ------------------------------------------
       tl.to('.welcome-dev-word', {
-        maxWidth: '160px',
+        maxWidth: '185px',
         opacity: 1,
         scale: 1,
         duration: 0.65,
         ease: 'power3.out',
+        onComplete: () => {
+          gsap.set('.welcome-dev-word', { overflow: 'visible' });
+        },
       }, 0.95);
 
       // ------------------------------------------
@@ -232,9 +244,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         duration: 0.16,
         ease: 'power2.in',
         onComplete: () => {
-          setActiveGreeting(GREETINGS[1].text);
-          const greetings = containerRef.current?.querySelectorAll('.welcome-greeting-text');
-          if (greetings) greetings.forEach(g => { g.textContent = GREETINGS[1].text; });
+          if (greetingEls) greetingEls.forEach(g => { g.textContent = GREETINGS[1].text; });
         },
       }, 0.95);
 
@@ -254,9 +264,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         duration: 0.15,
         ease: 'power2.in',
         onComplete: () => {
-          setActiveGreeting(GREETINGS[2].text);
-          const greetings = containerRef.current?.querySelectorAll('.welcome-greeting-text');
-          if (greetings) greetings.forEach(g => { g.textContent = GREETINGS[2].text; });
+          if (greetingEls) greetingEls.forEach(g => { g.textContent = GREETINGS[2].text; });
         },
       }, 1.45);
 
@@ -601,11 +609,20 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
         }
       }
 
-    }, containerRef);
+      }, containerRef);
+    };
+
+    // Wait for initial paint before starting GSAP timeline so frame 0 is visibly painted first
+    raf1 = window.requestAnimationFrame(() => {
+      raf2 = window.requestAnimationFrame(startTimeline);
+    });
 
     return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(raf1);
+      window.cancelAnimationFrame(raf2);
       document.body.style.overflow = '';
-      ctx.revert();
+      if (ctx) ctx.revert();
     };
   }, [exitMode]);
 
@@ -660,7 +677,7 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           <p
             className="welcome-greeting-text font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tight text-[#09090B] dark:text-white drop-shadow-[0_0_25px_rgba(225,29,46,0.3)] dark:drop-shadow-[0_0_35px_rgba(225,29,46,0.6)] select-none will-change-transform leading-[1.15] pt-1 sm:pt-2"
           >
-            {activeGreeting}
+            {initialGreeting}
           </p>
         </div>
 
@@ -688,8 +705,8 @@ export default function WelcomeScreen({ exitMode = 'sheesh', onStartExit, onComp
           </span>
 
           {/* Smoothly expanding DEVELOPER Word */}
-          <span className="welcome-dev-word inline-flex items-center overflow-hidden will-change-transform">
-            <span className="pl-0.5 sm:pl-1.5 tracking-wider sm:tracking-widest uppercase font-extrabold text-[#E11D2E] whitespace-nowrap drop-shadow-[0_0_10px_rgba(225,29,46,0.7)]">
+          <span className="welcome-dev-word inline-flex items-center overflow-hidden py-3 -my-3 pr-3 -mr-3 will-change-transform">
+            <span className="pl-0.5 sm:pl-1.5 tracking-wider sm:tracking-widest uppercase font-extrabold text-[#E11D2E] whitespace-nowrap [text-shadow:0_0_5px_rgba(225,29,46,0.75),0_0_12px_rgba(225,29,46,0.45)]">
               DEVELOPER
             </span>
           </span>

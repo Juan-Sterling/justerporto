@@ -282,7 +282,7 @@ export default function EncoreDiagonalShutterTransition() {
           </svg>
         </div>
 
-        <span className="block font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-widest text-[#E11D2E] drop-shadow-[0_0_24px_rgba(225,29,46,0.9)]">
+        <span className="block font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-widest text-[#E11D2E] [text-shadow:0_0_12px_rgba(225,29,46,0.75),0_0_24px_rgba(225,29,46,0.5)]">
           ENCORE
         </span>
         <span className="mt-2 block font-mono text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.3em] text-zinc-700 dark:text-zinc-300 uppercase">

@@ -1,15 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { flushSync } from 'react-dom';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WelcomeScreen from './components/WelcomeScreen';
 import Navbar from './components/Navbar';
 import Hero from './sections/Hero';
-import About from './sections/About';
-import Education from './sections/Education';
-import Skills from './sections/Skills';
-import Experience from './sections/Experience';
-import Contact from './sections/Contact';
-import Footer from './components/Footer';
 import BaemonBackground from './components/BaemonBackground';
 // [SAVED FOR FUTURE USE] Wave, Geometric & Rain Backgrounds:
 // import BaemonCrimsonWaveBackground from './components/BaemonCrimsonWaveBackground';
@@ -17,14 +11,32 @@ import BaemonBackground from './components/BaemonBackground';
 // import BaemonRainBackground from './components/BaemonRainBackground';
 // import WorkBackground from './components/WorkBackground';
 import ReactiveAmbientGlow from './components/ReactiveAmbientGlow';
-import SevenMemberSlitTransition from './components/transitions/SevenMemberSlitTransition';
-import BatterUpStageTransition from './components/transitions/BatterUpStageTransition';
-import MonolithSplitTransition from './components/transitions/MonolithSplitTransition';
-import EncoreDiagonalShutterTransition from './components/transitions/EncoreDiagonalShutterTransition';
 import { SkillModalProvider } from './context/SkillModalContext';
 import { SmoothScrollProvider } from './context/SmoothScrollContext';
-import SideProfilePage from './pages/SideProfilePage';
 import ToxicScreenTransition from './components/sideprofile/ToxicScreenTransition';
+
+const loadAbout = () => import('./sections/About');
+const loadSevenMemberSlitTransition = () => import('./components/transitions/SevenMemberSlitTransition');
+const loadExperience = () => import('./sections/Experience');
+const loadBatterUpStageTransition = () => import('./components/transitions/BatterUpStageTransition');
+const loadSkills = () => import('./sections/Skills');
+const loadMonolithSplitTransition = () => import('./components/transitions/MonolithSplitTransition');
+const loadEducation = () => import('./sections/Education');
+const loadEncoreDiagonalShutterTransition = () => import('./components/transitions/EncoreDiagonalShutterTransition');
+const loadContact = () => import('./sections/Contact');
+const loadFooter = () => import('./components/Footer');
+
+const About = lazy(loadAbout);
+const SevenMemberSlitTransition = lazy(loadSevenMemberSlitTransition);
+const Experience = lazy(loadExperience);
+const BatterUpStageTransition = lazy(loadBatterUpStageTransition);
+const Skills = lazy(loadSkills);
+const MonolithSplitTransition = lazy(loadMonolithSplitTransition);
+const Education = lazy(loadEducation);
+const EncoreDiagonalShutterTransition = lazy(loadEncoreDiagonalShutterTransition);
+const Contact = lazy(loadContact);
+const Footer = lazy(loadFooter);
+const SideProfilePage = lazy(() => import('./pages/SideProfilePage'));
 
 export default function App() {
   // Determine initial route based on URL path
@@ -247,7 +259,26 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [currentRoute]);
 
+  // Prefetch below-the-fold chunks quietly after WelcomeScreen starts playing
+  useEffect(() => {
+    if (isInitialSideProfile) return;
+    const timer = window.setTimeout(() => {
+      loadAbout();
+      loadSevenMemberSlitTransition();
+      loadExperience();
+      loadBatterUpStageTransition();
+      loadSkills();
+      loadMonolithSplitTransition();
+      loadEducation();
+      loadEncoreDiagonalShutterTransition();
+      loadContact();
+      loadFooter();
+    }, 1200);
+    return () => window.clearTimeout(timer);
+  }, [isInitialSideProfile]);
+
   const isSideProfile = currentRoute === '/sideprofile';
+  const showBelowFoldSections = !showWelcome || welcomeExiting;
 
   // Synchronize route class on document.documentElement for route-specific palette styling (Scrollbars, accents)
   useEffect(() => {
@@ -276,7 +307,7 @@ export default function App() {
           {/* MAIN BABYMONSTER PORTFOLIO: Kept mounted in the DOM to eliminate heavy re-mount lag */}
           <div
             style={{ display: isSideProfile ? 'none' : 'flex' }}
-            className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex-col selection:bg-[#E11D2E]/30 selection:text-white overflow-x-hidden w-full max-w-full"
+            className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex-col selection:bg-[#E11D2E]/30 selection:text-white overflow-x-clip w-full max-w-full"
           >
             {/* Opening Welcome Screen Animation */}
             {showWelcome && (
@@ -290,8 +321,8 @@ export default function App() {
             {/* Sticky Header Navigation */}
             <Navbar activeSection={activeSection} />
 
-            {/* Atmospheric BABYMONSTER Ambient Background Canvas */}
-            <BaemonBackground />
+            {/* Atmospheric BABYMONSTER Ambient Background Canvas (paused while WelcomeScreen covers viewport) */}
+            <BaemonBackground paused={(showWelcome && !welcomeExiting) || isSideProfile} />
 
             {/* [SAVED FOR FUTURE USE] Alternative Background Components: */}
             {/* <BaemonGeometricBackground /> */}
@@ -301,35 +332,45 @@ export default function App() {
             {/* GSAP Scroll-Driven Reactive Ambient Lighting Atmosphere */}
             <ReactiveAmbientGlow />
 
-            {/* Main Content Sections with Laser Horizon Transitions */}
+            {/* Main Content Sections with Full-Screen Stage Transitions */}
             <main className="flex-1 w-full relative z-10">
               <Hero
                 welcomeActive={showWelcome && !welcomeExiting}
                 portalEntranceTrigger={portalEntranceTrigger}
               />
-              <About />
-              <SevenMemberSlitTransition />
-              <Experience />
-              <BatterUpStageTransition />
-              <Skills />
-              <MonolithSplitTransition />
-              <Education />
-              <EncoreDiagonalShutterTransition />
-              <Contact />
+              {showBelowFoldSections && (
+                <Suspense fallback={null}>
+                  <About />
+                  <SevenMemberSlitTransition />
+                  <Experience />
+                  <BatterUpStageTransition />
+                  <Skills />
+                  <MonolithSplitTransition />
+                  <Education />
+                  <EncoreDiagonalShutterTransition />
+                  <Contact />
+                </Suspense>
+              )}
             </main>
 
             {/* Semantic Footer with Balanced Left-Right Layout */}
-            <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
+            {showBelowFoldSections && (
+              <Suspense fallback={null}>
+                <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
+              </Suspense>
+            )}
           </div>
 
 
 
           {/* SIDE PROFILE PAGE: Mounted only when active */}
           {isSideProfile && (
-            <SideProfilePage
-              isReady={sideProfileEntranceReady}
-              onBackToPortfolio={() => navigateTo('/')}
-            />
+            <Suspense fallback={null}>
+              <SideProfilePage
+                isReady={sideProfileEntranceReady}
+                onBackToPortfolio={() => navigateTo('/')}
+              />
+            </Suspense>
           )}
         </SkillModalProvider>
     </SmoothScrollProvider>

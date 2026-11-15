@@ -277,7 +277,7 @@ export default function SevenMemberSlitTransition() {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none text-center px-4 will-change-transform transform-gpu"
         aria-hidden="true"
       >
-        <span className="block font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase tracking-widest text-zinc-950 dark:text-white drop-shadow-[0_0_24px_rgba(225,29,46,0.85)]">
+        <span className="block font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black uppercase tracking-widest text-zinc-950 dark:text-white [text-shadow:0_0_12px_rgba(225,29,46,0.75),0_0_24px_rgba(225,29,46,0.5)]">
           BABY, I’M A MONSTER
         </span>
       </div>

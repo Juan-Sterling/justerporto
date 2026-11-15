@@ -233,7 +233,7 @@ export default function BatterUpStageTransition() {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 pointer-events-none text-center px-4 will-change-transform transform-gpu"
         aria-hidden="true"
       >
-        <span className="block font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-widest text-[#E11D2E] drop-shadow-[0_0_24px_rgba(225,29,46,0.9)]">
+        <span className="block font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-widest text-[#E11D2E] [text-shadow:0_0_12px_rgba(225,29,46,0.75),0_0_24px_rgba(225,29,46,0.5)]">
           BATTER UP!
         </span>
         <span className="mt-1 block font-mono text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.3em] text-zinc-700 dark:text-zinc-300 uppercase">

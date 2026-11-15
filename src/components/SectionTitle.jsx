@@ -53,16 +53,19 @@ export default function SectionTitle({
 
             {/* Last word that wraps naturally */}
             {lastWord && (
-              <span className="inline-block overflow-hidden py-1 -my-1">
+              <span className="inline-block overflow-hidden px-5 -mx-5 py-3 -my-3">
                 <span
-                  className={`inline-block transition-transform duration-700 ease-out will-change-transform ${
+                  className={`inline-block ease-out will-change-transform ${
                     highlightLastWord
-                      ? 'text-[#E11D2E] drop-shadow-[0_0_10px_rgba(225,29,46,0.3)] group-hover/title:drop-shadow-[0_0_14px_rgba(225,29,46,0.7)]'
+                      ? 'text-[#E11D2E] [text-shadow:0_0_6px_rgba(225,29,46,0.28)] group-hover/title:[text-shadow:0_0_6px_rgba(225,29,46,0.78),0_0_14px_rgba(225,29,46,0.48)]'
                       : 'text-[#09090B] dark:text-white'
                   }`}
                   style={{
-                    transform: isInView ? 'translateY(0)' : 'translateY(115%)',
-                    transitionDelay: `${leadingWords.length * 60 + 80}ms`,
+                    transform: isInView ? 'translateY(0)' : 'translateY(170%)',
+                    transitionProperty: 'transform, text-shadow',
+                    transitionDuration: '700ms, 300ms',
+                    transitionTimingFunction: 'cubic-bezier(0, 0, 0.2, 1), ease',
+                    transitionDelay: `${leadingWords.length * 60 + 80}ms, 0ms`,
                   }}
                 >
                   {lastWord}
