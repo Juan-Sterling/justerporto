@@ -46,8 +46,8 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
     };
 
     gsap.ticker.add(tickerUpdate);
-    // Disable lagSmoothing so GSAP does not clamp time or stutter when crossing sections
-    gsap.ticker.lagSmoothing(0);
+    // Keep lagSmoothing active by default; the [isLocked] effect disables it only once overlays unlock.
+    gsap.ticker.lagSmoothing(500, 33);
 
     // Expose lenis globally for debugging or direct access if needed
     window.__lenis = lenis;
@@ -55,6 +55,7 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
     return () => {
       lenis.destroy();
       gsap.ticker.remove(tickerUpdate);
+      gsap.ticker.lagSmoothing(500, 33);
       lenisRef.current = null;
       setLenisInstance(null);
       delete window.__lenis;
@@ -63,6 +64,11 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
 
   // Handle dynamic locking/unlocking (e.g. welcome screen or modals)
   useEffect(() => {
+    if (isLocked) {
+      gsap.ticker.lagSmoothing(500, 33);
+    } else {
+      gsap.ticker.lagSmoothing(0);
+    }
     if (!lenisRef.current) return;
     if (isLocked) {
       lenisRef.current.stop();

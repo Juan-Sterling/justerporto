@@ -15,8 +15,13 @@ const SHARD_COLORS = {
   ruby: '#E11D2E',
 };
 
-export default function BaemonBackground() {
+export default function BaemonBackground({ paused = false }) {
   const canvasRef = useRef(null);
+  const pausedRef = useRef(paused);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -183,6 +188,12 @@ export default function BaemonBackground() {
     const render = (now) => {
       if (!isVisible) {
         animFrameId = null;
+        return;
+      }
+
+      if (pausedRef.current) {
+        lastTime = now;
+        animFrameId = requestAnimationFrame(render);
         return;
       }
 

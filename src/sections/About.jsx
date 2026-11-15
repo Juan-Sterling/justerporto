@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import SectionTitle from '../components/SectionTitle';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
@@ -19,12 +19,37 @@ export default function About() {
   const { about } = portfolioData;
   const { isDark } = useTheme();
   const passDetails = about?.passDetails;
+  const badgeSlotRef = useRef(null);
+  const [shouldLoadBadge, setShouldLoadBadge] = useState(false);
+
+  // Defer heavy Three.js WebGL initialization until About approaches viewport
+  useEffect(() => {
+    if (shouldLoadBadge) return;
+    const el = badgeSlotRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setShouldLoadBadge(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setShouldLoadBadge(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '400px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [shouldLoadBadge]);
 
   useEffect(() => {
-    if (!passDetails?.photo || !passDetails?.photoLight) return;
+    if (!shouldLoadBadge || !passDetails?.photo || !passDetails?.photoLight) return;
     const preloadImg = new Image();
     preloadImg.src = isDark ? passDetails.photoLight : passDetails.photo;
-  }, [isDark, passDetails?.photo, passDetails?.photoLight]);
+  }, [shouldLoadBadge, isDark, passDetails?.photo, passDetails?.photoLight]);
 
   if (!about) return null;
 
@@ -40,17 +65,23 @@ export default function About() {
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start mt-6 sm:mt-10">
           {/* Left Column: Interactive 3D Backstage All-Access ID Pass */}
-          <div className="md:col-span-5 flex flex-col items-center">
+          <div ref={badgeSlotRef} className="md:col-span-5 flex flex-col items-center">
             <AnimatedSection delay={100} direction="none" gpu={false} className="w-full max-w-[340px] mx-auto">
-              <Suspense
-                fallback={
-                  <div className="w-full max-w-[320px] aspect-[1/1.55] rounded-3xl bg-zinc-100 dark:bg-[#121318] border border-zinc-200 dark:border-zinc-800 animate-pulse flex items-center justify-center shadow-md">
-                    <span className="font-mono text-xs text-zinc-400">Loading 3D Stage ID...</span>
-                  </div>
-                }
-              >
-                <ThreePassBadge passDetails={passDetails} isDark={isDark} />
-              </Suspense>
+              {shouldLoadBadge ? (
+                <Suspense
+                  fallback={
+                    <div className="w-full max-w-[320px] mx-auto aspect-[1/1.55] rounded-3xl bg-zinc-100 dark:bg-[#121318] border border-zinc-200 dark:border-zinc-800 animate-pulse flex items-center justify-center shadow-md">
+                      <span className="font-mono text-xs text-zinc-400">Loading 3D Stage ID...</span>
+                    </div>
+                  }
+                >
+                  <ThreePassBadge passDetails={passDetails} isDark={isDark} />
+                </Suspense>
+              ) : (
+                <div className="w-full max-w-[320px] mx-auto aspect-[1/1.55] rounded-3xl bg-zinc-100 dark:bg-[#121318] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center shadow-md">
+                  <span className="font-mono text-xs text-zinc-400">Loading 3D Stage ID...</span>
+                </div>
+              )}
             </AnimatedSection>
           </div>
 

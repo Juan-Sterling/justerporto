@@ -1,15 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { flushSync } from 'react-dom';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WelcomeScreen from './components/WelcomeScreen';
 import Navbar from './components/Navbar';
 import Hero from './sections/Hero';
-import About from './sections/About';
-import Education from './sections/Education';
-import Skills from './sections/Skills';
-import Experience from './sections/Experience';
-import Contact from './sections/Contact';
-import Footer from './components/Footer';
 import BaemonBackground from './components/BaemonBackground';
 // [SAVED FOR FUTURE USE] Wave, Geometric & Rain Backgrounds:
 // import BaemonCrimsonWaveBackground from './components/BaemonCrimsonWaveBackground';
@@ -20,8 +14,22 @@ import ReactiveAmbientGlow from './components/ReactiveAmbientGlow';
 import LaserSectionDivider from './components/LaserSectionDivider';
 import { SkillModalProvider } from './context/SkillModalContext';
 import { SmoothScrollProvider } from './context/SmoothScrollContext';
-import SideProfilePage from './pages/SideProfilePage';
 import ToxicScreenTransition from './components/sideprofile/ToxicScreenTransition';
+
+const loadAbout = () => import('./sections/About');
+const loadExperience = () => import('./sections/Experience');
+const loadSkills = () => import('./sections/Skills');
+const loadEducation = () => import('./sections/Education');
+const loadContact = () => import('./sections/Contact');
+const loadFooter = () => import('./components/Footer');
+
+const About = lazy(loadAbout);
+const Experience = lazy(loadExperience);
+const Skills = lazy(loadSkills);
+const Education = lazy(loadEducation);
+const Contact = lazy(loadContact);
+const Footer = lazy(loadFooter);
+const SideProfilePage = lazy(() => import('./pages/SideProfilePage'));
 
 export default function App() {
   // Determine initial route based on URL path
@@ -244,7 +252,22 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [currentRoute]);
 
+  // Prefetch below-the-fold chunks quietly after WelcomeScreen starts playing
+  useEffect(() => {
+    if (isInitialSideProfile) return;
+    const timer = window.setTimeout(() => {
+      loadAbout();
+      loadExperience();
+      loadSkills();
+      loadEducation();
+      loadContact();
+      loadFooter();
+    }, 1200);
+    return () => window.clearTimeout(timer);
+  }, [isInitialSideProfile]);
+
   const isSideProfile = currentRoute === '/sideprofile';
+  const showBelowFoldSections = !showWelcome || welcomeExiting;
 
   // Synchronize route class on document.documentElement for route-specific palette styling (Scrollbars, accents)
   useEffect(() => {
@@ -287,8 +310,8 @@ export default function App() {
             {/* Sticky Header Navigation */}
             <Navbar activeSection={activeSection} />
 
-            {/* Atmospheric BABYMONSTER Ambient Background Canvas */}
-            <BaemonBackground />
+            {/* Atmospheric BABYMONSTER Ambient Background Canvas (paused while WelcomeScreen covers viewport) */}
+            <BaemonBackground paused={(showWelcome && !welcomeExiting) || isSideProfile} />
 
             {/* [SAVED FOR FUTURE USE] Alternative Background Components: */}
             {/* <BaemonGeometricBackground /> */}
@@ -304,29 +327,39 @@ export default function App() {
                 welcomeActive={showWelcome && !welcomeExiting}
                 portalEntranceTrigger={portalEntranceTrigger}
               />
-              <About />
-              <LaserSectionDivider />
-              <Experience />
-              <LaserSectionDivider />
-              <Skills />
-              <LaserSectionDivider />
-              <Education />
-              <LaserSectionDivider />
-              <Contact />
+              {showBelowFoldSections && (
+                <Suspense fallback={null}>
+                  <About />
+                  <LaserSectionDivider />
+                  <Experience />
+                  <LaserSectionDivider />
+                  <Skills />
+                  <LaserSectionDivider />
+                  <Education />
+                  <LaserSectionDivider />
+                  <Contact />
+                </Suspense>
+              )}
             </main>
 
             {/* Semantic Footer with Balanced Left-Right Layout */}
-            <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
+            {showBelowFoldSections && (
+              <Suspense fallback={null}>
+                <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
+              </Suspense>
+            )}
           </div>
 
 
 
           {/* SIDE PROFILE PAGE: Mounted only when active */}
           {isSideProfile && (
-            <SideProfilePage
-              isReady={sideProfileEntranceReady}
-              onBackToPortfolio={() => navigateTo('/')}
-            />
+            <Suspense fallback={null}>
+              <SideProfilePage
+                isReady={sideProfileEntranceReady}
+                onBackToPortfolio={() => navigateTo('/')}
+              />
+            </Suspense>
           )}
         </SkillModalProvider>
     </SmoothScrollProvider>
