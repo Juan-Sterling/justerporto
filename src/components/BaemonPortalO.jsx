@@ -28,7 +28,7 @@ const BaemonPortalO = forwardRef(function BaemonPortalO(
     >
       {/* 1. Luminous Ambient Backlight Aura (Fixed behind portal) */}
       <div
-        className="absolute w-[220px] h-[220px] sm:w-[290px] sm:h-[290px] lg:w-[390px] lg:h-[390px] rounded-full bg-radial from-[#FF3B4D]/25 via-[#E11D2E]/10 to-transparent blur-2xl pointer-events-none dark:opacity-85 opacity-50"
+        className="absolute w-[220px] h-[220px] sm:w-[290px] sm:h-[290px] lg:w-[390px] lg:h-[390px] rounded-full bg-radial from-[#FF3B4D]/25 via-[#E11D2E]/10 to-transparent blur-md pointer-events-none dark:opacity-85 opacity-50"
       />
 
       {/* 2. The Baemon "O" Main Stage Container */}
@@ -37,7 +37,7 @@ const BaemonPortalO = forwardRef(function BaemonPortalO(
         {/* 3. Center Aperture Core Light */}
         <div
           ref={portalAuraRef}
-          className="absolute w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-full bg-radial from-[#FF3B4D]/35 via-[#E11D2E]/15 to-transparent blur-xl pointer-events-none opacity-0"
+          className="absolute w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-full bg-radial from-[#FF3B4D]/35 via-[#E11D2E]/15 to-transparent blur-sm pointer-events-none opacity-0"
         />
 
         {/* 4. Scalable Outer Ring Container */}

@@ -145,7 +145,7 @@ function TaglineBlock({
   );
 }
 
-export default function Hero({ welcomeActive = false, portalEntranceTrigger = null }) {
+export default function Hero({ welcomeActive = false, scrollReady = true, portalEntranceTrigger = null }) {
   const { personal } = portfolioData;
   const { scrollTo } = useSmoothScroll();
 
@@ -365,7 +365,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
     return entranceTl;
   }, []);
 
-  // GSAP Entrance & Scroll-Driven Portal Zoom Timeline
+  // 1. GSAP Entrance Timeline (Runs immediately when welcome screen starts exiting)
   useLayoutEffect(() => {
     // If welcome screen is still covering the screen, keep hero invisible
     if (welcomeActive) {
@@ -376,11 +376,22 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
     }
 
     const ctx = gsap.context(() => {
-      // 0. Synchronously prime all initial hidden states BEFORE browser paints
+      // Synchronously prime all initial hidden states BEFORE browser paints
       primeAllHeroElements();
 
-      // 1. Entrance Timeline (Plays once welcome screen dismisses)
+      // Entrance Timeline (Plays once welcome screen dismisses)
       playFullHeroEntrance();
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, [welcomeActive, primeAllHeroElements, playFullHeroEntrance]);
+
+  // 2. Scroll-Driven Portal Zoom Timeline (Deferred until WelcomeScreen finishes so ScrollTrigger pin
+  // never causes synchronous layout/pin reflow during the "SHEESH!" split wipe & Hero entrance)
+  useEffect(() => {
+    if (!scrollReady) return;
+
+    const ctx = gsap.context(() => {
 
       const restoreHeroAtTop = () => {
         if (auroraContainerRef.current) gsap.set(auroraContainerRef.current, { autoAlpha: 1 });
@@ -604,7 +615,7 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
     }, heroRef);
 
     return () => ctx.revert();
-  }, [welcomeActive]);
+  }, [scrollReady]);
 
   // Handle Hero Initial Prime State on return from Side Profile (behind WelcomeScreen)
   useEffect(() => {
@@ -705,19 +716,19 @@ export default function Hero({ welcomeActive = false, portalEntranceTrigger = nu
         {/* Primary Volumetric Crimson Aurora Fog (Center Top) */}
         <div
           ref={auroraCenterRef}
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] sm:w-[50rem] h-[22rem] sm:h-[30rem] rounded-[100%] bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.14)_0%,rgba(225,29,46,0.05)_45%,transparent_75%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.34)_0%,rgba(225,29,46,0.12)_50%,transparent_80%)] blur-xl sm:blur-2xl pointer-events-none"
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[34rem] sm:w-[50rem] h-[22rem] sm:h-[30rem] rounded-[100%] bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.14)_0%,rgba(225,29,46,0.05)_45%,transparent_75%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(225,29,46,0.34)_0%,rgba(225,29,46,0.12)_50%,transparent_80%)] pointer-events-none"
         />
 
         {/* Deep Ruby Ambient Smoke (Left Flank) */}
         <div
           ref={fogLeftRef}
-          className="absolute top-1/3 left-[15%] -translate-x-1/2 -translate-y-1/2 w-[22rem] sm:w-[28rem] h-[18rem] sm:h-[24rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(225,29,46,0.08)_0%,rgba(136,8,21,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(136,8,21,0.26)_0%,rgba(225,29,46,0.10)_45%,transparent_70%)] blur-lg sm:blur-xl pointer-events-none"
+          className="absolute top-1/3 left-[15%] -translate-x-1/2 -translate-y-1/2 w-[22rem] sm:w-[28rem] h-[18rem] sm:h-[24rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(225,29,46,0.08)_0%,rgba(136,8,21,0.04)_45%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(136,8,21,0.26)_0%,rgba(225,29,46,0.10)_45%,transparent_70%)] pointer-events-none"
         />
 
         {/* Soft Peach-Crimson Rim Glow (Right Flank) */}
         <div
           ref={fogRightRef}
-          className="absolute top-1/4 left-[85%] -translate-x-1/2 -translate-y-1/2 w-[20rem] sm:w-[26rem] h-[16rem] sm:h-[22rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,59,77,0.08)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,59,77,0.20)_0%,transparent_70%)] blur-lg sm:blur-xl pointer-events-none"
+          className="absolute top-1/4 left-[85%] -translate-x-1/2 -translate-y-1/2 w-[20rem] sm:w-[26rem] h-[16rem] sm:h-[22rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,59,77,0.08)_0%,transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,59,77,0.20)_0%,transparent_70%)] pointer-events-none"
         />
 
         {/* Smooth Bottom Dissolve to blend seamlessly with main page */}
