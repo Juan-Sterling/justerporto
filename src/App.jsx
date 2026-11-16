@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, startTransition, Suspense, lazy } from 'react';
 import { flushSync } from 'react-dom';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WelcomeScreen from './components/WelcomeScreen';
@@ -74,15 +74,17 @@ export default function App() {
   }, []);
 
   const handleComplete = useCallback(() => {
-    setShowWelcome(false);
+    startTransition(() => {
+      setShowWelcome(false);
+    });
     if (window.__lenis) {
       window.__lenis.resize();
       window.__lenis.start();
     }
-    // Refresh ScrollTriggers once the welcome screen overlay is removed
+    // Refresh ScrollTriggers after below-the-fold sections mount in transition
     setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 60);
+    }, 180);
   }, []);
 
   // Helper: Reliable return to Main Portfolio
@@ -278,7 +280,7 @@ export default function App() {
   }, [isInitialSideProfile]);
 
   const isSideProfile = currentRoute === '/sideprofile';
-  const showBelowFoldSections = !showWelcome || welcomeExiting;
+  const showBelowFoldSections = !showWelcome;
 
   // Synchronize route class on document.documentElement for route-specific palette styling (Scrollbars, accents)
   useEffect(() => {
@@ -322,7 +324,7 @@ export default function App() {
             <Navbar activeSection={activeSection} />
 
             {/* Atmospheric BABYMONSTER Ambient Background Canvas (paused while WelcomeScreen covers viewport) */}
-            <BaemonBackground paused={(showWelcome && !welcomeExiting) || isSideProfile} />
+            <BaemonBackground paused={showWelcome || isSideProfile} />
 
             {/* [SAVED FOR FUTURE USE] Alternative Background Components: */}
             {/* <BaemonGeometricBackground /> */}
@@ -336,6 +338,7 @@ export default function App() {
             <main className="flex-1 w-full relative z-10">
               <Hero
                 welcomeActive={showWelcome && !welcomeExiting}
+                scrollReady={!showWelcome}
                 portalEntranceTrigger={portalEntranceTrigger}
               />
               {showBelowFoldSections && (
