@@ -9,10 +9,71 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ROLES = [
+const ROLE_WORDS = [
   "Full Stack Developer",
   "Software Developer",
 ];
+
+/**
+ * Isolated typewriter component so 40-90ms character ticks never re-render Hero or TaglineBlock.
+ */
+function RoleTypewriter({ roleRef }) {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
+
+  useEffect(() => {
+    const currentWord = ROLE_WORDS[roleIndex];
+    let timer;
+
+    if (isWaiting) {
+      timer = setTimeout(() => {
+        setIsWaiting(false);
+        if (isDeleting) {
+          setIsDeleting(false);
+          setRoleIndex((prev) => (prev + 1) % ROLE_WORDS.length);
+        } else {
+          setIsDeleting(true);
+        }
+      }, isDeleting ? 400 : 2200);
+    } else if (isDeleting) {
+      timer = setTimeout(() => {
+        setCharIndex((prev) => {
+          if (prev <= 1) {
+            setIsWaiting(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 40);
+    } else {
+      timer = setTimeout(() => {
+        setCharIndex((prev) => {
+          if (prev >= currentWord.length - 1) {
+            setIsWaiting(true);
+            return currentWord.length;
+          }
+          return prev + 1;
+        });
+      }, 90);
+    }
+
+    return () => clearTimeout(timer);
+  }, [charIndex, isDeleting, isWaiting, roleIndex]);
+
+  const displayedRole = ROLE_WORDS[roleIndex].slice(0, charIndex);
+
+  return (
+    <div ref={roleRef} className="inline-flex items-center gap-2 font-mono text-xs sm:text-base md:text-xl font-semibold tracking-tight min-h-[1.75rem] sm:min-h-[2.25rem] opacity-0">
+      <span className="text-[#E11D2E] font-bold select-none">//</span>
+      <span className="text-zinc-900 dark:text-zinc-100 font-medium tracking-normal">
+        {displayedRole}
+      </span>
+      <span className="inline-block w-2 sm:w-2.5 h-3.5 sm:h-6 bg-[#E11D2E] animate-pulse rounded-xs shadow-[0_0_6px_rgba(225,29,46,0.6)] dark:shadow-[0_0_8px_rgba(225,29,46,0.8)]" aria-hidden="true" />
+    </div>
+  );
+}
 
 const TAGLINE_VARIANT_ORDER = ['solid', 'crimson', 'split'];
 
@@ -60,8 +121,8 @@ function parseTaglineLine(entry, index) {
 }
 
 /**
- * Renders the multi-line editorial tagline block with vertical accent bar
- * and sequential line-by-line scale highlight animation.
+ * Renders the multi-line editorial tagline block with vertical accent bar,
+ * 1-by-1 masked emergence from the crimson bar, and jitter-free CSS spotlight scaling.
  */
 function TaglineBlock({
   isTaglineArray,
@@ -77,19 +138,19 @@ function TaglineBlock({
     ? 'lg:text-[19px] xl:text-[1.4rem] 2xl:text-[1.6rem] leading-snug'
     : 'text-xs sm:text-sm md:text-base leading-snug';
   const hasSpotlight = activeIndex >= 0;
-  const activeScale = desktop ? 1.1 : 1.06;
+  const activeScale = desktop ? 1.075 : 1.05;
 
   return (
     <div className={`relative flex flex-col ${containerClass}`}>
       {desktop ? (
         <span
           aria-hidden="true"
-          className="absolute left-0 top-0.5 bottom-0.5 w-[3px] rounded-full bg-gradient-to-b from-[#E11D2E] via-[#E11D2E] to-[#E11D2E]/35 dark:shadow-[0_0_10px_rgba(225,29,46,0.45)]"
+          className="hero-tagline-bar-desktop absolute left-0 top-0.5 bottom-0.5 w-[3px] rounded-full bg-gradient-to-b from-[#E11D2E] via-[#E11D2E] to-[#E11D2E]/35 dark:shadow-[0_0_10px_rgba(225,29,46,0.45)] opacity-0"
         />
       ) : (
         <span
           aria-hidden="true"
-          className="w-10 h-[2px] mb-1 rounded-full bg-gradient-to-r from-[#E11D2E]/25 via-[#E11D2E] to-[#E11D2E]/25 dark:shadow-[0_0_8px_rgba(225,29,46,0.45)]"
+          className="hero-tagline-bar-mobile w-10 h-[2px] mb-1 rounded-full bg-gradient-to-r from-[#E11D2E]/25 via-[#E11D2E] to-[#E11D2E]/25 dark:shadow-[0_0_8px_rgba(225,29,46,0.45)] opacity-0"
         />
       )}
       {isTaglineArray ? (
@@ -101,39 +162,50 @@ function TaglineBlock({
           const isActive = hasSpotlight && index === activeIndex;
 
           return (
-            <motion.p
+            <div
               key={`${index}-${keyword}`}
-              animate={{
-                scale: isActive ? activeScale : 1,
-                opacity: !hasSpotlight || isActive ? 1 : 0.68,
-              }}
-              transition={{
-                type: 'spring',
-                stiffness: 260,
-                damping: 22,
-                mass: 0.9,
-              }}
-              style={{ transformOrigin: desktop ? 'left center' : 'center center' }}
-              className={`${lineTextClass} font-sans`}
+              className={
+                desktop
+                  ? 'overflow-hidden py-1 -my-1 pr-8 -mr-8'
+                  : 'overflow-hidden py-1 -my-1 px-5 -mx-5'
+              }
             >
-              {prefix && (
-                <span className="font-light tracking-[0.08em] text-zinc-600 dark:text-zinc-400 mr-1">
-                  {prefix}{' '}
-                </span>
-              )}
-              {keyword && (
-                variant === 'split' ? (
-                  <span className="font-extrabold tracking-[0.05em]">
-                    <span className={TAGLINE_VARIANT_CLASSES.crimson}>{splitLead}</span>
-                    <span className={TAGLINE_VARIANT_CLASSES.solid}>{splitTail}</span>
-                  </span>
-                ) : (
-                  <span className={`font-extrabold tracking-[0.05em] ${variantClass}`}>
-                    {keyword}
-                  </span>
-                )
-              )}
-            </motion.p>
+              <span
+                className={
+                  desktop
+                    ? 'hero-tagline-line-desktop block opacity-0'
+                    : 'hero-tagline-line-mobile block opacity-0'
+                }
+              >
+                <p
+                  style={{
+                    transformOrigin: desktop ? 'left center' : 'center center',
+                    transform: `scale(${isActive ? activeScale : 1}) translateZ(0)`,
+                    opacity: !hasSpotlight || isActive ? 1 : 0.65,
+                    backfaceVisibility: 'hidden',
+                  }}
+                  className={`${lineTextClass} font-sans transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]`}
+                >
+                  {prefix && (
+                    <span className="font-light tracking-[0.08em] text-zinc-600 dark:text-zinc-400 mr-1">
+                      {prefix}{' '}
+                    </span>
+                  )}
+                  {keyword && (
+                    variant === 'split' ? (
+                      <span className="font-extrabold tracking-[0.05em]">
+                        <span className={TAGLINE_VARIANT_CLASSES.crimson}>{splitLead}</span>
+                        <span className={TAGLINE_VARIANT_CLASSES.solid}>{splitTail}</span>
+                      </span>
+                    ) : (
+                      <span className={`font-extrabold tracking-[0.05em] ${variantClass}`}>
+                        {keyword}
+                      </span>
+                    )
+                  )}
+                </p>
+              </span>
+            </div>
           );
         })
       ) : (
@@ -179,12 +251,7 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
   const fogLeftRef = useRef(null);
   const fogRightRef = useRef(null);
 
-  // Dynamic role typewriter cycle
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isWaiting, setIsWaiting] = useState(false);
-  const [activeTaglineIndex, setActiveTaglineIndex] = useState(0);
+  const [activeTaglineIndex, setActiveTaglineIndex] = useState(-1);
 
   // 0. Synchronously prime all initial hidden states for ALL Hero elements
   const primeAllHeroElements = useCallback(() => {
@@ -205,7 +272,11 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
     ].filter(Boolean);
     gsap.killTweensOf(elementsToKill);
     if (heroRef.current) {
-      gsap.killTweensOf(heroRef.current.querySelectorAll('.hero-word-inner'));
+      gsap.killTweensOf(
+        heroRef.current.querySelectorAll(
+          '.hero-word-inner, .hero-tagline-bar-desktop, .hero-tagline-bar-mobile, .hero-tagline-line-desktop, .hero-tagline-line-mobile'
+        )
+      );
     }
 
     if (auroraContainerRef.current) gsap.set(auroraContainerRef.current, { opacity: 1 });
@@ -253,14 +324,24 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
     }
     if (emblemRef.current) gsap.set(emblemRef.current, { scale: 0, rotation: -25, opacity: 0 });
     if (roleRef.current) gsap.set(roleRef.current, { x: -20, opacity: 0 });
-    if (taglineRef.current) gsap.set(taglineRef.current, { y: 22, opacity: 0 });
+    if (taglineRef.current) gsap.set(taglineRef.current, { x: 0, y: 0, opacity: 1 });
     if (ctaRef.current?.children) gsap.set(ctaRef.current.children, { y: 22, opacity: 0, scale: 0.96 });
     if (desktopTaglineRef.current) {
       gsap.set(desktopTaglineRef.current, {
-        x: 24,
-        y: 16,
-        opacity: 0,
+        x: 0,
+        y: 0,
+        opacity: 1,
       });
+    }
+    if (heroRef.current) {
+      const desktopBar = heroRef.current.querySelectorAll('.hero-tagline-bar-desktop');
+      const mobileBar = heroRef.current.querySelectorAll('.hero-tagline-bar-mobile');
+      const desktopLines = heroRef.current.querySelectorAll('.hero-tagline-line-desktop');
+      const mobileLines = heroRef.current.querySelectorAll('.hero-tagline-line-mobile');
+      if (desktopBar.length) gsap.set(desktopBar, { scaleY: 0, opacity: 0, transformOrigin: 'top center' });
+      if (mobileBar.length) gsap.set(mobileBar, { scaleX: 0, opacity: 0, transformOrigin: 'center center' });
+      if (desktopLines.length) gsap.set(desktopLines, { xPercent: -105, opacity: 0 });
+      if (mobileLines.length) gsap.set(mobileLines, { yPercent: -105, opacity: 0 });
     }
 
     if (heroRef.current) gsap.set(heroRef.current, { opacity: 1 });
@@ -334,9 +415,33 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
       entranceTl.to(roleRef.current, { x: 0, opacity: 1, duration: 0.55 }, 0.55);
     }
 
-    // G. Mobile Editorial Tagline fade & float up (below BaemonPortalO on mobile)
-    if (taglineRef.current) {
-      entranceTl.to(taglineRef.current, { y: 0, opacity: 1, duration: 0.65 }, 0.60);
+    // G. Tagline Accent Bars draw in, then lines emerge 1-by-1 from the red bar
+    if (heroRef.current) {
+      const desktopBar = heroRef.current.querySelectorAll('.hero-tagline-bar-desktop');
+      const mobileBar = heroRef.current.querySelectorAll('.hero-tagline-bar-mobile');
+      const desktopLines = heroRef.current.querySelectorAll('.hero-tagline-line-desktop');
+      const mobileLines = heroRef.current.querySelectorAll('.hero-tagline-line-mobile');
+
+      if (desktopBar.length) {
+        entranceTl.to(desktopBar, { scaleY: 1, opacity: 1, duration: 0.35, ease: 'power3.out' }, 0.42);
+      }
+      if (mobileBar.length) {
+        entranceTl.to(mobileBar, { scaleX: 1, opacity: 1, duration: 0.35, ease: 'power3.out' }, 0.48);
+      }
+      if (desktopLines.length) {
+        entranceTl.to(
+          desktopLines,
+          { xPercent: 0, opacity: 1, duration: 0.52, stagger: 0.16, ease: 'power3.out', force3D: true },
+          0.58
+        );
+      }
+      if (mobileLines.length) {
+        entranceTl.to(
+          mobileLines,
+          { yPercent: 0, opacity: 1, duration: 0.48, stagger: 0.16, ease: 'power3.out', force3D: true },
+          0.62
+        );
+      }
     }
 
     // H. CTAs with spring stagger
@@ -349,17 +454,6 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
         stagger: 0.08,
         ease: 'back.out(1.4)',
       }, 0.75);
-    }
-
-    // I. Desktop Right-Column Tagline entrance
-    if (desktopTaglineRef.current) {
-      entranceTl.to(desktopTaglineRef.current, {
-        opacity: 1,
-        x: 0,
-        y: 0,
-        duration: 0.75,
-        ease: 'power3.out',
-      }, 0.50);
     }
 
     return entranceTl;
@@ -402,10 +496,17 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
         if (leftColRef.current) gsap.set(leftColRef.current, { autoAlpha: 1, x: 0, y: 0 });
         if (portalContainerRef.current) gsap.set(portalContainerRef.current, { autoAlpha: 1, scale: 1, rotation: 0 });
         if (desktopTaglineRef.current) gsap.set(desktopTaglineRef.current, { autoAlpha: 1, x: 0, y: 0 });
+        if (taglineRef.current) gsap.set(taglineRef.current, { autoAlpha: 1, x: 0, y: 0 });
         if (ringScaleRef.current) gsap.set(ringScaleRef.current, { scale: 1 });
         if (leftHalfRef.current) gsap.set(leftHalfRef.current, { x: 0 });
         if (rightHalfRef.current) gsap.set(rightHalfRef.current, { x: 0 });
         if (portalAuraRef.current) gsap.set(portalAuraRef.current, { opacity: 0.85, scale: 1 });
+        if (heroRef.current) {
+          gsap.set(heroRef.current.querySelectorAll('.hero-tagline-bar-desktop'), { scaleY: 1, opacity: 1 });
+          gsap.set(heroRef.current.querySelectorAll('.hero-tagline-bar-mobile'), { scaleX: 1, opacity: 1 });
+          gsap.set(heroRef.current.querySelectorAll('.hero-tagline-line-desktop'), { xPercent: 0, opacity: 1 });
+          gsap.set(heroRef.current.querySelectorAll('.hero-tagline-line-mobile'), { yPercent: 0, opacity: 1 });
+        }
       };
 
       // 2. Seamless Portal Zoom Timeline with pinSpacing: false
@@ -419,7 +520,7 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
           end: 'bottom top', // Exactly 100vh scroll: connects directly to Experience with zero dead space
           pin: true,
           pinSpacing: false, // Eliminates the 800px gap completely!
-          scrub: 0.65, // Silky smooth inertial damping matching Lenis scroll momentum
+          scrub: true, // Directly follows Lenis smooth scroll with zero double-damping overhead
           fastScrollEnd: false, // CRITICAL: NEVER force to progress 1 on rapid scroll-up!
           anticipatePin: 1,
           onScrubComplete: (self) => {
@@ -479,24 +580,6 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
         );
       }
 
-      if (contentWrapperRef.current) {
-        scrollTl.fromTo(
-          contentWrapperRef.current,
-          {
-            autoAlpha: 1,
-            scale: 1,
-          },
-          {
-            autoAlpha: 0,
-            scale: 0.98,
-            duration: 0.26,
-            ease: 'sine.out',
-            immediateRender: false,
-          },
-          0
-        );
-      }
-
       // Step 3: Center Aperture Core Light blooms (0.04 -> 0.50)
       if (portalAuraRef.current) {
         scrollTl.fromTo(
@@ -526,9 +609,9 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
       }
 
       // Step 4: BaemonPortalO GPU-Safe Scale-Up Zoom (0.04 -> 0.66)
-      // Capped scale (9 on mobile, 10 on tablet/desktop) + wider half-split (±56) clears
+      // Capped scale (8 on mobile, 9 on tablet/desktop) + wider half-split (±56) clears
       // the viewport cleanly while staying safely under mobile/tablet 4096px GPU texture limits
-      const targetScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 9 : 10;
+      const targetScale = typeof window !== 'undefined' && window.innerWidth < 768 ? 8 : 9;
       if (ringScaleRef.current) {
         scrollTl.fromTo(
           ringScaleRef.current,
@@ -626,47 +709,6 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
     }
   }, [portalEntranceTrigger, primeAllHeroElements]);
 
-  // Role typewriter logic
-  useEffect(() => {
-    const currentWord = ROLES[roleIndex];
-    let timer;
-
-    if (isWaiting) {
-      timer = setTimeout(() => {
-        setIsWaiting(false);
-        if (isDeleting) {
-          setIsDeleting(false);
-          setRoleIndex((prev) => (prev + 1) % ROLES.length);
-        } else {
-          setIsDeleting(true);
-        }
-      }, isDeleting ? 400 : 2200);
-    } else if (isDeleting) {
-      timer = setTimeout(() => {
-        setCharIndex((prev) => {
-          if (prev <= 1) {
-            setIsWaiting(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 40);
-    } else {
-      timer = setTimeout(() => {
-        setCharIndex((prev) => {
-          if (prev >= currentWord.length - 1) {
-            setIsWaiting(true);
-            return currentWord.length;
-          }
-          return prev + 1;
-        });
-      }, 90);
-    }
-
-    return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, isWaiting, roleIndex]);
-
-  const displayedRole = ROLES[roleIndex].slice(0, charIndex);
   const isTaglineArray = Array.isArray(personal.tagline);
   const taglineEntries = isTaglineArray
     ? personal.tagline.filter(Boolean).map(parseTaglineLine)
@@ -675,21 +717,30 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
     typeof window !== 'undefined' &&
     window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const effectiveTaglineIndex =
-    prefersReducedMotion || !isTaglineArray || taglineEntries.length <= 1
+    welcomeActive || prefersReducedMotion || !isTaglineArray || taglineEntries.length <= 1
       ? -1
       : activeTaglineIndex;
 
+  // Delay spotlight scale cycle until red bar + all 3 tagline lines finish emerging (~1.65s)
+  // so enlarge animations only run after every line has settled with zero jitter.
   useEffect(() => {
     if (welcomeActive || prefersReducedMotion || !isTaglineArray || taglineEntries.length <= 1) {
       return;
     }
 
     const lineCount = taglineEntries.length;
-    const intervalId = window.setInterval(() => {
-      setActiveTaglineIndex((prev) => (prev + 1) % lineCount);
-    }, 1350);
+    let intervalId = null;
+    const startTimer = window.setTimeout(() => {
+      setActiveTaglineIndex(0);
+      intervalId = window.setInterval(() => {
+        setActiveTaglineIndex((prev) => (prev + 1) % lineCount);
+      }, 1350);
+    }, 1650);
 
-    return () => window.clearInterval(intervalId);
+    return () => {
+      window.clearTimeout(startTimer);
+      if (intervalId) window.clearInterval(intervalId);
+    };
   }, [welcomeActive, prefersReducedMotion, isTaglineArray, taglineEntries.length]);
 
   const scrollToSection = (id) => {
@@ -843,13 +894,7 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
                   </h1>
 
                   {/* Dynamic Role with Typewriter & Blinking Caret */}
-                  <div ref={roleRef} className="inline-flex items-center gap-2 font-mono text-xs sm:text-base md:text-xl font-semibold tracking-tight min-h-[1.75rem] sm:min-h-[2.25rem] opacity-0">
-                    <span className="text-[#E11D2E] font-bold select-none">//</span>
-                    <span className="text-zinc-900 dark:text-zinc-100 font-medium tracking-normal">
-                      {displayedRole}
-                    </span>
-                    <span className="inline-block w-2 sm:w-2.5 h-3.5 sm:h-6 bg-[#E11D2E] animate-pulse rounded-xs shadow-[0_0_6px_rgba(225,29,46,0.6)] dark:shadow-[0_0_8px_rgba(225,29,46,0.8)]" aria-hidden="true" />
-                  </div>
+                  <RoleTypewriter roleRef={roleRef} />
                 </div>
               </div>
             </div>
@@ -859,7 +904,7 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
               {/* Mobile / Tablet Editorial Tagline (Centered below BaemonPortalO) */}
               <div
                 ref={taglineRef}
-                className="lg:hidden opacity-0 self-center text-center max-w-xs sm:max-w-md"
+                className="lg:hidden self-center text-center max-w-xs sm:max-w-md"
               >
                 <TaglineBlock
                   isTaglineArray={isTaglineArray}
@@ -919,7 +964,7 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
           {/* Right Column: Editorial Tagline Replacing Hero Portrait on Desktop */}
           <div
             ref={desktopTaglineRef}
-            className="hidden lg:flex lg:col-span-7 xl:col-span-7 justify-end items-center h-full opacity-0 pointer-events-auto lg:pr-6 xl:pr-8"
+            className="hidden lg:flex lg:col-span-7 xl:col-span-7 justify-end items-center h-full pointer-events-auto lg:pr-6 xl:pr-8"
           >
             <div className="text-left max-w-[380px] xl:max-w-[460px] 2xl:max-w-[520px]">
               <TaglineBlock

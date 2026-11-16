@@ -105,9 +105,10 @@ function drawImageProgressive(ctx, img, targetX, targetY, targetW, targetH) {
  */
 function renderFrontTexture(canvas, img, isDark, passDetails) {
   const ctx = canvas.getContext('2d');
-  const w = canvas.width;
-  const h = canvas.height;
+  const w = 1024;
+  const h = 1536;
 
+  ctx.setTransform(canvas.width / w, 0, 0, canvas.height / h, 0, 0);
   ctx.clearRect(0, 0, w, h);
 
   // 1. Background Card Body (Pure deep obsidian in dark mode, clean white in light mode)
@@ -232,9 +233,10 @@ function renderFrontTexture(canvas, img, isDark, passDetails) {
  */
 function renderBackTexture(canvas, isDark, qrCanvas) {
   const ctx = canvas.getContext('2d');
-  const w = canvas.width;
-  const h = canvas.height;
+  const w = 1024;
+  const h = 1536;
 
+  ctx.setTransform(canvas.width / w, 0, 0, canvas.height / h, 0, 0);
   ctx.clearRect(0, 0, w, h);
 
   // 1. Background Card Body
@@ -397,7 +399,7 @@ export default function ThreePassBadge({ passDetails, isDark }) {
     dragStartX: 0,
     dragStartRotationY: 0,
     isDragging: false,
-    isVisible: true,
+    isVisible: false,
   });
 
   // Pre-generate QR code once
@@ -532,7 +534,7 @@ export default function ThreePassBadge({ passDetails, isDark }) {
     const extrudeSettings = {
       depth: cardThickness,
       bevelEnabled: true,
-      bevelSegments: 6,
+      bevelSegments: 3,
       steps: 1,
       bevelSize: 0.035,
       bevelThickness: 0.035,
@@ -540,20 +542,18 @@ export default function ThreePassBadge({ passDetails, isDark }) {
     const cardGeometry = new THREE.ExtrudeGeometry(cardShape, extrudeSettings);
     cardGeometry.center();
 
-    // Sleek Solid Obsidian / Silver Bevel Body Material (no muddy transmission haze)
-    const acrylicMat = new THREE.MeshPhysicalMaterial({
+    // Sleek Solid Obsidian / Silver Bevel Body Material (lightweight MeshStandardMaterial for fast shader compile)
+    const acrylicMat = new THREE.MeshStandardMaterial({
       color: isDark ? 0x090a0d : 0xe4e4e7,
-      metalness: isDark ? 0.15 : 0.1,
-      roughness: 0.28,
-      clearcoat: 0.5,
-      clearcoatRoughness: 0.2,
+      metalness: isDark ? 0.2 : 0.12,
+      roughness: 0.25,
     });
     const cardMesh = new THREE.Mesh(cardGeometry, acrylicMat);
     badgeGroup.add(cardMesh);
 
-    // 6. Canvases for Front & Back Textures (1024 x 1536 px)
-    const texW = 1024;
-    const texH = 1536;
+    // 6. Canvases for Front & Back Textures (512 x 768 px: 1.6x retina for 320px card, fast GPU upload & mipmaps)
+    const texW = 512;
+    const texH = 768;
     const maxAnisotropy = renderer.capabilities.getMaxAnisotropy ? renderer.capabilities.getMaxAnisotropy() : 1;
 
     const frontCanvas = document.createElement('canvas');
@@ -565,7 +565,7 @@ export default function ThreePassBadge({ passDetails, isDark }) {
     frontTexture.generateMipmaps = true;
     frontTexture.minFilter = THREE.LinearMipmapLinearFilter;
     frontTexture.magFilter = THREE.LinearFilter;
-    frontTexture.anisotropy = Math.min(maxAnisotropy, 8);
+    frontTexture.anisotropy = Math.min(maxAnisotropy, 4);
 
     const backCanvas = document.createElement('canvas');
     backCanvas.width = texW;
@@ -576,14 +576,14 @@ export default function ThreePassBadge({ passDetails, isDark }) {
     backTexture.generateMipmaps = true;
     backTexture.minFilter = THREE.LinearMipmapLinearFilter;
     backTexture.magFilter = THREE.LinearFilter;
-    backTexture.anisotropy = Math.min(maxAnisotropy, 8);
+    backTexture.anisotropy = Math.min(maxAnisotropy, 4);
 
     // Rounded Face Geometry matching the beveled card corners cleanly
     const faceW = cardW - 0.01;
     const faceH = cardH - 0.01;
     const faceRadius = cardRadius - 0.005;
     const faceShape = createRoundedRectShape(faceW, faceH, faceRadius);
-    const planeGeo = new THREE.ShapeGeometry(faceShape, 24);
+    const planeGeo = new THREE.ShapeGeometry(faceShape, 16);
     const posAttr = planeGeo.attributes.position;
     const uvAttr = planeGeo.attributes.uv;
     for (let i = 0; i < posAttr.count; i++) {
@@ -593,11 +593,10 @@ export default function ThreePassBadge({ passDetails, isDark }) {
     }
     uvAttr.needsUpdate = true;
 
-    const frontMat = new THREE.MeshPhysicalMaterial({
+    const frontMat = new THREE.MeshStandardMaterial({
       map: frontTexture,
-      roughness: 0.42,
+      roughness: 0.65,
       metalness: 0.0,
-      specularIntensity: 0.12, // Eliminates broad gray dielectric sheen on deep dark cards
       polygonOffset: true,
       polygonOffsetFactor: -2,
       polygonOffsetUnits: -2,
@@ -607,11 +606,10 @@ export default function ThreePassBadge({ passDetails, isDark }) {
     badgeGroup.add(frontPlane);
 
     // Back Face Plane Mesh (Faced backward)
-    const backMat = new THREE.MeshPhysicalMaterial({
+    const backMat = new THREE.MeshStandardMaterial({
       map: backTexture,
-      roughness: 0.42,
+      roughness: 0.65,
       metalness: 0.0,
-      specularIntensity: 0.12,
       polygonOffset: true,
       polygonOffsetFactor: -2,
       polygonOffsetUnits: -2,
@@ -667,10 +665,13 @@ export default function ThreePassBadge({ passDetails, isDark }) {
     threeRef.current.frontCanvas = frontCanvas;
     threeRef.current.backCanvas = backCanvas;
 
-    // 8. Performance Guard: Intersection Observer
+    // 8. Pre-compile shaders & render 1 initial frame once during setup, then render only when visible
+    renderer.compile(scene, camera);
+    renderer.render(scene, camera);
+
     const observer = new IntersectionObserver(
       (entries) => {
-        const isIntersecting = entries[0]?.isIntersecting ?? true;
+        const isIntersecting = entries[0]?.isIntersecting ?? false;
         threeRef.current.isVisible = isIntersecting;
       },
       { threshold: 0.05 }
