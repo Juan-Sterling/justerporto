@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SectionTitle from '../components/SectionTitle';
 import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
@@ -69,9 +70,27 @@ export default function About() {
     preloadImg.src = isDark ? passDetails.photoLight : passDetails.photo;
   }, [shouldLoadBadge, isDark, passDetails?.photo, passDetails?.photoLight]);
 
+  useEffect(() => {
+    if (!shouldLoadBadge) return;
+    const rafId = window.requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, [shouldLoadBadge]);
+
   if (!about) return null;
 
   const { narrative, quickFacts, headline, title, subtitle } = about;
+
+  const badgePlaceholder = (
+    <div className="w-full flex flex-col items-center select-none">
+      <div className="w-20 h-3 mx-auto mb-1.5 rounded-full bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700" aria-hidden="true" />
+      <div className="w-full max-w-[320px] mx-auto aspect-[1/1.55] rounded-3xl bg-zinc-100 dark:bg-[#121318] border border-zinc-200 dark:border-zinc-800 animate-pulse flex items-center justify-center shadow-md">
+        <span className="font-mono text-xs text-zinc-400">Loading 3D Stage ID...</span>
+      </div>
+      <div className="mt-3.5 h-[30px] w-28 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/80 opacity-60" aria-hidden="true" />
+    </div>
+  );
 
   return (
     <section id="about" className="relative z-10 py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
@@ -86,19 +105,11 @@ export default function About() {
           <div ref={badgeSlotRef} className="md:col-span-5 flex flex-col items-center">
             <AnimatedSection delay={100} direction="none" gpu={false} className="w-full max-w-[340px] mx-auto">
               {shouldLoadBadge ? (
-                <Suspense
-                  fallback={
-                    <div className="w-full max-w-[320px] mx-auto aspect-[1/1.55] rounded-3xl bg-zinc-100 dark:bg-[#121318] border border-zinc-200 dark:border-zinc-800 animate-pulse flex items-center justify-center shadow-md">
-                      <span className="font-mono text-xs text-zinc-400">Loading 3D Stage ID...</span>
-                    </div>
-                  }
-                >
+                <Suspense fallback={badgePlaceholder}>
                   <ThreePassBadge passDetails={passDetails} isDark={isDark} />
                 </Suspense>
               ) : (
-                <div className="w-full max-w-[320px] mx-auto aspect-[1/1.55] rounded-3xl bg-zinc-100 dark:bg-[#121318] border border-zinc-200 dark:border-zinc-800 flex items-center justify-center shadow-md">
-                  <span className="font-mono text-xs text-zinc-400">Loading 3D Stage ID...</span>
-                </div>
+                badgePlaceholder
               )}
             </AnimatedSection>
           </div>

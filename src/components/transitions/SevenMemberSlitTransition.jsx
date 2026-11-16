@@ -77,68 +77,67 @@ export default function SevenMemberSlitTransition() {
           id: 'seven-slit-transition',
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=90%', // Snappy ~90vh scroll distance for optimal pacing
+          end: '+=120%', // Generous scroll travel so watermark, slits, and beacon glide smoothly
           pin: true,
           pinSpacing: true,
-          scrub: 0.45,
-          fastScrollEnd: true,
-          preventOverlaps: true,
+          scrub: true, // Syncs 1:1 with Lenis smooth scroll (avoids double-damping lag/jumps)
+          fastScrollEnd: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 4,
         },
       });
 
-      // Step 1: Laser watermark surges
+      // Step 1: Laser watermark surges (0.00 -> 0.22)
       tl.to(watermarkRef.current, {
         scale: 1.08,
         opacity: 1,
-        duration: 0.2,
-        ease: 'power2.out',
+        duration: 0.22,
+        ease: 'sine.inOut',
       }, 0);
 
-      // Step 2: Inner Stage Entrance lights up behind the slits
+      // Step 2: Inner Stage Entrance lights up behind the slits (0.20 -> 0.65)
       tl.to(stageAuraRef.current, {
         scale: 1.15,
         opacity: 0.9,
-        duration: 0.4,
-        ease: 'power2.out',
-      }, 0.2)
+        duration: 0.42,
+        ease: 'sine.inOut',
+      }, 0.20)
         .to(stageContentRef.current, {
           y: 0,
           opacity: 1,
-          duration: 0.35,
-          ease: 'power3.out',
-        }, 0.25)
+          duration: 0.40,
+          ease: 'power2.out',
+        }, 0.26)
         .to(stageTicksRef.current, {
           scaleX: 1,
           opacity: 1,
-          duration: 0.35,
+          duration: 0.36,
           ease: 'power2.out',
         }, 0.32);
 
-      // Step 3: Watermark expands and disperses
+      // Step 3: Watermark expands and disperses smoothly (0.22 -> 0.56)
       tl.to(watermarkRef.current, {
-        scale: 1.8,
+        scale: 1.75,
         opacity: 0,
-        duration: 0.3,
-        ease: 'power3.out',
-      }, 0.25);
+        duration: 0.34,
+        ease: 'power2.inOut',
+      }, 0.22);
 
-      // Step 4: Staggered 7-Slit Vertical Curtain Wipe (Alternating UP and DOWN)
+      // Step 4: Staggered 7-Slit Vertical Curtain Wipe (0.22 -> 0.88)
       slitRefs.current.forEach((slitEl, i) => {
         if (!slitEl) return;
         const isUp = i % 2 === 0; // Columns 0, 2, 4, 6 go UP; Columns 1, 3, 5 go DOWN
         tl.to(slitEl, {
           yPercent: isUp ? -108 : 108,
-          duration: 0.55,
-          ease: 'power3.inOut',
+          duration: 0.50,
+          ease: 'power2.inOut',
           force3D: true,
-        }, 0.25 + i * 0.035);
+        }, 0.22 + i * 0.028);
       });
 
-      // Step 5: Smooth exit into Experience
-      tl.to(stageContentRef.current, {
-        opacity: 0.95,
-        duration: 0.15,
-      }, 0.75);
+      // Step 5: Brief settled hold while beacon stays visible before natural scroll-out
+      tl.to({}, { duration: 0.12 }, 0.88);
 
     }, containerRef);
 
@@ -149,7 +148,7 @@ export default function SevenMemberSlitTransition() {
     <div
       ref={containerRef}
       id="about-to-experience-transition"
-      className="relative w-full h-[100dvh] overflow-hidden select-none z-30 bg-[#FAFAFA] dark:bg-[#07080B]"
+      className="relative w-full h-[100svh] sm:h-screen overflow-hidden select-none z-30 bg-[#FAFAFA] dark:bg-[#07080B]"
       aria-label="Transition Stage · 7 Monsters"
     >
       {/* ----------------------------------------------------------- */}

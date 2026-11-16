@@ -43,75 +43,79 @@ export default function EncoreDiagonalShutterTransition() {
           id: 'encore-diagonal-transition',
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=85%', // Snappy ~85vh scroll distance
+          end: '+=115%', // Generous scroll travel so watermark, shutters, and beacon glide smoothly
           pin: true,
           pinSpacing: true,
-          scrub: 0.45,
-          fastScrollEnd: true,
-          preventOverlaps: true,
+          scrub: true, // Syncs 1:1 with Lenis smooth scroll (avoids double-damping lag/jumps)
+          fastScrollEnd: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 1,
         },
       });
 
-      // Step 1: Laser diagonal seam glows and watermark pulses
+      // Step 1: Laser diagonal seam glows and watermark pulses (0.00 -> 0.22)
       tl.to(watermarkRef.current, {
         scale: 1.06,
         opacity: 1,
-        duration: 0.18,
-        ease: 'power2.out',
+        duration: 0.22,
+        ease: 'sine.inOut',
       }, 0)
       .to(diagonalLaserRef.current, {
         opacity: 1,
-        duration: 0.18,
+        duration: 0.22,
       }, 0);
 
-      // Step 2: Inner Stage lights up behind the shutters
+      // Step 2: Inner Stage lights up behind the shutters (0.20 -> 0.66)
       tl.to(stageAuraRef.current, {
         scale: 1.1,
         opacity: 0.9,
-        duration: 0.35,
-        ease: 'power2.out',
-      }, 0.18)
+        duration: 0.42,
+        ease: 'sine.inOut',
+      }, 0.20)
       .to(stageContentRef.current, {
         y: 0,
         opacity: 1,
-        duration: 0.35,
-        ease: 'power3.out',
-      }, 0.22)
+        duration: 0.40,
+        ease: 'power2.out',
+      }, 0.26)
       .to(diagonalAccentRef.current, {
         scaleY: 1,
         opacity: 1,
-        duration: 0.38,
-        ease: 'power3.out',
-      }, 0.24);
+        duration: 0.40,
+        ease: 'power2.out',
+      }, 0.26);
 
-      // Step 3: Watermark expands and disperses
+      // Step 3: Watermark expands and disperses smoothly (0.22 -> 0.56)
       tl.to(watermarkRef.current, {
-        scale: 1.8,
+        scale: 1.75,
         opacity: 0,
-        duration: 0.28,
-        ease: 'power3.out',
+        duration: 0.34,
+        ease: 'power2.inOut',
       }, 0.22);
 
-      // Step 4: DUAL DIAGONAL SHUTTER SPLIT
-      // Left shutter slides to top-left, right shutter slides to bottom-right
+      // Step 4: DUAL DIAGONAL SHUTTER SPLIT (0.22 -> 0.82)
       tl.to(leftShutterRef.current, {
         xPercent: -108,
         yPercent: -42,
-        duration: 0.6,
-        ease: 'power3.inOut',
+        duration: 0.60,
+        ease: 'power2.inOut',
         force3D: true,
       }, 0.22)
       .to(rightShutterRef.current, {
         xPercent: 108,
         yPercent: 42,
-        duration: 0.6,
-        ease: 'power3.inOut',
+        duration: 0.60,
+        ease: 'power2.inOut',
         force3D: true,
       }, 0.22)
       .to(diagonalLaserRef.current, {
         opacity: 0,
-        duration: 0.25,
-      }, 0.35);
+        duration: 0.22,
+      }, 0.38);
+
+      // Step 5: Brief settled hold while beacon stays visible before natural scroll-out
+      tl.to({}, { duration: 0.14 }, 0.82);
 
     }, containerRef);
 
@@ -122,7 +126,7 @@ export default function EncoreDiagonalShutterTransition() {
     <div
       ref={containerRef}
       id="education-to-contact-transition"
-      className="relative w-full h-[100dvh] overflow-hidden select-none z-30 bg-[#FAFAFA] dark:bg-[#07080B]"
+      className="relative w-full h-[100svh] sm:h-screen overflow-hidden select-none z-30 bg-[#FAFAFA] dark:bg-[#07080B]"
       aria-label="Transition Stage · Encore Diagonal Shutter"
     >
       {/* ----------------------------------------------------------- */}

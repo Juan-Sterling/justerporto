@@ -43,76 +43,79 @@ export default function BatterUpStageTransition() {
           id: 'batterup-transition',
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=85%', // Snappy ~85vh scroll distance
+          end: '+=115%', // Generous scroll travel so watermark, doors, and beacon glide smoothly
           pin: true,
           pinSpacing: true,
-          scrub: 0.45,
-          fastScrollEnd: true,
-          preventOverlaps: true,
+          scrub: true, // Syncs 1:1 with Lenis smooth scroll (avoids double-damping lag/jumps)
+          fastScrollEnd: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 3,
         },
       });
 
-      // Step 1: Laser beam ignites horizontally along the center seam
+      // Step 1: Laser beam ignites horizontally along the center seam (0.00 -> 0.22)
       tl.to(laserBeamRef.current, {
         scaleX: 1,
         opacity: 1,
-        duration: 0.2,
-        ease: 'power3.out',
+        duration: 0.22,
+        ease: 'sine.inOut',
       }, 0)
       .to(watermarkRef.current, {
         scale: 1.08,
         opacity: 1,
-        duration: 0.2,
-        ease: 'power2.out',
+        duration: 0.22,
+        ease: 'sine.inOut',
       }, 0);
 
-      // Step 2: Inner Stage lights up behind the blast doors
+      // Step 2: Inner Stage lights up behind the blast doors (0.20 -> 0.66)
       tl.to(stageAuraRef.current, {
         scaleX: 1,
         opacity: 0.9,
-        duration: 0.35,
-        ease: 'power2.out',
-      }, 0.2)
+        duration: 0.42,
+        ease: 'sine.inOut',
+      }, 0.20)
       .to(stageContentRef.current, {
         y: 0,
         opacity: 1,
-        duration: 0.35,
-        ease: 'power3.out',
-      }, 0.25)
+        duration: 0.40,
+        ease: 'power2.out',
+      }, 0.26)
       .to(hudRulesRef.current, {
         scaleX: 1,
         opacity: 1,
-        duration: 0.4,
-        ease: 'power3.out',
-      }, 0.25);
+        duration: 0.40,
+        ease: 'power2.out',
+      }, 0.26);
 
-      // Step 3: Watermark expands and disperses
+      // Step 3: Watermark expands and disperses smoothly (0.22 -> 0.56)
       tl.to(watermarkRef.current, {
-        scale: 1.8,
+        scale: 1.75,
         opacity: 0,
-        duration: 0.28,
-        ease: 'power3.out',
-      }, 0.25);
+        duration: 0.34,
+        ease: 'power2.inOut',
+      }, 0.22);
 
-      // Step 4: Double Stadium Blast Doors split open (Top UP, Bottom DOWN)
+      // Step 4: Double Stadium Blast Doors split open (0.22 -> 0.80)
       tl.to(topDoorRef.current, {
         yPercent: -106,
-        duration: 0.55,
-        ease: 'power3.inOut',
+        duration: 0.58,
+        ease: 'power2.inOut',
         force3D: true,
-      }, 0.25)
+      }, 0.22)
       .to(bottomDoorRef.current, {
         yPercent: 106,
-        duration: 0.55,
-        ease: 'power3.inOut',
+        duration: 0.58,
+        ease: 'power2.inOut',
         force3D: true,
-      }, 0.25);
-
-      // Step 5: Fade beam and hand over to Skills
-      tl.to(laserBeamRef.current, {
+      }, 0.22)
+      .to(laserBeamRef.current, {
         opacity: 0,
-        duration: 0.2,
-      }, 0.6);
+        duration: 0.22,
+      }, 0.54);
+
+      // Step 5: Brief settled hold while beacon stays visible before natural scroll-out
+      tl.to({}, { duration: 0.14 }, 0.80);
 
     }, containerRef);
 
@@ -123,7 +126,7 @@ export default function BatterUpStageTransition() {
     <div
       ref={containerRef}
       id="experience-to-skills-transition"
-      className="relative w-full h-[100dvh] overflow-hidden select-none z-30 bg-[#FAFAFA] dark:bg-[#07080B]"
+      className="relative w-full h-[100svh] sm:h-screen overflow-hidden select-none z-30 bg-[#FAFAFA] dark:bg-[#07080B]"
       aria-label="Transition Stage · Batter Up"
     >
       {/* ----------------------------------------------------------- */}

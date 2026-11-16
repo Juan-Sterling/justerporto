@@ -43,76 +43,79 @@ export default function MonolithSplitTransition() {
           id: 'monolith-transition',
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=85%', // Snappy ~85vh scroll distance
+          end: '+=115%', // Generous scroll travel so watermark, gates, and beacon glide smoothly
           pin: true,
           pinSpacing: true,
-          scrub: 0.45,
-          fastScrollEnd: true,
-          preventOverlaps: true,
+          scrub: true, // Syncs 1:1 with Lenis smooth scroll (avoids double-damping lag/jumps)
+          fastScrollEnd: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          refreshPriority: 2,
         },
       });
 
-      // Step 1: Vertical laser beam ignites along the central seam
+      // Step 1: Vertical laser beam ignites along the central seam (0.00 -> 0.22)
       tl.to(verticalLaserRef.current, {
         scaleY: 1,
         opacity: 1,
-        duration: 0.2,
-        ease: 'power3.out',
+        duration: 0.22,
+        ease: 'sine.inOut',
       }, 0)
       .to(watermarkRef.current, {
         scale: 1.08,
         opacity: 1,
-        duration: 0.2,
-        ease: 'power2.out',
+        duration: 0.22,
+        ease: 'sine.inOut',
       }, 0);
 
-      // Step 2: Inner Stage lights up behind the gates
+      // Step 2: Inner Stage lights up behind the gates (0.20 -> 0.66)
       tl.to(stageAuraRef.current, {
         scaleY: 1,
         opacity: 0.9,
-        duration: 0.35,
-        ease: 'power2.out',
-      }, 0.2)
+        duration: 0.42,
+        ease: 'sine.inOut',
+      }, 0.20)
       .to(stageContentRef.current, {
         y: 0,
         opacity: 1,
-        duration: 0.35,
-        ease: 'power3.out',
-      }, 0.25)
+        duration: 0.40,
+        ease: 'power2.out',
+      }, 0.26)
       .to(centerSpineRef.current, {
         scaleY: 1,
         opacity: 1,
-        duration: 0.4,
-        ease: 'power3.out',
-      }, 0.25);
+        duration: 0.40,
+        ease: 'power2.out',
+      }, 0.26);
 
-      // Step 3: Watermark expands and disperses
+      // Step 3: Watermark expands and disperses smoothly (0.22 -> 0.56)
       tl.to(watermarkRef.current, {
-        scale: 1.8,
+        scale: 1.75,
         opacity: 0,
-        duration: 0.28,
-        ease: 'power3.out',
-      }, 0.25);
+        duration: 0.34,
+        ease: 'power2.inOut',
+      }, 0.22);
 
-      // Step 4: Left and Right Monolith Gates slide outward (Left to LEFT, Right to RIGHT)
+      // Step 4: Left and Right Monolith Gates slide outward (0.22 -> 0.80)
       tl.to(leftGateRef.current, {
         xPercent: -106,
-        duration: 0.55,
-        ease: 'power3.inOut',
+        duration: 0.58,
+        ease: 'power2.inOut',
         force3D: true,
-      }, 0.25)
+      }, 0.22)
       .to(rightGateRef.current, {
         xPercent: 106,
-        duration: 0.55,
-        ease: 'power3.inOut',
+        duration: 0.58,
+        ease: 'power2.inOut',
         force3D: true,
-      }, 0.25);
-
-      // Step 5: Fade vertical laser and complete reveal
-      tl.to(verticalLaserRef.current, {
+      }, 0.22)
+      .to(verticalLaserRef.current, {
         opacity: 0,
-        duration: 0.2,
-      }, 0.6);
+        duration: 0.22,
+      }, 0.54);
+
+      // Step 5: Brief settled hold while beacon stays visible before natural scroll-out
+      tl.to({}, { duration: 0.14 }, 0.80);
 
     }, containerRef);
 
@@ -123,7 +126,7 @@ export default function MonolithSplitTransition() {
     <div
       ref={containerRef}
       id="skills-to-education-transition"
-      className="relative w-full h-[100dvh] overflow-hidden select-none z-30 bg-[#FAFAFA] dark:bg-[#07080B]"
+      className="relative w-full h-[100svh] sm:h-screen overflow-hidden select-none z-30 bg-[#FAFAFA] dark:bg-[#07080B]"
       aria-label="Transition Stage · Forever Monolith"
     >
       {/* ----------------------------------------------------------- */}

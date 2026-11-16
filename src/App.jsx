@@ -38,6 +38,19 @@ const Contact = lazy(loadContact);
 const Footer = lazy(loadFooter);
 const SideProfilePage = lazy(() => import('./pages/SideProfilePage'));
 
+function BelowFoldScrollSync() {
+  useEffect(() => {
+    const rafId = window.requestAnimationFrame(() => {
+      if (window.__lenis) {
+        window.__lenis.resize();
+      }
+      ScrollTrigger.refresh();
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, []);
+  return null;
+}
+
 export default function App() {
   // Determine initial route based on URL path
   const getInitialRoute = () => {
@@ -352,6 +365,7 @@ export default function App() {
                   <Education />
                   <EncoreDiagonalShutterTransition />
                   <Contact />
+                  <BelowFoldScrollSync />
                 </Suspense>
               )}
             </main>
