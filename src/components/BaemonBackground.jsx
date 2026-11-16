@@ -8,11 +8,17 @@ import React, { useEffect, useRef } from 'react';
  * - Dynamic scroll interaction: Parallax depth layers + radial dispersion (clears the center for readability).
  * - Multi-device responsive tiering (Mobile: 20 shards, Tablet: 32 shards, PC: 48 shards) with DPR capping.
  * - 0% scroll jank / 60-120 FPS guaranteed via zero-allocation render loop and lerped scroll tracking.
- * - Single-color solid shards in pure black (#000000) and BABYMONSTER crimson red (#E11D2E).
+ * - Single-color solid shards in pure black (#000000) in light mode, pure white (#FFFFFF) in dark mode, and BABYMONSTER crimson red (#E11D2E).
  */
 const SHARD_COLORS = {
-  chrome: '#000000',
-  ruby: '#E11D2E',
+  light: {
+    chrome: '#000000',
+    ruby: '#E11D2E',
+  },
+  dark: {
+    chrome: '#FFFFFF',
+    ruby: '#E11D2E',
+  },
 };
 
 export default function BaemonBackground({ paused = false }) {
@@ -36,7 +42,6 @@ export default function BaemonBackground({ paused = false }) {
     // Scroll state tracking with smooth lerp
     let targetScrollY = window.scrollY || window.pageYOffset || 0;
     let currentScrollY = targetScrollY;
-    let scrollVelocity = 0;
 
     // Theme state
     let isDark = document.documentElement.classList.contains('dark');
@@ -45,6 +50,37 @@ export default function BaemonBackground({ paused = false }) {
     let width = window.innerWidth;
     let height = window.innerHeight;
     let dpr = 1;
+    let cachedBgGrad = null;
+
+    const rebuildGradient = () => {
+      if (isDark) {
+        const g = ctx.createRadialGradient(
+          width * 0.5,
+          height * 0.45,
+          20,
+          width * 0.5,
+          height * 0.45,
+          Math.min(width, height) * 0.58
+        );
+        g.addColorStop(0, 'rgba(225, 29, 46, 0.075)');
+        g.addColorStop(0.45, 'rgba(180, 15, 30, 0.025)');
+        g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        cachedBgGrad = g;
+      } else {
+        const g = ctx.createRadialGradient(
+          width * 0.5,
+          height * 0.45,
+          20,
+          width * 0.5,
+          height * 0.45,
+          Math.min(width, height) * 0.55
+        );
+        g.addColorStop(0, 'rgba(225, 29, 46, 0.035)');
+        g.addColorStop(0.5, 'rgba(244, 63, 94, 0.012)');
+        g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        cachedBgGrad = g;
+      }
+    };
 
     // Pre-allocated array of shards
     let shards = [];
@@ -65,8 +101,8 @@ export default function BaemonBackground({ paused = false }) {
 
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      rebuildGradient();
 
       const count = isMobile ? 22 : isTablet ? 34 : 50;
       shards = [];
@@ -154,7 +190,11 @@ export default function BaemonBackground({ paused = false }) {
 
     // Theme observer (Dark / Light mode change)
     const themeObserver = new MutationObserver(() => {
-      isDark = document.documentElement.classList.contains('dark');
+      const nextIsDark = document.documentElement.classList.contains('dark');
+      if (nextIsDark !== isDark) {
+        isDark = nextIsDark;
+        rebuildGradient();
+      }
     });
     themeObserver.observe(document.documentElement, {
       attributes: true,
@@ -202,40 +242,14 @@ export default function BaemonBackground({ paused = false }) {
       time += dt;
 
       // Smooth scroll lerping for silky response
-      const prevScroll = currentScrollY;
       currentScrollY += (targetScrollY - currentScrollY) * 0.12;
-      scrollVelocity = (currentScrollY - prevScroll) / (dt || 0.016);
 
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Ambient Volumetric Glow behind center
-      if (isDark) {
-        const radGrad = ctx.createRadialGradient(
-          width * 0.5,
-          height * 0.45,
-          20,
-          width * 0.5,
-          height * 0.45,
-          Math.min(width, height) * 0.58
-        );
-        radGrad.addColorStop(0, 'rgba(225, 29, 46, 0.075)');
-        radGrad.addColorStop(0.45, 'rgba(180, 15, 30, 0.025)');
-        radGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = radGrad;
-        ctx.fillRect(0, 0, width, height);
-      } else {
-        const radGrad = ctx.createRadialGradient(
-          width * 0.5,
-          height * 0.45,
-          20,
-          width * 0.5,
-          height * 0.45,
-          Math.min(width, height) * 0.55
-        );
-        radGrad.addColorStop(0, 'rgba(225, 29, 46, 0.035)');
-        radGrad.addColorStop(0.5, 'rgba(244, 63, 94, 0.012)');
-        radGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.fillStyle = radGrad;
+      // 1. Ambient Volumetric Glow behind center (cached radial gradient)
+      if (cachedBgGrad) {
+        ctx.fillStyle = cachedBgGrad;
         ctx.fillRect(0, 0, width, height);
       }
 
@@ -273,14 +287,13 @@ export default function BaemonBackground({ paused = false }) {
         // Rotation: Ambient slow spin + scroll velocity impulse
         const currentRot = s.rot + time * s.rotSpeed + currentScrollY * 0.0018 * (s.z > 0.5 ? 1 : -1);
 
-        ctx.save();
-        ctx.translate(posX, posY);
+        ctx.setTransform(dpr, 0, 0, dpr, posX * dpr, posY * dpr);
         ctx.rotate(currentRot);
 
         const halfL = s.length * 0.5;
         const halfW = s.width * 0.5;
 
-        ctx.fillStyle = SHARD_COLORS[s.material];
+        ctx.fillStyle = (isDark ? SHARD_COLORS.dark : SHARD_COLORS.light)[s.material];
 
         if (s.type === 0) {
           // --- TYPE 0: DIAMOND / RHOMBOID SHARD ---
@@ -307,8 +320,6 @@ export default function BaemonBackground({ paused = false }) {
           ctx.ellipse(0, 0, halfW * 0.35, halfL * 0.75, 0, 0, Math.PI * 2);
           ctx.fill();
         }
-
-        ctx.restore();
       }
 
       animFrameId = requestAnimationFrame(render);

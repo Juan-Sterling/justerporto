@@ -84,17 +84,17 @@ export default function SectionTitle({
         >
           {/* Primary Crimson Animated Accent Line */}
           <div
-            className="h-[2px] bg-gradient-to-r from-[#E11D2E] via-[#FF3B4D] to-transparent rounded-full transition-all duration-700 ease-out will-change-all origin-left group-hover/title:w-24 sm:group-hover/title:w-28 group-hover/title:shadow-[0_0_10px_rgba(225,29,46,0.8)]"
+            className="w-[68px] h-[2px] bg-gradient-to-r from-[#E11D2E] via-[#FF3B4D] to-transparent rounded-full transition-transform duration-700 ease-out origin-left group-hover/title:scale-x-125 group-hover/title:shadow-[0_0_10px_rgba(225,29,46,0.8)]"
             style={{
-              width: isInView ? '68px' : '0px',
+              transform: isInView ? 'scaleX(1)' : 'scaleX(0)',
               transitionDelay: '240ms',
             }}
           />
           {/* Secondary Tech Track Line */}
           <div
-            className="h-[2px] bg-[#D4D4D8] dark:bg-zinc-600 dark:bg-white/30 rounded-full transition-all duration-700 ease-out will-change-all origin-left"
+            className="w-[42px] h-[2px] bg-[#D4D4D8] dark:bg-zinc-600 dark:bg-white/30 rounded-full transition-transform duration-700 ease-out origin-left"
             style={{
-              width: isInView ? '42px' : '0px',
+              transform: isInView ? 'scaleX(1)' : 'scaleX(0)',
               transitionDelay: '380ms',
             }}
           />

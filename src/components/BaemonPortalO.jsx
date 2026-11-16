@@ -40,10 +40,10 @@ const BaemonPortalO = forwardRef(function BaemonPortalO(
           className="absolute w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-full bg-radial from-[#FF3B4D]/35 via-[#E11D2E]/15 to-transparent blur-sm pointer-events-none opacity-0"
         />
 
-        {/* 4. Scalable Outer Ring Container */}
+        {/* 4. Scalable Outer Ring Container (single compositor layer for smooth 1->9x scroll zoom) */}
         <div
           ref={ringScaleRef}
-          className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none"
+          className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none will-change-transform"
         >
           <svg
             viewBox="0 0 400 400"

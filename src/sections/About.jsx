@@ -5,7 +5,8 @@ import { portfolioData } from '../data/portfolioData';
 import { useTheme } from '../context/ThemeContext';
 import { Home, MapPin, Calendar, Code2, Sparkles, AtSign } from 'lucide-react';
 
-const ThreePassBadge = lazy(() => import('../components/ThreePassBadge'));
+const loadThreePassBadge = () => import('../components/ThreePassBadge');
+const ThreePassBadge = lazy(loadThreePassBadge);
 
 const ICON_MAP = {
   Home,
@@ -22,27 +23,44 @@ export default function About() {
   const badgeSlotRef = useRef(null);
   const [shouldLoadBadge, setShouldLoadBadge] = useState(false);
 
-  // Defer heavy Three.js WebGL initialization until About approaches viewport
+  // Pre-warm ThreePassBadge quietly during idle time while user is on Hero
+  // so WebGL context & shaders are already compiled before scrolling to About.
   useEffect(() => {
     if (shouldLoadBadge) return;
+
+    let idleId = null;
+    const warmTimer = window.setTimeout(() => {
+      loadThreePassBadge().then(() => {
+        if (typeof window.requestIdleCallback === 'function') {
+          idleId = window.requestIdleCallback(() => setShouldLoadBadge(true), { timeout: 1200 });
+        } else {
+          setShouldLoadBadge(true);
+        }
+      });
+    }, 1200);
+
     const el = badgeSlotRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') {
-      setShouldLoadBadge(true);
-      return;
+    let observer = null;
+    if (el && typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0]?.isIntersecting) {
+            setShouldLoadBadge(true);
+            observer?.disconnect();
+          }
+        },
+        { rootMargin: '60px 0px' }
+      );
+      observer.observe(el);
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setShouldLoadBadge(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '400px 0px' }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      window.clearTimeout(warmTimer);
+      if (idleId && typeof window.cancelIdleCallback === 'function') {
+        window.cancelIdleCallback(idleId);
+      }
+      observer?.disconnect();
+    };
   }, [shouldLoadBadge]);
 
   useEffect(() => {
