@@ -1,14 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, startTransition, Suspense, lazy } from 'react';
 import { flushSync } from 'react-dom';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WelcomeScreen from './components/WelcomeScreen';
 import Navbar from './components/Navbar';
 import Hero from './sections/Hero';
-import Education from './sections/Education';
-import Skills from './sections/Skills';
-import Experience from './sections/Experience';
-import Contact from './sections/Contact';
-import Footer from './components/Footer';
 import BaemonBackground from './components/BaemonBackground';
 // [SAVED FOR FUTURE USE] Wave, Geometric & Rain Backgrounds:
 // import BaemonCrimsonWaveBackground from './components/BaemonCrimsonWaveBackground';
@@ -16,11 +11,45 @@ import BaemonBackground from './components/BaemonBackground';
 // import BaemonRainBackground from './components/BaemonRainBackground';
 // import WorkBackground from './components/WorkBackground';
 import ReactiveAmbientGlow from './components/ReactiveAmbientGlow';
-import LaserSectionDivider from './components/LaserSectionDivider';
 import { SkillModalProvider } from './context/SkillModalContext';
 import { SmoothScrollProvider } from './context/SmoothScrollContext';
-import SideProfilePage from './pages/SideProfilePage';
 import ToxicScreenTransition from './components/sideprofile/ToxicScreenTransition';
+
+const loadAbout = () => import('./sections/About');
+const loadSevenMemberSlitTransition = () => import('./components/transitions/SevenMemberSlitTransition');
+const loadExperience = () => import('./sections/Experience');
+const loadBatterUpStageTransition = () => import('./components/transitions/BatterUpStageTransition');
+const loadSkills = () => import('./sections/Skills');
+const loadMonolithSplitTransition = () => import('./components/transitions/MonolithSplitTransition');
+const loadEducation = () => import('./sections/Education');
+const loadEncoreDiagonalShutterTransition = () => import('./components/transitions/EncoreDiagonalShutterTransition');
+const loadContact = () => import('./sections/Contact');
+const loadFooter = () => import('./components/Footer');
+
+const About = lazy(loadAbout);
+const SevenMemberSlitTransition = lazy(loadSevenMemberSlitTransition);
+const Experience = lazy(loadExperience);
+const BatterUpStageTransition = lazy(loadBatterUpStageTransition);
+const Skills = lazy(loadSkills);
+const MonolithSplitTransition = lazy(loadMonolithSplitTransition);
+const Education = lazy(loadEducation);
+const EncoreDiagonalShutterTransition = lazy(loadEncoreDiagonalShutterTransition);
+const Contact = lazy(loadContact);
+const Footer = lazy(loadFooter);
+const SideProfilePage = lazy(() => import('./pages/SideProfilePage'));
+
+function BelowFoldScrollSync() {
+  useEffect(() => {
+    const rafId = window.requestAnimationFrame(() => {
+      if (window.__lenis) {
+        window.__lenis.resize();
+      }
+      ScrollTrigger.refresh();
+    });
+    return () => window.cancelAnimationFrame(rafId);
+  }, []);
+  return null;
+}
 
 export default function App() {
   // Determine initial route based on URL path
@@ -58,15 +87,17 @@ export default function App() {
   }, []);
 
   const handleComplete = useCallback(() => {
-    setShowWelcome(false);
+    startTransition(() => {
+      setShowWelcome(false);
+    });
     if (window.__lenis) {
       window.__lenis.resize();
       window.__lenis.start();
     }
-    // Refresh ScrollTriggers once the welcome screen overlay is removed
+    // Refresh ScrollTriggers after below-the-fold sections mount in transition
     setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 60);
+    }, 180);
   }, []);
 
   // Helper: Reliable return to Main Portfolio
@@ -208,7 +239,7 @@ export default function App() {
   useEffect(() => {
     if (currentRoute !== '/') return;
 
-    const sections = ['experience', 'skills', 'education', 'contact'];
+    const sections = ['about', 'experience', 'skills', 'education', 'contact'];
     let ticking = false;
 
     const handleScroll = () => {
@@ -230,7 +261,7 @@ export default function App() {
             }
           }
 
-          // If above experience, clear active section
+          // If above about, clear active section
           setActiveSection('');
           ticking = false;
         });
@@ -243,7 +274,26 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [currentRoute]);
 
+  // Prefetch below-the-fold chunks quietly after WelcomeScreen starts playing
+  useEffect(() => {
+    if (isInitialSideProfile) return;
+    const timer = window.setTimeout(() => {
+      loadAbout();
+      loadSevenMemberSlitTransition();
+      loadExperience();
+      loadBatterUpStageTransition();
+      loadSkills();
+      loadMonolithSplitTransition();
+      loadEducation();
+      loadEncoreDiagonalShutterTransition();
+      loadContact();
+      loadFooter();
+    }, 1200);
+    return () => window.clearTimeout(timer);
+  }, [isInitialSideProfile]);
+
   const isSideProfile = currentRoute === '/sideprofile';
+  const showBelowFoldSections = !showWelcome;
 
   // Synchronize route class on document.documentElement for route-specific palette styling (Scrollbars, accents)
   useEffect(() => {
@@ -272,7 +322,7 @@ export default function App() {
           {/* MAIN BABYMONSTER PORTFOLIO: Kept mounted in the DOM to eliminate heavy re-mount lag */}
           <div
             style={{ display: isSideProfile ? 'none' : 'flex' }}
-            className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex-col selection:bg-[#E11D2E]/30 selection:text-white overflow-x-hidden w-full max-w-full"
+            className="min-h-screen bg-[#FAFAFA] dark:bg-[#0f1117] text-[#09090B] dark:text-white flex-col selection:bg-[#E11D2E]/30 selection:text-white overflow-x-clip w-full max-w-full"
           >
             {/* Opening Welcome Screen Animation */}
             {showWelcome && (
@@ -286,8 +336,8 @@ export default function App() {
             {/* Sticky Header Navigation */}
             <Navbar activeSection={activeSection} />
 
-            {/* Atmospheric BABYMONSTER Ambient Background Canvas */}
-            <BaemonBackground />
+            {/* Atmospheric BABYMONSTER Ambient Background Canvas (paused while WelcomeScreen covers viewport) */}
+            <BaemonBackground paused={showWelcome || isSideProfile} />
 
             {/* [SAVED FOR FUTURE USE] Alternative Background Components: */}
             {/* <BaemonGeometricBackground /> */}
@@ -297,34 +347,47 @@ export default function App() {
             {/* GSAP Scroll-Driven Reactive Ambient Lighting Atmosphere */}
             <ReactiveAmbientGlow />
 
-            {/* Main Content Sections with Laser Horizon Transitions */}
+            {/* Main Content Sections with Full-Screen Stage Transitions */}
             <main className="flex-1 w-full relative z-10">
-              {/* Hero Portal Zooms directly into Experience */}
               <Hero
                 welcomeActive={showWelcome && !welcomeExiting}
+                scrollReady={!showWelcome}
                 portalEntranceTrigger={portalEntranceTrigger}
               />
-              <Experience />
-              <LaserSectionDivider />
-              <Skills />
-              <LaserSectionDivider />
-              <Education />
-              <LaserSectionDivider />
-              <Contact />
+              {showBelowFoldSections && (
+                <Suspense fallback={null}>
+                  <About />
+                  <SevenMemberSlitTransition />
+                  <Experience />
+                  <BatterUpStageTransition />
+                  <Skills />
+                  <MonolithSplitTransition />
+                  <Education />
+                  <EncoreDiagonalShutterTransition />
+                  <Contact />
+                  <BelowFoldScrollSync />
+                </Suspense>
+              )}
             </main>
 
             {/* Semantic Footer with Balanced Left-Right Layout */}
-            <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
+            {showBelowFoldSections && (
+              <Suspense fallback={null}>
+                <Footer onNavigateToSideProfile={() => navigateTo('/sideprofile')} />
+              </Suspense>
+            )}
           </div>
 
 
 
           {/* SIDE PROFILE PAGE: Mounted only when active */}
           {isSideProfile && (
-            <SideProfilePage
-              isReady={sideProfileEntranceReady}
-              onBackToPortfolio={() => navigateTo('/')}
-            />
+            <Suspense fallback={null}>
+              <SideProfilePage
+                isReady={sideProfileEntranceReady}
+                onBackToPortfolio={() => navigateTo('/')}
+              />
+            </Suspense>
           )}
         </SkillModalProvider>
     </SmoothScrollProvider>

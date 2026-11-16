@@ -8,10 +8,26 @@ import React, { useEffect, useRef } from 'react';
  * - Dynamic scroll interaction: Parallax depth layers + radial dispersion (clears the center for readability).
  * - Multi-device responsive tiering (Mobile: 20 shards, Tablet: 32 shards, PC: 48 shards) with DPR capping.
  * - 0% scroll jank / 60-120 FPS guaranteed via zero-allocation render loop and lerped scroll tracking.
- * - Full Dark Mode & Light Mode fidelity with adaptive facet gradients and crisp specular rims.
+ * - Single-color solid shards in pure black (#000000) in light mode, pure white (#FFFFFF) in dark mode, and BABYMONSTER crimson red (#E11D2E).
  */
-export default function BaemonBackground() {
+const SHARD_COLORS = {
+  light: {
+    chrome: '#000000',
+    ruby: '#E11D2E',
+  },
+  dark: {
+    chrome: '#FFFFFF',
+    ruby: '#E11D2E',
+  },
+};
+
+export default function BaemonBackground({ paused = false }) {
   const canvasRef = useRef(null);
+  const pausedRef = useRef(paused);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,7 +42,6 @@ export default function BaemonBackground() {
     // Scroll state tracking with smooth lerp
     let targetScrollY = window.scrollY || window.pageYOffset || 0;
     let currentScrollY = targetScrollY;
-    let scrollVelocity = 0;
 
     // Theme state
     let isDark = document.documentElement.classList.contains('dark');
@@ -35,6 +50,37 @@ export default function BaemonBackground() {
     let width = window.innerWidth;
     let height = window.innerHeight;
     let dpr = 1;
+    let cachedBgGrad = null;
+
+    const rebuildGradient = () => {
+      if (isDark) {
+        const g = ctx.createRadialGradient(
+          width * 0.5,
+          height * 0.45,
+          20,
+          width * 0.5,
+          height * 0.45,
+          Math.min(width, height) * 0.58
+        );
+        g.addColorStop(0, 'rgba(225, 29, 46, 0.075)');
+        g.addColorStop(0.45, 'rgba(180, 15, 30, 0.025)');
+        g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        cachedBgGrad = g;
+      } else {
+        const g = ctx.createRadialGradient(
+          width * 0.5,
+          height * 0.45,
+          20,
+          width * 0.5,
+          height * 0.45,
+          Math.min(width, height) * 0.55
+        );
+        g.addColorStop(0, 'rgba(225, 29, 46, 0.035)');
+        g.addColorStop(0.5, 'rgba(244, 63, 94, 0.012)');
+        g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        cachedBgGrad = g;
+      }
+    };
 
     // Pre-allocated array of shards
     let shards = [];
@@ -55,8 +101,8 @@ export default function BaemonBackground() {
 
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      rebuildGradient();
 
       const count = isMobile ? 22 : isTablet ? 34 : 50;
       shards = [];
@@ -144,7 +190,11 @@ export default function BaemonBackground() {
 
     // Theme observer (Dark / Light mode change)
     const themeObserver = new MutationObserver(() => {
-      isDark = document.documentElement.classList.contains('dark');
+      const nextIsDark = document.documentElement.classList.contains('dark');
+      if (nextIsDark !== isDark) {
+        isDark = nextIsDark;
+        rebuildGradient();
+      }
     });
     themeObserver.observe(document.documentElement, {
       attributes: true,
@@ -181,45 +231,25 @@ export default function BaemonBackground() {
         return;
       }
 
+      if (pausedRef.current) {
+        lastTime = now;
+        animFrameId = requestAnimationFrame(render);
+        return;
+      }
+
       const dt = Math.min((now - lastTime) / 1000, 0.05); // Cap dt to avoid large jumps
       lastTime = now;
       time += dt;
 
       // Smooth scroll lerping for silky response
-      const prevScroll = currentScrollY;
       currentScrollY += (targetScrollY - currentScrollY) * 0.12;
-      scrollVelocity = (currentScrollY - prevScroll) / (dt || 0.016);
 
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Ambient Volumetric Glow behind center
-      if (isDark) {
-        const radGrad = ctx.createRadialGradient(
-          width * 0.5,
-          height * 0.45,
-          20,
-          width * 0.5,
-          height * 0.45,
-          Math.min(width, height) * 0.58
-        );
-        radGrad.addColorStop(0, 'rgba(225, 29, 46, 0.075)');
-        radGrad.addColorStop(0.45, 'rgba(180, 15, 30, 0.025)');
-        radGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = radGrad;
-        ctx.fillRect(0, 0, width, height);
-      } else {
-        const radGrad = ctx.createRadialGradient(
-          width * 0.5,
-          height * 0.45,
-          20,
-          width * 0.5,
-          height * 0.45,
-          Math.min(width, height) * 0.55
-        );
-        radGrad.addColorStop(0, 'rgba(225, 29, 46, 0.035)');
-        radGrad.addColorStop(0.5, 'rgba(244, 63, 94, 0.012)');
-        radGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.fillStyle = radGrad;
+      // 1. Ambient Volumetric Glow behind center (cached radial gradient)
+      if (cachedBgGrad) {
+        ctx.fillStyle = cachedBgGrad;
         ctx.fillRect(0, 0, width, height);
       }
 
@@ -257,110 +287,23 @@ export default function BaemonBackground() {
         // Rotation: Ambient slow spin + scroll velocity impulse
         const currentRot = s.rot + time * s.rotSpeed + currentScrollY * 0.0018 * (s.z > 0.5 ? 1 : -1);
 
-        ctx.save();
-        ctx.translate(posX, posY);
+        ctx.setTransform(dpr, 0, 0, dpr, posX * dpr, posY * dpr);
         ctx.rotate(currentRot);
 
         const halfL = s.length * 0.5;
         const halfW = s.width * 0.5;
 
-        // Shard Alpha based on depth and theme
-        const baseAlpha = isDark ? (0.45 + s.z * 0.45) : (0.55 + s.z * 0.4);
+        ctx.fillStyle = (isDark ? SHARD_COLORS.dark : SHARD_COLORS.light)[s.material];
 
         if (s.type === 0) {
-          // --- TYPE 0: CHISELED DIAMOND / RHOMBOID (2 Facets + Center Ridge) ---
-          // Left Facet (Light/Reflection face)
-          ctx.beginPath();
-          ctx.moveTo(0, -halfL);
-          ctx.lineTo(-halfW, 0);
-          ctx.lineTo(0, halfL);
-          ctx.closePath();
-
-          if (s.material === 'chrome') {
-            const gradLeft = ctx.createLinearGradient(-halfW, -halfL * 0.5, 0, halfL * 0.5);
-            if (isDark) {
-              gradLeft.addColorStop(0, `rgba(255, 255, 255, ${baseAlpha.toFixed(2)})`);
-              gradLeft.addColorStop(0.5, `rgba(180, 195, 215, ${(baseAlpha * 0.85).toFixed(2)})`);
-              gradLeft.addColorStop(1, `rgba(80, 95, 115, ${(baseAlpha * 0.6).toFixed(2)})`);
-            } else {
-              gradLeft.addColorStop(0, `rgba(148, 163, 184, ${(baseAlpha * 0.9).toFixed(2)})`);
-              gradLeft.addColorStop(0.5, `rgba(203, 213, 225, ${(baseAlpha * 0.75).toFixed(2)})`);
-              gradLeft.addColorStop(1, `rgba(71, 85, 105, ${(baseAlpha * 0.85).toFixed(2)})`);
-            }
-            ctx.fillStyle = gradLeft;
-          } else {
-            // Ruby Material
-            const gradLeft = ctx.createLinearGradient(-halfW, -halfL * 0.5, 0, halfL * 0.5);
-            if (isDark) {
-              gradLeft.addColorStop(0, `rgba(255, 75, 95, ${baseAlpha.toFixed(2)})`);
-              gradLeft.addColorStop(0.6, `rgba(225, 29, 46, ${(baseAlpha * 0.9).toFixed(2)})`);
-              gradLeft.addColorStop(1, `rgba(140, 10, 25, ${(baseAlpha * 0.7).toFixed(2)})`);
-            } else {
-              gradLeft.addColorStop(0, `rgba(244, 63, 94, ${(baseAlpha * 0.85).toFixed(2)})`);
-              gradLeft.addColorStop(0.7, `rgba(190, 18, 40, ${(baseAlpha * 0.85).toFixed(2)})`);
-              gradLeft.addColorStop(1, `rgba(136, 19, 35, ${(baseAlpha * 0.95).toFixed(2)})`);
-            }
-            ctx.fillStyle = gradLeft;
-          }
-          ctx.fill();
-
-          // Right Facet (Shaded face)
-          ctx.beginPath();
-          ctx.moveTo(0, -halfL);
-          ctx.lineTo(halfW, 0);
-          ctx.lineTo(0, halfL);
-          ctx.closePath();
-
-          if (s.material === 'chrome') {
-            const gradRight = ctx.createLinearGradient(0, -halfL * 0.5, halfW, halfL * 0.5);
-            if (isDark) {
-              gradRight.addColorStop(0, `rgba(90, 100, 120, ${(baseAlpha * 0.75).toFixed(2)})`);
-              gradRight.addColorStop(0.5, `rgba(35, 42, 55, ${(baseAlpha * 0.9).toFixed(2)})`);
-              gradRight.addColorStop(1, `rgba(15, 20, 30, ${(baseAlpha * 0.95).toFixed(2)})`);
-            } else {
-              gradRight.addColorStop(0, `rgba(71, 85, 105, ${(baseAlpha * 0.95).toFixed(2)})`);
-              gradRight.addColorStop(0.5, `rgba(51, 65, 85, ${(baseAlpha * 0.9).toFixed(2)})`);
-              gradRight.addColorStop(1, `rgba(30, 41, 59, ${(baseAlpha * 0.85).toFixed(2)})`);
-            }
-            ctx.fillStyle = gradRight;
-          } else {
-            // Ruby Material Shaded
-            const gradRight = ctx.createLinearGradient(0, -halfL * 0.5, halfW, halfL * 0.5);
-            if (isDark) {
-              gradRight.addColorStop(0, `rgba(160, 15, 30, ${(baseAlpha * 0.85).toFixed(2)})`);
-              gradRight.addColorStop(0.5, `rgba(85, 5, 15, ${(baseAlpha * 0.9).toFixed(2)})`);
-              gradRight.addColorStop(1, `rgba(35, 0, 8, ${(baseAlpha * 0.95).toFixed(2)})`);
-            } else {
-              gradRight.addColorStop(0, `rgba(159, 18, 57, ${(baseAlpha * 0.95).toFixed(2)})`);
-              gradRight.addColorStop(0.5, `rgba(112, 10, 38, ${(baseAlpha * 0.9).toFixed(2)})`);
-              gradRight.addColorStop(1, `rgba(76, 5, 25, ${(baseAlpha * 0.85).toFixed(2)})`);
-            }
-            ctx.fillStyle = gradRight;
-          }
-          ctx.fill();
-
-          // Center Specular Ridge Line (Razor-sharp highlight)
-          ctx.beginPath();
-          ctx.moveTo(0, -halfL);
-          ctx.lineTo(0, halfL);
-          ctx.lineWidth = 0.85;
-          ctx.strokeStyle = isDark
-            ? (s.material === 'chrome' ? `rgba(255, 255, 255, ${(baseAlpha * 0.95).toFixed(2)})` : `rgba(255, 140, 155, ${(baseAlpha * 0.9).toFixed(2)})`)
-            : (s.material === 'chrome' ? `rgba(255, 255, 255, ${(baseAlpha * 0.7).toFixed(2)})` : `rgba(255, 200, 210, ${(baseAlpha * 0.6).toFixed(2)})`);
-          ctx.stroke();
-
-          // Outer Chiseled Rim Outline
+          // --- TYPE 0: DIAMOND / RHOMBOID SHARD ---
           ctx.beginPath();
           ctx.moveTo(0, -halfL);
           ctx.lineTo(-halfW, 0);
           ctx.lineTo(0, halfL);
           ctx.lineTo(halfW, 0);
           ctx.closePath();
-          ctx.lineWidth = 0.6;
-          ctx.strokeStyle = isDark
-            ? `rgba(255, 255, 255, ${(baseAlpha * 0.35).toFixed(2)})`
-            : `rgba(30, 41, 59, ${(baseAlpha * 0.45).toFixed(2)})`;
-          ctx.stroke();
+          ctx.fill();
 
         } else if (s.type === 1) {
           // --- TYPE 1: TRIANGULAR DAGGER FRAGMENT ---
@@ -369,55 +312,14 @@ export default function BaemonBackground() {
           ctx.lineTo(-halfW * 0.9, halfL);
           ctx.lineTo(halfW * 0.5, halfL * 0.7);
           ctx.closePath();
-
-          const grad = ctx.createLinearGradient(-halfW, -halfL, halfW, halfL);
-          if (s.material === 'chrome') {
-            if (isDark) {
-              grad.addColorStop(0, `rgba(240, 245, 255, ${baseAlpha.toFixed(2)})`);
-              grad.addColorStop(0.5, `rgba(130, 145, 170, ${(baseAlpha * 0.7).toFixed(2)})`);
-              grad.addColorStop(1, `rgba(20, 25, 35, ${(baseAlpha * 0.9).toFixed(2)})`);
-            } else {
-              grad.addColorStop(0, `rgba(203, 213, 225, ${(baseAlpha * 0.8).toFixed(2)})`);
-              grad.addColorStop(0.5, `rgba(100, 116, 139, ${(baseAlpha * 0.85).toFixed(2)})`);
-              grad.addColorStop(1, `rgba(30, 41, 59, ${(baseAlpha * 0.9).toFixed(2)})`);
-            }
-          } else {
-            if (isDark) {
-              grad.addColorStop(0, `rgba(255, 60, 80, ${baseAlpha.toFixed(2)})`);
-              grad.addColorStop(0.6, `rgba(200, 20, 35, ${(baseAlpha * 0.85).toFixed(2)})`);
-              grad.addColorStop(1, `rgba(50, 0, 10, ${(baseAlpha * 0.95).toFixed(2)})`);
-            } else {
-              grad.addColorStop(0, `rgba(244, 63, 94, ${(baseAlpha * 0.85).toFixed(2)})`);
-              grad.addColorStop(0.6, `rgba(190, 18, 40, ${(baseAlpha * 0.9).toFixed(2)})`);
-              grad.addColorStop(1, `rgba(76, 5, 25, ${(baseAlpha * 0.95).toFixed(2)})`);
-            }
-          }
-          ctx.fillStyle = grad;
           ctx.fill();
-
-          ctx.lineWidth = 0.65;
-          ctx.strokeStyle = isDark
-            ? (s.material === 'chrome' ? `rgba(255, 255, 255, ${(baseAlpha * 0.6).toFixed(2)})` : `rgba(255, 90, 110, ${(baseAlpha * 0.7).toFixed(2)})`)
-            : `rgba(15, 23, 42, ${(baseAlpha * 0.5).toFixed(2)})`;
-          ctx.stroke();
 
         } else {
           // --- TYPE 2: MICRO NEEDLE / EMBER FLECK ---
           ctx.beginPath();
           ctx.ellipse(0, 0, halfW * 0.35, halfL * 0.75, 0, 0, Math.PI * 2);
-          if (s.material === 'chrome') {
-            ctx.fillStyle = isDark
-              ? `rgba(240, 245, 255, ${(baseAlpha * 0.8).toFixed(2)})`
-              : `rgba(71, 85, 105, ${(baseAlpha * 0.7).toFixed(2)})`;
-          } else {
-            ctx.fillStyle = isDark
-              ? `rgba(255, 55, 75, ${(baseAlpha * 0.85).toFixed(2)})`
-              : `rgba(225, 29, 46, ${(baseAlpha * 0.75).toFixed(2)})`;
-          }
           ctx.fill();
         }
-
-        ctx.restore();
       }
 
       animFrameId = requestAnimationFrame(render);

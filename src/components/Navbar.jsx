@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Menu, X, Code2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
@@ -6,6 +6,7 @@ import BaemonNavbarFrame from './BaemonNavbarFrame';
 import { useSmoothScroll } from '../context/SmoothScrollContext';
 
 const NAV_ITEMS = [
+  { id: 'about', label: 'About' },
   { id: 'experience', label: 'Work Experience' },
   { id: 'skills', label: 'Skills' },
   { id: 'education', label: 'Education' },
@@ -16,9 +17,18 @@ export default function Navbar({ activeSection = '' }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [clickedSection, setClickedSection] = useState(null);
+  const clearClickTimerRef = useRef(null);
   const { scrollTo } = useSmoothScroll();
 
   const effectiveActive = clickedSection && clickedSection !== activeSection ? clickedSection : activeSection;
+
+  useEffect(() => {
+    return () => {
+      if (clearClickTimerRef.current) {
+        clearTimeout(clearClickTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,15 +57,18 @@ export default function Navbar({ activeSection = '' }) {
   const handleNavClick = (id) => {
     setIsOpen(false);
     setClickedSection(id);
-    // For experience, offset: 2 ensures we cleanly complete Hero's 100vh pin
-    // For other sections, -15 offset preserves breathing room below floating navbar
-    const offset = id === 'experience' ? 2 : -15;
+    /* For about, offset: 2 ensures we cleanly complete Hero's 100vh pin */
+    /* For other sections, -15 offset preserves breathing room below floating navbar */
+    const offset = id === 'about' ? 2 : -15;
     scrollTo(`#${id}`, { offset });
 
-    // Safety clear clicked override after transition & scroll completes
-    setTimeout(() => {
+    // Safety clear clicked override after 2.2s scroll completes
+    if (clearClickTimerRef.current) {
+      clearTimeout(clearClickTimerRef.current);
+    }
+    clearClickTimerRef.current = setTimeout(() => {
       setClickedSection(null);
-    }, 1000);
+    }, 2300);
   };
 
   return (
@@ -80,8 +93,12 @@ export default function Navbar({ activeSection = '' }) {
             href="#hero"
             onClick={(e) => {
               e.preventDefault();
+              setIsOpen(false);
+              if (clearClickTimerRef.current) {
+                clearTimeout(clearClickTimerRef.current);
+              }
               setClickedSection(null);
-              scrollTo(0, { offset: 0, duration: 1.4 });
+              scrollTo(0, { offset: 0 });
             }}
             className="group flex items-center gap-2 sm:gap-2.5 text-[#09090B] dark:text-white font-semibold tracking-tight text-sm sm:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] rounded-full py-1 px-1.5 sm:px-2 hover:bg-white/40 dark:hover:bg-white/[0.06] transition-colors"
             aria-label="Juan Sterling Home"
@@ -101,7 +118,7 @@ export default function Navbar({ activeSection = '' }) {
               </div>
 
               {/* Code Badge Container */}
-              <div className="p-1 rounded-md bg-white/70 dark:bg-white/[0.06] backdrop-blur-md border border-[#E11D2E]/40 dark:border-[#E11D2E]/50 shadow-xs shadow-[#E11D2E]/20 group-hover:border-[#E11D2E] group-hover:shadow-md group-hover:shadow-[#E11D2E]/30 relative transition-all duration-200">
+              <div className="p-1 rounded-md bg-white/80 dark:bg-white/[0.08] border border-[#E11D2E]/40 dark:border-[#E11D2E]/50 shadow-xs shadow-[#E11D2E]/20 group-hover:border-[#E11D2E] group-hover:shadow-md group-hover:shadow-[#E11D2E]/30 relative transition-all duration-200">
                 <div className="absolute inset-0 rounded-md bg-[#E11D2E]/10 dark:bg-[#E11D2E]/20 blur-xs pointer-events-none" />
                 <Code2 className="w-3.5 h-3.5 text-[#E11D2E] relative z-10" />
               </div>
@@ -115,7 +132,7 @@ export default function Navbar({ activeSection = '' }) {
           </a>
 
           {/* Desktop Navigation Capsule (matching reference image) */}
-          <div className="hidden md:flex items-center rounded-full bg-black/[0.03] dark:bg-white/[0.04] backdrop-blur-md border border-black/[0.05] dark:border-white/[0.08] p-1 shadow-xs">
+          <div className="hidden md:flex items-center rounded-full bg-black/[0.03] dark:bg-white/[0.05] border border-black/[0.05] dark:border-white/[0.08] p-1 shadow-xs">
             <nav
               className="relative flex items-center gap-0.5"
               aria-label="Main Navigation"
@@ -141,7 +158,7 @@ export default function Navbar({ activeSection = '' }) {
                     {isActive && (
                       <motion.div
                         layoutId="activeNavPill"
-                        className="absolute inset-0 rounded-full bg-white dark:bg-white/[0.14] border border-black/[0.06] dark:border-white/20 shadow-xs backdrop-blur-md pointer-events-none"
+                        className="absolute inset-0 rounded-full bg-white dark:bg-white/[0.14] border border-black/[0.06] dark:border-white/20 shadow-xs pointer-events-none"
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
                     )}

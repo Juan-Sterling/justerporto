@@ -6,6 +6,7 @@ export default function AnimatedSection({
   className = '',
   delay = 0,
   direction = 'up', // 'up' | 'none'
+  gpu = true,
 }) {
   // Bidirectional in-view trigger with subtle margin to prevent pop-in jitter
   const [ref, isInView] = useInView({ threshold: 0.08, triggerOnce: false, rootMargin: '20px 0px -20px 0px' });
@@ -19,9 +20,13 @@ export default function AnimatedSection({
     <div
       ref={ref}
       style={{ transitionDelay: isInView ? `${delay}ms` : '0ms' }}
-      className={`transition-[opacity,transform] duration-500 ease-out transform-gpu ${
+      className={`${
+        direction === 'none' ? 'transition-opacity' : 'transition-[opacity,transform]'
+      } duration-500 ease-out ${gpu ? 'transform-gpu' : ''} ${
         isInView
-          ? 'opacity-100 translate-y-0'
+          ? direction === 'none'
+            ? 'opacity-100'
+            : 'opacity-100 translate-y-0'
           : `opacity-0 ${getTransformClass()}`
       } ${className}`}
     >

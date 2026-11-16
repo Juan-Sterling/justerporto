@@ -25,28 +25,28 @@ export default function BaemonNavbarFrame({
 }) {
   return (
     <nav
-      className={`group/baemon-nav relative flex items-center justify-between px-6 sm:px-9 py-3 sm:py-3.5 w-full max-w-5xl mx-auto transition-all duration-300 ${
-        scrolled
-          ? 'drop-shadow-[0_12px_36px_rgba(0,0,0,0.5)] drop-shadow-[0_0_20px_rgba(225,29,46,0.18)] dark:drop-shadow-[0_14px_42px_rgba(0,0,0,0.7)] dark:drop-shadow-[0_0_24px_rgba(225,29,46,0.22)]'
-          : 'drop-shadow-[0_8px_24px_rgba(0,0,0,0.35)] drop-shadow-[0_0_14px_rgba(225,29,46,0.1)] dark:drop-shadow-[0_10px_32px_rgba(0,0,0,0.55)] dark:drop-shadow-[0_0_16px_rgba(225,29,46,0.14)]'
-      } ${className}`}
+      className={`group/baemon-nav relative flex items-center justify-between px-6 sm:px-9 py-3 sm:py-3.5 w-full max-w-5xl mx-auto ${className}`}
     >
-      {/* Backdrop blur layer */}
-      <div className="absolute inset-0 -top-2.5 h-[calc(100%+10px)] backdrop-blur-2xl backdrop-saturate-180 pointer-events-none rounded-[36px]" />
+      {/* Single clean backdrop blur layer positioned within navbar body (never wrapped in CSS filter) */}
+      <div className="absolute inset-x-1.5 top-2.5 bottom-0 backdrop-blur-lg pointer-events-none rounded-[28px]" />
 
       {/* Kerangka Bodi Navbar dengan Ujung Tanduk BABYMONSTER Menyambung Mulus */}
       <svg
-        className="absolute inset-0 w-full -top-2.5 h-[calc(100%+10px)] pointer-events-none transition-all duration-300 overflow-visible"
+        className={`absolute inset-0 w-full -top-2.5 h-[calc(100%+10px)] pointer-events-none overflow-visible transition-[filter] duration-300 ${
+          scrolled
+            ? 'drop-shadow-[0_12px_28px_rgba(0,0,0,0.48)] dark:drop-shadow-[0_14px_32px_rgba(0,0,0,0.72)]'
+            : 'drop-shadow-[0_8px_20px_rgba(0,0,0,0.32)] dark:drop-shadow-[0_10px_24px_rgba(0,0,0,0.55)]'
+        }`}
         viewBox="0 0 1000 90"
         preserveAspectRatio="none"
         aria-hidden="true"
       >
         <path
           d={BAEMON_HORN_PATH}
-          className={`transition-all duration-300 ${
+          className={`transition-[fill,stroke] duration-300 ${
             scrolled
-              ? 'fill-white/85 dark:fill-[#141218]/95 stroke-black/15 dark:stroke-white/20'
-              : 'fill-white/75 dark:fill-[#141218]/90 stroke-black/10 dark:stroke-white/14'
+              ? 'fill-white/88 dark:fill-[#141218]/95 stroke-black/15 dark:stroke-white/20'
+              : 'fill-white/78 dark:fill-[#141218]/90 stroke-black/10 dark:stroke-white/14'
           }`}
           strokeWidth="1.5"
           strokeLinecap="round"

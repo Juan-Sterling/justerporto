@@ -2,7 +2,11 @@ export const portfolioData = {
   personal: {
     name: "Juan Sterling",
     role: "Software Developer",
-    tagline: "Interested in Web and Android Development. I am ready to contribute to projects that require technical expertise, problem-solving skills, and innovative solutions.",
+    // tagline: "Interested in Web and Android Development. I am ready to contribute to projects that require technical expertise, problem-solving skills, and innovative solutions.",
+    tagline: ["CURIOUS LIKE BABY",
+      "CREATIVE LIKE MONSTER",
+      "BUILT FOR TECHNOLOGY"
+    ],
     email: "juansterling1409@gmail.com",
     github: "https://github.com/Juan-Sterling",
     github2: "https://github.com/juansterling",
@@ -18,12 +22,14 @@ export const portfolioData = {
     passDetails: {
       name: "Juan Sterling",
       role: "Software Developer",
-      photo: "https://res.cloudinary.com/og1jrvy3/image/upload/f_auto,q_auto/v1791215430/IMG_0996_gg.jpg",
+      photo: "/images/profile/pass-photo-dark.jpg",
+      photoLight: "/images/profile/pass-photo-light.jpg",
     },
-    headline: "Engineering Solutions with Rhythm & Precision",
+    headline: "Hi, I'm Juan Sterling Martua",
     narrative: [
-      "I am Juan Sterling, a software developer dedicated to crafting modern web and multiplatform applications. I bridge clean interface design with sturdy, scalable backend architectures.",
-      "Driven by curiosity and a problem-solving mindset, I enjoy transforming complex requirements into reliable, maintainable code and smooth digital experiences.",
+      // "I am Juan Sterling, a software developer dedicated to crafting modern web and multiplatform applications. I bridge clean interface design with sturdy, scalable backend architectures.",
+      // "Driven by curiosity and a problem-solving mindset, I enjoy transforming complex requirements into reliable, maintainable code and smooth digital experiences.",
+      "A Full-Stack Developer passionate about building web and Android applications. I enjoy solving problems, exploring new technologies, and creating innovative solutions that bring ideas to life."
     ],
     quickFacts: [
       {
@@ -41,15 +47,21 @@ export const portfolioData = {
       {
         id: "birth",
         label: "Birth Year",
-        value: "2001",
+        value: "2002",
         icon: "Calendar",
       },
       {
-        id: "focus",
-        label: "Core Focus",
-        value: "Web & Mobile Development",
-        icon: "Code2",
+        id: "alias",
+        label: "Alias",
+        value: "juster / justermp",
+        icon: "AtSign",
       },
+      // {
+      //   id: "focus",
+      //   label: "Core Focus",
+      //   value: "Web & Mobile Development",
+      //   icon: "Code2",
+      // },
     ],
   },
 

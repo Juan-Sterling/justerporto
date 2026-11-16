@@ -23,35 +23,35 @@ const BaemonPortalO = forwardRef(function BaemonPortalO(
   return (
     <div
       ref={ref}
-      className={`relative flex items-center justify-center select-none transform-gpu ${className}`}
+      className={`relative flex items-center justify-center select-none ${className}`}
       aria-hidden="true"
     >
       {/* 1. Luminous Ambient Backlight Aura (Fixed behind portal) */}
       <div
-        className="absolute w-[220px] h-[220px] sm:w-[290px] sm:h-[290px] lg:w-[390px] lg:h-[390px] rounded-full bg-radial from-[#FF3B4D]/25 via-[#E11D2E]/10 to-transparent blur-2xl pointer-events-none dark:opacity-85 opacity-50 transform-gpu will-change-transform"
+        className="absolute w-[220px] h-[220px] sm:w-[290px] sm:h-[290px] lg:w-[390px] lg:h-[390px] rounded-full bg-radial from-[#FF3B4D]/25 via-[#E11D2E]/10 to-transparent blur-md pointer-events-none dark:opacity-85 opacity-50"
       />
 
       {/* 2. The Baemon "O" Main Stage Container */}
-      <div className="relative w-[190px] h-[190px] sm:w-[250px] sm:h-[250px] lg:w-[350px] lg:h-[350px] xl:w-[380px] xl:h-[380px] flex items-center justify-center transform-gpu">
+      <div className="relative w-[190px] h-[190px] sm:w-[250px] sm:h-[250px] lg:w-[350px] lg:h-[350px] xl:w-[380px] xl:h-[380px] flex items-center justify-center">
 
         {/* 3. Center Aperture Core Light */}
         <div
           ref={portalAuraRef}
-          className="absolute w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-full bg-radial from-[#FF3B4D]/35 via-[#E11D2E]/15 to-transparent blur-xl pointer-events-none opacity-0 transform-gpu will-change-transform"
+          className="absolute w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-full bg-radial from-[#FF3B4D]/35 via-[#E11D2E]/15 to-transparent blur-sm pointer-events-none opacity-0"
         />
 
-        {/* 4. Scalable Outer Ring Container (GSAP scales this cleanly on GPU) */}
+        {/* 4. Scalable Outer Ring Container (single compositor layer for smooth 1->9x scroll zoom) */}
         <div
           ref={ringScaleRef}
-          className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none will-change-transform transform-gpu"
+          className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none will-change-transform"
         >
           <svg
             viewBox="0 0 400 400"
-            className="w-full h-full overflow-visible pointer-events-none transform-gpu"
+            className="w-full h-full overflow-visible pointer-events-none"
             aria-hidden="true"
           >
             {/* LEFT HALF of the Baemon "O" (Solid Black in Light Mode, Solid Crimson Red in Dark Mode) */}
-            <g ref={leftHalfRef} className="will-change-transform">
+            <g ref={leftHalfRef}>
               <path
                 d="M 188 25.41 A 175 175 0 0 0 188 374.59 L 188 294.24 A 95 95 0 0 1 188 105.76 Z"
                 className="fill-black dark:fill-[#E11D2E] transition-colors duration-200"
@@ -59,7 +59,7 @@ const BaemonPortalO = forwardRef(function BaemonPortalO(
             </g>
 
             {/* RIGHT HALF of the Baemon "O" (Solid Black in Light Mode, Solid Crimson Red in Dark Mode) */}
-            <g ref={rightHalfRef} className="will-change-transform">
+            <g ref={rightHalfRef}>
               <path
                 d="M 212 25.41 A 175 175 0 0 1 212 374.59 L 212 294.24 A 95 95 0 0 0 212 105.76 Z"
                 className="fill-black dark:fill-[#E11D2E] transition-colors duration-200"
