@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { motion } from 'motion/react';
 import {
   ArrowDown,
-  Crosshair,
   Zap,
-  Activity,
-  Radio,
   MapPin,
-  Waves,
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
+
+const ViperPoisonOrb3D = lazy(() => import('./ViperPoisonOrb3D'));
 
 /**
  * Ultra-lightweight GPU-accelerated motion variants
@@ -33,267 +32,10 @@ const textStaggerVariants = {
   exit: { opacity: 0, y: 10, transition: { duration: 0.15 } },
 };
 
-/**
- * Parametric Fluid Soundwave Ribbon (Option 2)
- * High-end 3D parametric undulating soundwave ribbon & digital silk fluid mesh.
- * Combines acoustic frequency oscillation (Spotify/Music) with fluid toxic chemical vapor aesthetics.
- * Undulates and ripples smoothly in 3D space with zero clipping across PC & HP.
- */
-function ParametricSoundwaveRibbon({ isToxinActive = false }) {
+function ViperOrbFallback() {
   return (
-    <div className="relative w-72 h-64 sm:w-96 sm:h-80 lg:w-[440px] lg:h-[420px] xl:w-[500px] xl:h-[460px] flex items-center justify-center select-none pointer-events-none">
-
-      {/* Intense Ambient Radial Bloom behind the ribbons */}
-      <div
-        className={`absolute inset-0 bg-radial from-[#00f59b]/30 via-[#047857]/15 to-transparent blur-3xl pointer-events-none transform-gpu transition-opacity duration-700 ${isToxinActive ? 'opacity-100 scale-110' : 'opacity-70 scale-100'
-          }`}
-      />
-
-      <svg
-        viewBox="0 0 540 480"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-[0_0_35px_rgba(0,245,155,0.4)]"
-      >
-        <defs>
-          {/* Ribbon 3D Surface Gradients */}
-          <linearGradient id="ribbonGradPrimary" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#00f59b" stopOpacity={isToxinActive ? 0.9 : 0.75} />
-            <stop offset="40%" stopColor="#10b981" stopOpacity={isToxinActive ? 0.6 : 0.45} />
-            <stop offset="75%" stopColor="#047857" stopOpacity={isToxinActive ? 0.35 : 0.2} />
-            <stop offset="100%" stopColor="#020805" stopOpacity="0.05" />
-          </linearGradient>
-
-          <linearGradient id="ribbonGradSecondary" x1="1" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#34d399" stopOpacity={isToxinActive ? 0.85 : 0.65} />
-            <stop offset="50%" stopColor="#059669" stopOpacity={isToxinActive ? 0.5 : 0.35} />
-            <stop offset="100%" stopColor="#02140b" stopOpacity="0.1" />
-          </linearGradient>
-
-          <linearGradient id="ribbonGradUnder" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0%" stopColor="#047857" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#022c22" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#010a05" stopOpacity="0" />
-          </linearGradient>
-
-          {/* Wireframe Contour Stroke Gradient */}
-          <linearGradient id="strandGlowGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#00f59b" stopOpacity="0.3" />
-            <stop offset="35%" stopColor="#00f59b" stopOpacity="0.95" />
-            <stop offset="70%" stopColor="#34d399" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#059669" stopOpacity="0.25" />
-          </linearGradient>
-
-          {/* Node Glow Flare */}
-          <radialGradient id="nodeGlowFlare" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-            <stop offset="40%" stopColor="#00f59b" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#00f59b" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-
-        {/* ============================================================== */}
-        {/* 1. ACOUSTIC TELEMETRY HUD ACCENTS                              */}
-        {/* ============================================================== */}
-        <g opacity="0.45">
-          <circle cx="270" cy="240" r="225" stroke="#00f59b" strokeWidth="0.8" strokeDasharray="4 8" />
-          <circle cx="270" cy="240" r="195" stroke="#047857" strokeWidth="0.6" strokeDasharray="16 12" />
-
-          {/* Telemetry Coordinate Readouts */}
-          <text x="270" y="32" fill="#34d399" fontSize="8" fontFamily="monospace" fontWeight="bold" textAnchor="middle" letterSpacing="2">
-            PARAMETRIC ACOUSTIC FLUID // 48.0 kHz
-          </text>
-          <text x="270" y="460" fill="#00f59b" fontSize="7.5" fontFamily="monospace" textAnchor="middle" letterSpacing="1.5">
-            {isToxinActive ? 'WAVE OSCILLATION : RESONANT SURGE' : 'HARMONIC FREQUENCY : STABLE'}
-          </text>
-        </g>
-
-        {/* ============================================================== */}
-        {/* 2. LAYERED TRANSLUCENT 3D RIBBON BODIES (Undulating Silk Waves) */}
-        {/* ============================================================== */}
-
-        {/* Ribbon Layer 1: Deep Translucent Base Underside */}
-        <path
-          d="M 50,290 C 140,170 220,150 310,250 C 400,350 450,320 490,200 L 490,240 C 450,360 400,390 310,290 C 220,190 140,210 50,330 Z"
-          fill="url(#ribbonGradUnder)"
-        >
-          <animate
-            attributeName="d"
-            values="
-              M 50,290 C 140,170 220,150 310,250 C 400,350 450,320 490,200 L 490,240 C 450,360 400,390 310,290 C 220,190 140,210 50,330 Z;
-              M 50,310 C 150,210 210,130 300,220 C 390,320 460,340 490,230 L 490,270 C 460,380 390,360 300,260 C 210,170 150,250 50,350 Z;
-              M 50,290 C 140,170 220,150 310,250 C 400,350 450,320 490,200 L 490,240 C 450,360 400,390 310,290 C 220,190 140,210 50,330 Z
-            "
-            dur="8s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Ribbon Layer 2: Secondary Intertwining Counter-Wave */}
-        <path
-          d="M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290 L 485,250 C 455,150 415,110 325,200 C 235,300 145,270 55,160 Z"
-          fill="url(#ribbonGradSecondary)"
-        >
-          <animate
-            attributeName="d"
-            values="
-              M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290 L 485,250 C 455,150 415,110 325,200 C 235,300 145,270 55,160 Z;
-              M 55,170 C 135,270 245,360 335,270 C 425,170 445,150 485,260 L 485,220 C 445,120 425,140 335,230 C 245,320 135,230 55,130 Z;
-              M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290 L 485,250 C 455,150 415,110 325,200 C 235,300 145,270 55,160 Z
-            "
-            dur="7s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Ribbon Layer 3: Primary Glowing Silk Mesh Surface */}
-        <path
-          d="M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160 L 485,195 C 445,315 405,345 315,245 C 225,145 135,165 45,285 Z"
-          fill="url(#ribbonGradPrimary)"
-        >
-          <animate
-            attributeName="d"
-            values="
-              M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160 L 485,195 C 445,315 405,345 315,245 C 225,145 135,165 45,285 Z;
-              M 45,270 C 145,170 215,90 305,180 C 395,280 455,300 485,190 L 485,225 C 455,335 395,315 305,215 C 215,125 145,205 45,305 Z;
-              M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160 L 485,195 C 445,315 405,345 315,245 C 225,145 135,165 45,285 Z
-            "
-            dur="6s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* ============================================================== */}
-        {/* 3. PARAMETRIC WIREFRAME STRANDS (Harmonic Silk Curves)         */}
-        {/* ============================================================== */}
-        {/* Strand 1: Main Crest Line */}
-        <path
-          d="M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160"
-          stroke="url(#strandGlowGrad)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        >
-          <animate
-            attributeName="d"
-            values="
-              M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160;
-              M 45,270 C 145,170 215,90 305,180 C 395,280 455,300 485,190;
-              M 45,250 C 135,130 225,110 315,210 C 405,310 445,280 485,160
-            "
-            dur="6s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Strand 2: Inner Contour Parallel Offset */}
-        <path
-          d="M 45,260 C 135,140 225,120 315,220 C 405,320 445,290 485,170"
-          stroke="#00f59b"
-          strokeWidth="1.8"
-          strokeDasharray="14 6"
-          opacity="0.85"
-        >
-          <animate
-            attributeName="d"
-            values="
-              M 45,260 C 135,140 225,120 315,220 C 405,320 445,290 485,170;
-              M 45,280 C 145,180 215,100 305,190 C 395,290 455,310 485,200;
-              M 45,260 C 135,140 225,120 315,220 C 405,320 445,290 485,170
-            "
-            dur="6s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Strand 3: Counter-Wave Crest Line */}
-        <path
-          d="M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290"
-          stroke="#34d399"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          opacity="0.9"
-        >
-          <animate
-            attributeName="d"
-            values="
-              M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290;
-              M 55,170 C 135,270 245,360 335,270 C 425,170 445,150 485,260;
-              M 55,200 C 145,310 235,340 325,240 C 415,140 455,180 485,290
-            "
-            dur="7s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Strand 4: Counter-Wave Dash Accent */}
-        <path
-          d="M 55,215 C 145,325 235,355 325,255 C 415,155 455,195 485,305"
-          stroke="#00f59b"
-          strokeWidth="1.5"
-          strokeDasharray="8 8"
-          opacity="0.7"
-        >
-          <animate
-            attributeName="d"
-            values="
-              M 55,215 C 145,325 235,355 325,255 C 415,155 455,195 485,305;
-              M 55,185 C 135,285 245,375 335,285 C 425,185 445,165 485,275;
-              M 55,215 C 145,325 235,355 325,255 C 415,155 455,195 485,305
-            "
-            dur="7s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Strand 5 & 6: Ambient Background Filament Ribbons */}
-        <path
-          d="M 60,230 C 150,150 240,170 320,270 C 400,370 440,300 480,220"
-          stroke="#047857"
-          strokeWidth="1"
-          opacity="0.5"
-        />
-        <path
-          d="M 70,270 C 160,350 250,330 330,230 C 410,130 450,200 475,260"
-          stroke="#047857"
-          strokeWidth="1"
-          opacity="0.5"
-        />
-
-        {/* ============================================================== */}
-        {/* 4. HARMONIC FREQUENCY NODES (Glowing Crest Points)             */}
-        {/* ============================================================== */}
-        {/* Node 1 (Peak 1) */}
-        <g>
-          <circle cx="185" cy="120" r="5" fill="url(#nodeGlowFlare)">
-            <animate attributeName="r" values="3.5;6;3.5" dur="2s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="185" cy="120" r="2" fill="#ffffff" />
-        </g>
-
-        {/* Node 2 (Intersection Knot) */}
-        <g>
-          <circle cx="270" cy="225" r="5.5" fill="url(#nodeGlowFlare)">
-            <animate attributeName="r" values="4;7;4" dur="2.4s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="270" cy="225" r="2.5" fill="#ffffff" />
-        </g>
-
-        {/* Node 3 (Peak 2) */}
-        <g>
-          <circle cx="360" cy="305" r="5" fill="url(#nodeGlowFlare)">
-            <animate attributeName="r" values="3.5;6;3.5" dur="1.8s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="360" cy="305" r="2" fill="#ffffff" />
-        </g>
-
-        {/* Node 4 (Counter-Peak) */}
-        <g>
-          <circle cx="375" cy="155" r="4.5" fill="url(#nodeGlowFlare)">
-            <animate attributeName="r" values="3;5.5;3" dur="2.2s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="375" cy="155" r="1.8" fill="#ffffff" />
-        </g>
-      </svg>
+    <div className="relative w-72 h-72 sm:w-96 sm:h-88 lg:w-[440px] lg:h-[420px] xl:w-[490px] xl:h-[460px] flex items-center justify-center select-none pointer-events-none">
+      <div className="w-44 h-44 sm:w-56 sm:h-56 rounded-full border border-[#059669]/40 dark:border-[#00f59b]/35 bg-radial from-[#10b981]/35 via-[#059669]/20 dark:from-[#00f59b]/45 dark:via-[#047857]/30 to-transparent blur-sm animate-pulse" />
     </div>
   );
 }
@@ -305,7 +47,11 @@ export default function ViperHeroDossier({
   onToggleToxin,
   isReady = true,
   isExiting = false,
+  isDesktop = false,
 }) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const fullName = (profile.name || 'JUAN STERLING').trim() || 'JUAN STERLING';
   const [firstName, ...restNameParts] = fullName.split(/\s+/);
   const lastName = restNameParts.join(' ');
@@ -327,8 +73,11 @@ export default function ViperHeroDossier({
       initial="hidden"
       whileInView={isExiting ? 'exit' : isReady ? 'visible' : 'hidden'}
       viewport={{ once: false, amount: 0.1 }}
-      className={`relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden transition-colors duration-500 select-none ${isToxinActive ? 'bg-[#040e08]' : 'bg-[#030805]'
-        }`}
+      className={`relative w-full min-h-[90vh] lg:min-h-screen flex items-center overflow-hidden transition-colors duration-500 select-none ${
+        isToxinActive
+          ? 'bg-[#c3e2cf] dark:bg-[#040e08]'
+          : 'bg-[#d6ede0] dark:bg-[#030805]'
+      }`}
     >
       {/* ===================================================================== */}
       {/* 1. SEAMLESS UNIFIED BACKGROUND (DIAGONAL TOXIC SMOKE WAVE)             */}
@@ -336,13 +85,20 @@ export default function ViperHeroDossier({
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
 
         {/* Continuous Ambient Glow Blooms */}
-        <div className="absolute top-1/4 -left-20 w-[450px] sm:w-[550px] h-[450px] sm:h-[550px] bg-radial from-[#059669]/20 via-transparent to-transparent blur-3xl opacity-60 pointer-events-none transform-gpu" />
+        <div className="absolute top-1/4 -left-20 w-[450px] sm:w-[550px] h-[450px] sm:h-[550px] bg-radial from-[#10b981]/25 dark:from-[#059669]/20 via-transparent to-transparent blur-3xl opacity-70 dark:opacity-60 pointer-events-none transform-gpu" />
         <div
-          className={`absolute top-1/3 right-1/4 w-[600px] sm:w-[750px] h-[600px] sm:h-[750px] bg-radial from-[#00f59b]/25 via-[#047857]/15 to-transparent blur-3xl pointer-events-none transform-gpu transition-opacity duration-700 ${isToxinActive ? 'opacity-100' : 'opacity-70'
-            }`}
+          className={`absolute top-1/3 right-1/4 w-[600px] sm:w-[750px] h-[600px] sm:h-[750px] bg-radial from-[#059669]/20 via-[#10b981]/10 dark:from-[#00f59b]/25 dark:via-[#047857]/15 to-transparent blur-3xl pointer-events-none transform-gpu transition-opacity duration-700 ${
+            isToxinActive ? 'opacity-100' : 'opacity-70'
+          }`}
         />
-        <div className="absolute bottom-0 right-10 w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] bg-radial from-[#00f59b]/20 via-transparent to-transparent blur-3xl pointer-events-none transform-gpu" />
-        <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#020503] via-[#020503]/80 to-transparent z-10 pointer-events-none" />
+        <div className="absolute bottom-0 right-10 w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] bg-radial from-[#059669]/20 dark:from-[#00f59b]/20 via-transparent to-transparent blur-3xl pointer-events-none transform-gpu" />
+        <div
+          className={`absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t ${
+            isToxinActive
+              ? 'from-[#cce6d6] via-[#cce6d6]/80'
+              : 'from-[#dcefe3] via-[#dcefe3]/80'
+          } dark:from-[#090d0b] dark:via-[#090d0b]/80 to-transparent z-10 pointer-events-none transition-colors duration-700`}
+        />
 
         {/* Master Scalable Vector Canvas: Continuous Diagonal Smoke Flow */}
         <svg
@@ -354,24 +110,24 @@ export default function ViperHeroDossier({
         >
           <defs>
             <radialGradient id="smokeCloudDense" cx="45%" cy="45%" r="55%">
-              <stop offset="0%" stopColor="#00f59b" stopOpacity={isToxinActive ? 0.8 : 0.6} />
-              <stop offset="45%" stopColor="#10b981" stopOpacity={isToxinActive ? 0.5 : 0.35} />
-              <stop offset="80%" stopColor="#047857" stopOpacity={isToxinActive ? 0.25 : 0.12} />
-              <stop offset="100%" stopColor="#020805" stopOpacity="0" />
+              <stop offset="0%" stopColor={isDark ? '#00f59b' : '#10b981'} stopOpacity={isDark ? (isToxinActive ? 0.8 : 0.6) : (isToxinActive ? 0.42 : 0.28)} />
+              <stop offset="45%" stopColor={isDark ? '#10b981' : '#059669'} stopOpacity={isDark ? (isToxinActive ? 0.5 : 0.35) : (isToxinActive ? 0.28 : 0.16)} />
+              <stop offset="80%" stopColor="#047857" stopOpacity={isDark ? (isToxinActive ? 0.25 : 0.12) : 0.08} />
+              <stop offset="100%" stopColor={isDark ? '#020805' : '#d6ede0'} stopOpacity="0" />
             </radialGradient>
 
             <radialGradient id="smokeCloudDeep" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#34d399" stopOpacity={isToxinActive ? 0.75 : 0.5} />
-              <stop offset="50%" stopColor="#059669" stopOpacity={isToxinActive ? 0.4 : 0.25} />
-              <stop offset="85%" stopColor="#022c22" stopOpacity="0.12" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              <stop offset="0%" stopColor={isDark ? '#34d399' : '#059669'} stopOpacity={isDark ? (isToxinActive ? 0.75 : 0.5) : (isToxinActive ? 0.34 : 0.22)} />
+              <stop offset="50%" stopColor={isDark ? '#059669' : '#10b981'} stopOpacity={isDark ? (isToxinActive ? 0.4 : 0.25) : 0.14} />
+              <stop offset="85%" stopColor={isDark ? '#022c22' : '#047857'} stopOpacity={isDark ? 0.12 : 0.05} />
+              <stop offset="100%" stopColor={isDark ? '#000000' : '#d6ede0'} stopOpacity="0" />
             </radialGradient>
 
             <linearGradient id="smokeWaveCurtain" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#00f59b" stopOpacity={isToxinActive ? 0.75 : 0.55} />
-              <stop offset="40%" stopColor="#059669" stopOpacity={isToxinActive ? 0.55 : 0.35} />
-              <stop offset="80%" stopColor="#022c22" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#020503" stopOpacity="0" />
+              <stop offset="0%" stopColor={isDark ? '#00f59b' : '#10b981'} stopOpacity={isDark ? (isToxinActive ? 0.75 : 0.55) : (isToxinActive ? 0.36 : 0.24)} />
+              <stop offset="40%" stopColor="#059669" stopOpacity={isDark ? (isToxinActive ? 0.55 : 0.35) : (isToxinActive ? 0.24 : 0.14)} />
+              <stop offset="80%" stopColor={isDark ? '#022c22' : '#047857'} stopOpacity={isDark ? 0.2 : 0.06} />
+              <stop offset="100%" stopColor={isDark ? '#020503' : '#d6ede0'} stopOpacity="0" />
             </linearGradient>
           </defs>
 
@@ -383,10 +139,10 @@ export default function ViperHeroDossier({
           />
           <path
             d="M 0,90 C 140,50 260,130 420,95 C 540,70 640,120 780,60"
-            stroke="#00f59b"
+            stroke={isDark ? '#00f59b' : '#059669'}
             strokeWidth="2.5"
             strokeLinecap="round"
-            opacity="0.75"
+            opacity={isDark ? 0.75 : 0.55}
           />
 
           {/* Diagonal Volumetric Clouds */}
@@ -406,28 +162,28 @@ export default function ViperHeroDossier({
           {/* Vivid Glowing Diagonal Smoke Ridge */}
           <path
             d="M 1220,0 C 1060,180 900,280 760,450 C 620,620 480,750 220,900"
-            stroke="#00f59b"
+            stroke={isDark ? '#00f59b' : '#047857'}
             strokeWidth={isToxinActive ? 5 : 3.5}
             strokeLinecap="round"
-            opacity={isToxinActive ? 1 : 0.85}
+            opacity={isDark ? (isToxinActive ? 1 : 0.85) : (isToxinActive ? 0.65 : 0.45)}
           />
 
           {/* Secondary Parallel Dashed Vapor Trace */}
           <path
             d="M 1255,0 C 1095,180 935,280 795,450 C 655,620 515,750 255,900"
-            stroke="#34d399"
+            stroke={isDark ? '#34d399' : '#059669'}
             strokeWidth="1.8"
             strokeDasharray="8 6"
-            opacity="0.55"
+            opacity={isDark ? 0.55 : 0.4}
           />
 
           {/* Swirling Smoke Tendrils */}
           <path
             d="M 880,310 Q 950,250 910,180 Q 860,120 920,50"
-            stroke="#00f59b"
+            stroke={isDark ? '#00f59b' : '#059669'}
             strokeWidth="3.5"
             strokeLinecap="round"
-            opacity="0.75"
+            opacity={isDark ? 0.75 : 0.5}
           >
             <animate
               attributeName="d"
@@ -438,10 +194,10 @@ export default function ViperHeroDossier({
           </path>
           <path
             d="M 640,580 Q 560,630 600,700 Q 640,760 580,820"
-            stroke="#00f59b"
+            stroke={isDark ? '#00f59b' : '#059669'}
             strokeWidth="3"
             strokeLinecap="round"
-            opacity="0.7"
+            opacity={isDark ? 0.7 : 0.45}
           >
             <animate
               attributeName="d"
@@ -466,7 +222,7 @@ export default function ViperHeroDossier({
             { cx: 1100, cy: 820, r: 4, dur: '3.9s', delay: '1.1s' },
           ].map((bubble, i) => (
             <g key={i}>
-              <circle cx={bubble.cx} cy={bubble.cy} r={bubble.r} fill="#00f59b" opacity="0.75">
+              <circle cx={bubble.cx} cy={bubble.cy} r={bubble.r} fill={isDark ? '#00f59b' : '#047857'} opacity={isDark ? 0.75 : 0.45}>
                 <animate attributeName="opacity" values="0.2;0.85;0.2" dur={bubble.dur} begin={bubble.delay} repeatCount="indefinite" />
                 <animate attributeName="cy" values={`${bubble.cy};${bubble.cy - 45};${bubble.cy}`} dur={bubble.dur} begin={bubble.delay} repeatCount="indefinite" />
                 <animate attributeName="r" values={`${bubble.r * 0.75};${bubble.r * 1.25};${bubble.r * 0.75}`} dur={bubble.dur} begin={bubble.delay} repeatCount="indefinite" />
@@ -488,9 +244,9 @@ export default function ViperHeroDossier({
           <motion.div
             custom={0}
             variants={textStaggerVariants}
-            className="flex items-center gap-2 text-xs font-mono text-zinc-400 font-medium"
+            className="flex items-center gap-2 text-xs font-mono text-[#065f46] dark:text-zinc-400 font-medium"
           >
-            <MapPin className="w-3.5 h-3.5 text-[#00f59b] shrink-0" />
+            <MapPin className="w-3.5 h-3.5 text-[#047857] dark:text-[#00f59b] shrink-0" />
             <span>JAKARTA, INDONESIA</span>
           </motion.div>
 
@@ -499,7 +255,7 @@ export default function ViperHeroDossier({
             <motion.p
               custom={1}
               variants={textStaggerVariants}
-              className="font-mono text-[11px] sm:text-sm font-bold tracking-widest uppercase text-[#34d399] drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]"
+              className="font-mono text-[11px] sm:text-sm font-bold tracking-widest uppercase text-[#047857] dark:text-[#34d399] dark:drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]"
             >
               WELCOME TO MY SIDE PROFILE
             </motion.p>
@@ -507,7 +263,7 @@ export default function ViperHeroDossier({
             <motion.h1
               custom={2}
               variants={textStaggerVariants}
-              className="font-display font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-white tracking-tight uppercase leading-[0.98] drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)] break-words"
+              className="font-display font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#052e1e] dark:text-white tracking-tight uppercase leading-[0.98] drop-shadow-[0_2px_16px_rgba(5,150,105,0.12)] dark:drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)] break-words"
             >
               <span className="block">{firstName}</span>
               {lastName && (
@@ -523,33 +279,10 @@ export default function ViperHeroDossier({
           <motion.p
             custom={3}
             variants={textStaggerVariants}
-            className="text-xs sm:text-base lg:text-lg font-mono text-zinc-300 leading-relaxed font-medium max-w-xl"
+            className="text-xs sm:text-base lg:text-lg font-mono text-[#14533b] dark:text-zinc-300 leading-relaxed font-medium max-w-xl"
           >
-            {profile.bio || 'Coding is part of the story, not the whole story.'}{' '}
-            An off-duty dossier covering competitive tactical FPS, physical bio-metrics, and audio soundstage curation.
+            {profile.bio || 'Coding is part of the story, not the whole story'}{' '}
           </motion.p>
-
-          {/* 3 Core Pillars: Responsive Grid on HP, Row on PC */}
-          <motion.div
-            custom={4}
-            variants={textStaggerVariants}
-            className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-3.5 pt-1"
-          >
-            <div className="inline-flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-2.5 py-2 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-black/45 hover:bg-black/60 backdrop-blur-md border border-[#059669]/40 hover:border-[#00f59b] transition-all duration-300 text-[10px] sm:text-xs font-mono shadow-xs group cursor-default">
-              <Crosshair className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00f59b] shrink-0" />
-              <span className="font-bold text-white tracking-wide truncate">GAMING</span>
-            </div>
-
-            <div className="inline-flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-2.5 py-2 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-black/45 hover:bg-black/60 backdrop-blur-md border border-[#059669]/40 hover:border-[#00f59b] transition-all duration-300 text-[10px] sm:text-xs font-mono shadow-xs group cursor-default">
-              <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00f59b] shrink-0" />
-              <span className="font-bold text-white tracking-wide truncate">ATHLETICS</span>
-            </div>
-
-            <div className="inline-flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 px-2.5 py-2 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl bg-black/45 hover:bg-black/60 backdrop-blur-md border border-[#059669]/40 hover:border-[#00f59b] transition-all duration-300 text-[10px] sm:text-xs font-mono shadow-xs group cursor-default">
-              <Radio className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#00f59b] shrink-0" />
-              <span className="font-bold text-white tracking-wide truncate">AUDIO</span>
-            </div>
-          </motion.div>
 
           {/* Action Row: Full-width stacked on HP, Side-by-side on PC */}
           <motion.div
@@ -561,7 +294,7 @@ export default function ViperHeroDossier({
             <button
               type="button"
               onClick={handleScrollToContent}
-              className="group inline-flex items-center justify-center gap-3 px-6 sm:px-9 py-3 sm:py-4 rounded-xl font-mono text-xs sm:text-sm font-black uppercase tracking-widest text-black bg-[#00f59b] hover:bg-[#34d399] transition-all duration-300 shadow-[0_0_35px_rgba(0,245,155,0.7)] hover:shadow-[0_0_55px_rgba(0,245,155,0.95)] hover:scale-105 active:scale-95 cursor-pointer select-none"
+              className="group inline-flex items-center justify-center gap-3 px-6 sm:px-9 py-3 sm:py-4 rounded-xl font-mono text-xs sm:text-sm font-black uppercase tracking-widest text-white dark:text-black bg-[#047857] hover:bg-[#065f46] dark:bg-[#00f59b] dark:hover:bg-[#34d399] transition-all duration-300 shadow-[0_8px_28px_rgba(4,120,87,0.35)] hover:shadow-[0_12px_36px_rgba(4,120,87,0.45)] dark:shadow-[0_0_35px_rgba(0,245,155,0.7)] dark:hover:shadow-[0_0_55px_rgba(0,245,155,0.95)] hover:scale-105 active:scale-95 cursor-pointer select-none"
             >
               <span>EXPLORE</span>
               <ArrowDown className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-1" />
@@ -573,13 +306,13 @@ export default function ViperHeroDossier({
               onClick={onToggleToxin}
               disabled={!isToxinActive && fuel < 15}
               className={`group inline-flex items-center justify-center gap-2.5 px-5 py-3 sm:py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer select-none border backdrop-blur-md ${isToxinActive
-                  ? 'bg-red-600/90 hover:bg-red-700 text-white border-red-500 shadow-[0_0_25px_rgba(239,68,68,0.5)] animate-pulse'
-                  : fuel < 15
-                    ? 'bg-zinc-800/80 text-zinc-500 border-zinc-700 cursor-not-allowed'
-                    : 'bg-black/50 hover:bg-black/75 text-zinc-200 hover:text-white border-[#059669]/50 hover:border-[#00f59b] shadow-[0_0_20px_rgba(0,245,155,0.2)]'
+                ? 'bg-red-600/95 hover:bg-red-700 text-white border-red-500 shadow-[0_0_25px_rgba(239,68,68,0.5)] animate-pulse'
+                : fuel < 15
+                  ? 'bg-zinc-300/80 dark:bg-zinc-800/80 text-zinc-500 border-zinc-400/60 dark:border-zinc-700 cursor-not-allowed'
+                  : 'bg-white/65 hover:bg-white/90 text-[#064e3b] hover:text-[#022c22] border-[#059669]/45 hover:border-[#047857] shadow-[0_6px_20px_rgba(5,150,105,0.15)] dark:bg-black/50 dark:hover:bg-black/75 dark:text-zinc-200 dark:hover:text-white dark:border-[#059669]/50 dark:hover:border-[#00f59b] dark:shadow-[0_0_20px_rgba(0,245,155,0.2)]'
                 }`}
             >
-              <Zap className="w-4 h-4 text-[#00f59b] transition-transform group-hover:scale-110 shrink-0" />
+              <Zap className={`w-4 h-4 transition-transform group-hover:scale-110 shrink-0 ${isToxinActive ? 'text-white' : 'text-[#047857] dark:text-[#00f59b]'}`} />
               <span>
                 {isToxinActive ? 'VENT TOXIN' : `TOXIN SCREEN (${Math.round(fuel)}%)`}
               </span>
@@ -587,13 +320,20 @@ export default function ViperHeroDossier({
           </motion.div>
         </div>
 
-        {/* Right Column: Parametric Fluid Soundwave Ribbon (Opsi 2: Perfectly fitted for both PC & HP) */}
+        {/* Right Column: Interactive 3D Viper Poison Orb Containment Core */}
         <motion.div
           custom={6}
           variants={textStaggerVariants}
           className="w-full lg:w-auto flex items-center justify-center select-none pointer-events-none py-2 lg:py-0"
         >
-          <ParametricSoundwaveRibbon isToxinActive={isToxinActive} />
+          <Suspense fallback={<ViperOrbFallback />}>
+            <ViperPoisonOrb3D
+              fuel={fuel}
+              isToxinActive={isToxinActive}
+              isDesktop={isDesktop}
+              isExiting={isExiting}
+            />
+          </Suspense>
         </motion.div>
       </div>
     </motion.section>
