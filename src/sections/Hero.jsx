@@ -482,7 +482,7 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
 
   // 2. Scroll-Driven Portal Zoom Timeline (Deferred until WelcomeScreen finishes so ScrollTrigger pin
   // never causes synchronous layout/pin reflow during the "SHEESH!" split wipe & Hero entrance)
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!scrollReady) return;
 
     const ctx = gsap.context(() => {
@@ -748,6 +748,7 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
   };
 
   return (
+    <div className="relative w-full">
     <section
       ref={heroRef}
       id="hero"
@@ -979,5 +980,6 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
         </div>
       </div>
     </section>
+    </div>
   );
 }

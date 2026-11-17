@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -26,7 +26,7 @@ export default function EncoreDiagonalShutterTransition() {
   const stageContentRef = useRef(null);
   const diagonalAccentRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // 1. Initial State
       gsap.set(leftShutterRef.current, { xPercent: 0, yPercent: 0, force3D: true });
@@ -123,6 +123,7 @@ export default function EncoreDiagonalShutterTransition() {
   }, []);
 
   return (
+    <div className="relative w-full">
     <div
       ref={containerRef}
       id="education-to-contact-transition"
@@ -293,6 +294,7 @@ export default function EncoreDiagonalShutterTransition() {
           STAGE 05 · OPEN FOR ROLES
         </span>
       </div>
+    </div>
     </div>
   );
 }

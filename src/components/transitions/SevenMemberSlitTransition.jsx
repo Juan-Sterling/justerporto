@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -62,7 +62,7 @@ export default function SevenMemberSlitTransition() {
   const stageContentRef = useRef(null);
   const stageTicksRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // 1. Initial Setup
       gsap.set(slitRefs.current, { yPercent: 0, force3D: true });
@@ -145,6 +145,7 @@ export default function SevenMemberSlitTransition() {
   }, []);
 
   return (
+    <div className="relative w-full">
     <div
       ref={containerRef}
       id="about-to-experience-transition"
@@ -280,6 +281,7 @@ export default function SevenMemberSlitTransition() {
           BABY, I’M A MONSTER
         </span>
       </div>
+    </div>
     </div>
   );
 }

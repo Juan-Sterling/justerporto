@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -26,7 +26,7 @@ export default function MonolithSplitTransition() {
   const stageContentRef = useRef(null);
   const centerSpineRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // 1. Initial State
       gsap.set(leftGateRef.current, { xPercent: 0, force3D: true });
@@ -123,6 +123,7 @@ export default function MonolithSplitTransition() {
   }, []);
 
   return (
+    <div className="relative w-full">
     <div
       ref={containerRef}
       id="skills-to-education-transition"
@@ -246,6 +247,7 @@ export default function MonolithSplitTransition() {
           STAGE 04 · ACADEMIC ROOTS
         </span>
       </div>
+    </div>
     </div>
   );
 }
