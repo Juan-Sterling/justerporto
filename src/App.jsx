@@ -78,6 +78,8 @@ export default function App() {
   const [showWelcome, setShowWelcome] = useState(() => !isInitialSideProfile);
   const [welcomeExiting, setWelcomeExiting] = useState(false);
   const [belowFoldReady, setBelowFoldReady] = useState(false);
+  const [heavyWarmReady, setHeavyWarmReady] = useState(false);
+  const completeWarmTimerRef = useRef(null);
 
   // Mode animasi exit BABYMONSTER yang aktif: 'sheesh' (Diagonal Laser Claw Slash & Split Wipe)
   const exitMode = 'sheesh';
@@ -123,6 +125,9 @@ export default function App() {
 
   const handleSectionCurtainMidpoint = useCallback((target) => {
     if (!target) return;
+
+    // Ensure all ScrollTrigger pin spacers and trigger bounds are up-to-date before jumping
+    ScrollTrigger.refresh();
 
     if (target.id === 'hero') {
       if (window.__lenis) {
@@ -179,9 +184,22 @@ export default function App() {
       window.__lenis.resize();
       window.__lenis.start();
     }
-    requestAnimationFrame(() => {
+    if (completeWarmTimerRef.current) {
+      window.clearTimeout(completeWarmTimerRef.current);
+    }
+    // Defer heavy ScrollTrigger refresh & Three.js badge warm-up until Hero entrance finishes (~850ms)
+    completeWarmTimerRef.current = window.setTimeout(() => {
       ScrollTrigger.refresh();
-    });
+      setHeavyWarmReady(true);
+    }, 850);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (completeWarmTimerRef.current) {
+        window.clearTimeout(completeWarmTimerRef.current);
+      }
+    };
   }, []);
 
   // Helper: Reliable return to Main Portfolio
@@ -382,7 +400,7 @@ export default function App() {
           setBelowFoldReady(true);
         });
       });
-    }, 900);
+    }, 250);
 
     return () => {
       cancelled = true;
@@ -462,7 +480,7 @@ export default function App() {
               />
               {showBelowFoldSections && (
                 <Suspense fallback={null}>
-                  <About />
+                  <About readyToWarm={heavyWarmReady} />
                   <SevenMemberSlitTransition />
                   <Experience />
                   <BatterUpStageTransition />

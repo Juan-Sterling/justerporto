@@ -17,28 +17,31 @@ const ICON_MAP = {
   AtSign,
 };
 
-export default function About() {
+export default function About({ readyToWarm = true }) {
   const { about } = portfolioData;
   const { isDark } = useTheme();
   const passDetails = about?.passDetails;
   const badgeSlotRef = useRef(null);
   const [shouldLoadBadge, setShouldLoadBadge] = useState(false);
 
-  // Pre-warm ThreePassBadge quietly during idle time while user is on Hero
-  // so WebGL context & shaders are already compiled before scrolling to About.
+  // Pre-warm ThreePassBadge quietly only after WelcomeScreen + Hero entrance settle,
+  // or immediately when the About badge slot enters the viewport.
   useEffect(() => {
     if (shouldLoadBadge) return;
 
     let idleId = null;
-    const warmTimer = window.setTimeout(() => {
-      loadThreePassBadge().then(() => {
-        if (typeof window.requestIdleCallback === 'function') {
-          idleId = window.requestIdleCallback(() => setShouldLoadBadge(true), { timeout: 1200 });
-        } else {
-          setShouldLoadBadge(true);
-        }
-      });
-    }, 1200);
+    let warmTimer = null;
+    if (readyToWarm) {
+      warmTimer = window.setTimeout(() => {
+        loadThreePassBadge().then(() => {
+          if (typeof window.requestIdleCallback === 'function') {
+            idleId = window.requestIdleCallback(() => setShouldLoadBadge(true), { timeout: 1200 });
+          } else {
+            setShouldLoadBadge(true);
+          }
+        });
+      }, 400);
+    }
 
     const el = badgeSlotRef.current;
     let observer = null;
@@ -56,13 +59,13 @@ export default function About() {
     }
 
     return () => {
-      window.clearTimeout(warmTimer);
+      if (warmTimer) window.clearTimeout(warmTimer);
       if (idleId && typeof window.cancelIdleCallback === 'function') {
         window.cancelIdleCallback(idleId);
       }
       observer?.disconnect();
     };
-  }, [shouldLoadBadge]);
+  }, [shouldLoadBadge, readyToWarm]);
 
   useEffect(() => {
     if (!shouldLoadBadge || !passDetails?.photo || !passDetails?.photoLight) return;

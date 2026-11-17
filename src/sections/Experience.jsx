@@ -55,8 +55,8 @@ export default function Experience() {
           ease: 'none',
           scrollTrigger: {
             trigger: container,
-            start: 'top 75%',
-            end: 'bottom 75%',
+            start: 'top 65%',
+            end: 'bottom 45%',
             scrub: 0.35,
             invalidateOnRefresh: true,
             onUpdate: checkNodes,
