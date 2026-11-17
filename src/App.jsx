@@ -458,6 +458,7 @@ export default function App() {
                 welcomeActive={showWelcome && !welcomeExiting}
                 scrollReady={!showWelcome}
                 portalEntranceTrigger={portalEntranceTrigger}
+                onSectionNavigate={handleSectionNavigate}
               />
               {showBelowFoldSections && (
                 <Suspense fallback={null}>

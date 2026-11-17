@@ -217,7 +217,12 @@ function TaglineBlock({
   );
 }
 
-export default function Hero({ welcomeActive = false, scrollReady = true, portalEntranceTrigger = null }) {
+export default function Hero({
+  welcomeActive = false,
+  scrollReady = true,
+  portalEntranceTrigger = null,
+  onSectionNavigate,
+}) {
   const { personal } = portfolioData;
   const { scrollTo } = useSmoothScroll();
 
@@ -743,7 +748,21 @@ export default function Hero({ welcomeActive = false, scrollReady = true, portal
     };
   }, [welcomeActive, prefersReducedMotion, isTaglineArray, taglineEntries.length]);
 
+  const SECTION_META = {
+    experience: { label: 'Work Experience', offset: -15 },
+    contact: { label: 'Contact', offset: -15 },
+  };
+
   const scrollToSection = (id) => {
+    if (onSectionNavigate) {
+      const meta = SECTION_META[id] || { label: id, offset: -15 };
+      onSectionNavigate({
+        id,
+        label: meta.label,
+        offset: meta.offset,
+      });
+      return;
+    }
     scrollTo(`#${id}`, { offset: -70 });
   };
 
