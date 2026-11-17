@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, startTransition, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useCallback, useRef, startTransition, Suspense, lazy } from 'react';
 import { flushSync } from 'react-dom';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WelcomeScreen from './components/WelcomeScreen';
@@ -14,6 +14,7 @@ import ReactiveAmbientGlow from './components/ReactiveAmbientGlow';
 import { SkillModalProvider } from './context/SkillModalContext';
 import { SmoothScrollProvider } from './context/SmoothScrollContext';
 import ToxicScreenTransition from './components/sideprofile/ToxicScreenTransition';
+import SectionCurtainTransition from './components/SectionCurtainTransition';
 
 const loadAbout = () => import('./sections/About');
 const loadSevenMemberSlitTransition = () => import('./components/transitions/SevenMemberSlitTransition');
@@ -82,6 +83,90 @@ export default function App() {
   const exitMode = 'sheesh';
 
   const [activeSection, setActiveSection] = useState('');
+  const [sectionCurtain, setSectionCurtain] = useState(null);
+  const isSectionCurtainActiveRef = useRef(false);
+
+  const handleSectionNavigate = useCallback((target) => {
+    if (isSectionCurtainActiveRef.current || transitionActive || showWelcome) return;
+
+    // Smart skip: if already aligned close to destination, gently scroll without curtain
+    if (target.id === 'hero') {
+      if (window.scrollY < 90) {
+        if (window.__lenis) {
+          window.__lenis.scrollTo(0, { duration: 0.6 });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        return;
+      }
+    } else {
+      const el = document.getElementById(target.id);
+      if (el) {
+        const targetTop = el.getBoundingClientRect().top + window.scrollY + (target.offset ?? 0);
+        if (Math.abs(window.scrollY - targetTop) < 90) {
+          if (window.__lenis) {
+            window.__lenis.scrollTo(`#${target.id}`, { offset: target.offset, duration: 0.6 });
+          } else {
+            window.scrollTo({ top: targetTop, behavior: 'smooth' });
+          }
+          return;
+        }
+      }
+    }
+
+    isSectionCurtainActiveRef.current = true;
+    setSectionCurtain({
+      ...target,
+      key: Date.now(),
+    });
+  }, [transitionActive, showWelcome]);
+
+  const handleSectionCurtainMidpoint = useCallback((target) => {
+    if (!target) return;
+
+    if (target.id === 'hero') {
+      if (window.__lenis) {
+        window.__lenis.scrollTo(0, { immediate: true, force: true });
+      }
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      const heroST = ScrollTrigger.getById('hero');
+      if (heroST && heroST.animation) {
+        heroST.animation.progress(0);
+      }
+      setActiveSection('');
+    } else {
+      if (window.__lenis) {
+        window.__lenis.scrollTo(`#${target.id}`, {
+          offset: target.offset ?? 0,
+          immediate: true,
+          force: true,
+        });
+      } else {
+        const el = document.getElementById(target.id);
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY + (target.offset ?? 0);
+          window.scrollTo({ top, left: 0, behavior: 'instant' });
+        }
+      }
+      setActiveSection(target.id);
+    }
+
+    ScrollTrigger.update();
+  }, []);
+
+  const handleSectionCurtainComplete = useCallback(() => {
+    isSectionCurtainActiveRef.current = false;
+    setSectionCurtain(null);
+    requestAnimationFrame(() => {
+      if (window.__lenis) {
+        window.__lenis.resize();
+      }
+      ScrollTrigger.update();
+    });
+  }, []);
 
   const handleStartExit = useCallback(() => {
     setWelcomeExiting(true);
@@ -320,8 +405,15 @@ export default function App() {
   }, [isSideProfile]);
 
   return (
-    <SmoothScrollProvider isLocked={showWelcome || transitionActive}>
+    <SmoothScrollProvider isLocked={showWelcome || transitionActive || Boolean(sectionCurtain)}>
       <SkillModalProvider>
+        {/* Double-Layer Stage Sweep Curtain for Navbar Section Navigation */}
+        <SectionCurtainTransition
+          transitionRequest={sectionCurtain}
+          onMidpoint={handleSectionCurtainMidpoint}
+          onComplete={handleSectionCurtainComplete}
+        />
+
         {/* Toxic Screen Transition Curtain */}
           <ToxicScreenTransition
             isActive={transitionActive}
@@ -347,7 +439,7 @@ export default function App() {
             )}
 
             {/* Sticky Header Navigation */}
-            <Navbar activeSection={activeSection} />
+            <Navbar activeSection={activeSection} onSectionNavigate={handleSectionNavigate} />
 
             {/* Atmospheric BABYMONSTER Ambient Background Canvas (paused while WelcomeScreen covers viewport) */}
             <BaemonBackground paused={showWelcome || isSideProfile} />

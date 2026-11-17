@@ -91,6 +91,7 @@ export function SmoothScrollProvider({ children, isLocked = false }) {
           options.easing ??
           ((t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)),
         immediate: options.immediate ?? false,
+        force: options.force ?? false,
       });
     } else {
       // Fallback if Lenis is disabled or not initialized

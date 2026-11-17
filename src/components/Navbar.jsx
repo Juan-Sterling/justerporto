@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { id: 'contact', label: 'Contact' },
 ];
 
-export default function Navbar({ activeSection = '' }) {
+export default function Navbar({ activeSection = '', onSectionNavigate }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [clickedSection, setClickedSection] = useState(null);
@@ -54,21 +54,31 @@ export default function Navbar({ activeSection = '' }) {
     };
   }, []);
 
-  const handleNavClick = (id) => {
+  const handleNavClick = (item) => {
+    const { id } = item;
     setIsOpen(false);
     setClickedSection(id);
     /* For about, offset: 2 ensures we cleanly complete Hero's 100vh pin */
     /* For other sections, -15 offset preserves breathing room below floating navbar */
     const offset = id === 'about' ? 2 : -15;
-    scrollTo(`#${id}`, { offset });
 
-    // Safety clear clicked override after 2.2s scroll completes
+    if (onSectionNavigate) {
+      onSectionNavigate({
+        id,
+        label: item.label,
+        offset,
+      });
+    } else {
+      scrollTo(`#${id}`, { offset });
+    }
+
+    // Safety clear clicked override after transition/scroll completes
     if (clearClickTimerRef.current) {
       clearTimeout(clearClickTimerRef.current);
     }
     clearClickTimerRef.current = setTimeout(() => {
       setClickedSection(null);
-    }, 2300);
+    }, onSectionNavigate ? 1350 : 2300);
   };
 
   return (
@@ -98,7 +108,15 @@ export default function Navbar({ activeSection = '' }) {
                 clearTimeout(clearClickTimerRef.current);
               }
               setClickedSection(null);
-              scrollTo(0, { offset: 0 });
+              if (onSectionNavigate) {
+                onSectionNavigate({
+                  id: 'hero',
+                  label: 'Juan Sterling',
+                  offset: 0,
+                });
+              } else {
+                scrollTo(0, { offset: 0 });
+              }
             }}
             className="group flex items-center gap-2 sm:gap-2.5 text-[#09090B] dark:text-white font-semibold tracking-tight text-sm sm:text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] rounded-full py-1 px-1.5 sm:px-2 hover:bg-white/40 dark:hover:bg-white/[0.06] transition-colors"
             aria-label="Juan Sterling Home"
@@ -146,7 +164,7 @@ export default function Navbar({ activeSection = '' }) {
                     href={`#${item.id}`}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNavClick(item.id);
+                      handleNavClick(item);
                     }}
                     className={`relative px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D2E] flex items-center select-none ${
                       isActive
@@ -207,7 +225,7 @@ export default function Navbar({ activeSection = '' }) {
                     href={`#${item.id}`}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNavClick(item.id);
+                      handleNavClick(item);
                     }}
                     className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                       isActive
