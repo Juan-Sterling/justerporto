@@ -76,6 +76,7 @@ export default function App() {
   // If directly accessing /sideprofile, skip opening welcome screen
   const [showWelcome, setShowWelcome] = useState(() => !isInitialSideProfile);
   const [welcomeExiting, setWelcomeExiting] = useState(false);
+  const [belowFoldReady, setBelowFoldReady] = useState(false);
 
   // Mode animasi exit BABYMONSTER yang aktif: 'sheesh' (Diagonal Laser Claw Slash & Split Wipe)
   const exitMode = 'sheesh';
@@ -87,17 +88,15 @@ export default function App() {
   }, []);
 
   const handleComplete = useCallback(() => {
-    startTransition(() => {
-      setShowWelcome(false);
-    });
+    setBelowFoldReady(true);
+    setShowWelcome(false);
     if (window.__lenis) {
       window.__lenis.resize();
       window.__lenis.start();
     }
-    // Refresh ScrollTriggers after below-the-fold sections mount in transition
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       ScrollTrigger.refresh();
-    }, 180);
+    });
   }, []);
 
   // Helper: Reliable return to Main Portfolio
@@ -274,26 +273,40 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [currentRoute]);
 
-  // Prefetch below-the-fold chunks quietly after WelcomeScreen starts playing
+  // Prefetch and pre-mount below-the-fold sections behind WelcomeScreen
+  // so document height and ScrollTrigger pin spacers settle before WelcomeScreen exits.
   useEffect(() => {
-    if (isInitialSideProfile) return;
+    if (currentRoute !== '/' || belowFoldReady) return;
+
+    let cancelled = false;
     const timer = window.setTimeout(() => {
-      loadAbout();
-      loadSevenMemberSlitTransition();
-      loadExperience();
-      loadBatterUpStageTransition();
-      loadSkills();
-      loadMonolithSplitTransition();
-      loadEducation();
-      loadEncoreDiagonalShutterTransition();
-      loadContact();
-      loadFooter();
-    }, 1200);
-    return () => window.clearTimeout(timer);
-  }, [isInitialSideProfile]);
+      Promise.all([
+        loadAbout(),
+        loadSevenMemberSlitTransition(),
+        loadExperience(),
+        loadBatterUpStageTransition(),
+        loadSkills(),
+        loadMonolithSplitTransition(),
+        loadEducation(),
+        loadEncoreDiagonalShutterTransition(),
+        loadContact(),
+        loadFooter(),
+      ]).then(() => {
+        if (cancelled) return;
+        startTransition(() => {
+          setBelowFoldReady(true);
+        });
+      });
+    }, 900);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [currentRoute, belowFoldReady]);
 
   const isSideProfile = currentRoute === '/sideprofile';
-  const showBelowFoldSections = !showWelcome;
+  const showBelowFoldSections = belowFoldReady || !showWelcome;
 
   // Synchronize route class on document.documentElement for route-specific palette styling (Scrollbars, accents)
   useEffect(() => {
