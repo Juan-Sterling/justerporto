@@ -40,10 +40,12 @@ export default function SectionTitle({
                 className="inline-block overflow-hidden py-1 -my-1"
               >
                 <span
-                  className="inline-block transition-transform duration-700 ease-out will-change-transform text-[#09090B] dark:text-white"
+                  className={`inline-block transition-transform ${
+                    isInView ? 'duration-700' : 'duration-300'
+                  } ease-out will-change-transform text-[#09090B] dark:text-white`}
                   style={{
                     transform: isInView ? 'translateY(0)' : 'translateY(115%)',
-                    transitionDelay: `${idx * 60 + 80}ms`,
+                    transitionDelay: isInView ? `${idx * 60 + 80}ms` : '0ms',
                   }}
                 >
                   {word}
@@ -63,9 +65,9 @@ export default function SectionTitle({
                   style={{
                     transform: isInView ? 'translateY(0)' : 'translateY(170%)',
                     transitionProperty: 'transform, text-shadow',
-                    transitionDuration: '700ms, 300ms',
+                    transitionDuration: isInView ? '700ms, 300ms' : '300ms, 300ms',
                     transitionTimingFunction: 'cubic-bezier(0, 0, 0.2, 1), ease',
-                    transitionDelay: `${leadingWords.length * 60 + 80}ms, 0ms`,
+                    transitionDelay: isInView ? `${leadingWords.length * 60 + 80}ms, 0ms` : '0ms, 0ms',
                   }}
                 >
                   {lastWord}
@@ -84,27 +86,33 @@ export default function SectionTitle({
         >
           {/* Primary Crimson Animated Accent Line */}
           <div
-            className="w-[68px] h-[2px] bg-gradient-to-r from-[#E11D2E] via-[#FF3B4D] to-transparent rounded-full transition-transform duration-700 ease-out origin-left group-hover/title:scale-x-125 group-hover/title:shadow-[0_0_10px_rgba(225,29,46,0.8)]"
+            className={`w-[68px] h-[2px] bg-gradient-to-r from-[#E11D2E] via-[#FF3B4D] to-transparent rounded-full transition-transform ${
+              isInView ? 'duration-700' : 'duration-300'
+            } ease-out origin-left group-hover/title:scale-x-125 group-hover/title:shadow-[0_0_10px_rgba(225,29,46,0.8)]`}
             style={{
               transform: isInView ? 'scaleX(1)' : 'scaleX(0)',
-              transitionDelay: '240ms',
+              transitionDelay: isInView ? '240ms' : '0ms',
             }}
           />
           {/* Secondary Tech Track Line */}
           <div
-            className="w-[42px] h-[2px] bg-[#D4D4D8] dark:bg-zinc-600 dark:bg-white/30 rounded-full transition-transform duration-700 ease-out origin-left"
+            className={`w-[42px] h-[2px] bg-[#D4D4D8] dark:bg-zinc-600 dark:bg-white/30 rounded-full transition-transform ${
+              isInView ? 'duration-700' : 'duration-300'
+            } ease-out origin-left`}
             style={{
               transform: isInView ? 'scaleX(1)' : 'scaleX(0)',
-              transitionDelay: '380ms',
+              transitionDelay: isInView ? '380ms' : '0ms',
             }}
           />
           {/* Micro Tech Hash Marks */}
           <span
-            className="font-mono text-[11px] text-[#71717A] dark:text-zinc-400 tracking-widest transition-all duration-700 ease-out font-medium"
+            className={`font-mono text-[11px] text-[#71717A] dark:text-zinc-400 tracking-widest transition-all ${
+              isInView ? 'duration-700' : 'duration-300'
+            } ease-out font-medium`}
             style={{
               opacity: isInView ? 0.9 : 0,
               transform: isInView ? 'translateX(0)' : 'translateX(-8px)',
-              transitionDelay: '480ms',
+              transitionDelay: isInView ? '480ms' : '0ms',
             }}
           >
             ///
@@ -115,11 +123,13 @@ export default function SectionTitle({
       {/* 4. Subtitle with Staggered Fade Up */}
       {subtitle && (
         <p
-          className="text-sm sm:text-base text-[#52525B] dark:text-[#A1A1AA] max-w-2xl leading-relaxed transition-all duration-700 ease-out will-change-transform pt-1"
+          className={`text-sm sm:text-base text-[#52525B] dark:text-[#A1A1AA] max-w-2xl leading-relaxed transition-all ${
+            isInView ? 'duration-700' : 'duration-300'
+          } ease-out will-change-transform pt-1`}
           style={{
             opacity: isInView ? 1 : 0,
             transform: isInView ? 'translateY(0)' : 'translateY(12px)',
-            transitionDelay: '320ms',
+            transitionDelay: isInView ? '320ms' : '0ms',
           }}
         >
           {subtitle}

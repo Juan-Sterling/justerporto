@@ -15,6 +15,7 @@ import { SkillModalProvider } from './context/SkillModalContext';
 import { SmoothScrollProvider } from './context/SmoothScrollContext';
 import ToxicScreenTransition from './components/sideprofile/ToxicScreenTransition';
 import SectionCurtainTransition from './components/SectionCurtainTransition';
+import { setInViewCurtainHold } from './hooks/useInView';
 
 const loadAbout = () => import('./sections/About');
 const loadSevenMemberSlitTransition = () => import('./components/transitions/SevenMemberSlitTransition');
@@ -126,6 +127,9 @@ export default function App() {
   const handleSectionCurtainMidpoint = useCallback((target) => {
     if (!target) return;
 
+    // Hold scroll-triggered section entrances behind the closed curtain until it lifts
+    setInViewCurtainHold(true);
+
     // Ensure all ScrollTrigger pin spacers and trigger bounds are up-to-date before jumping
     ScrollTrigger.refresh();
 
@@ -141,6 +145,7 @@ export default function App() {
       if (heroST && heroST.animation) {
         heroST.animation.progress(0);
       }
+      setPortalEntranceTrigger({ phase: 'prime', timestamp: Date.now() });
       setActiveSection('');
     } else {
       if (window.__lenis) {
@@ -162,7 +167,15 @@ export default function App() {
     ScrollTrigger.update();
   }, []);
 
+  const handleSectionCurtainOpenStart = useCallback((target) => {
+    setInViewCurtainHold(false);
+    if (target?.id === 'hero') {
+      setPortalEntranceTrigger({ phase: 'play', timestamp: Date.now() });
+    }
+  }, []);
+
   const handleSectionCurtainComplete = useCallback(() => {
+    setInViewCurtainHold(false);
     isSectionCurtainActiveRef.current = false;
     setSectionCurtain(null);
     requestAnimationFrame(() => {
@@ -205,6 +218,7 @@ export default function App() {
   // Helper: Reliable return to Main Portfolio
   // Resets scroll, primes Hero, resets ScrollTrigger scrub progress, and displays Welcome Screen
   const returnToMainPortfolio = useCallback(() => {
+    setInViewCurtainHold(false);
     setTransitionActive(false);
     setPendingRoute(null);
 
@@ -429,6 +443,7 @@ export default function App() {
         <SectionCurtainTransition
           transitionRequest={sectionCurtain}
           onMidpoint={handleSectionCurtainMidpoint}
+          onOpenStart={handleSectionCurtainOpenStart}
           onComplete={handleSectionCurtainComplete}
         />
 

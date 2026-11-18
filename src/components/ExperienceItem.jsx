@@ -61,11 +61,13 @@ export default function ExperienceItem({
 
       {/* Experience Content Box with Bottom-to-Top (translateY) Animation */}
       <div 
-        className="rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] p-5 sm:p-6 transition-all duration-700 ease-out hover:border-[#E11D2E]/40 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50 mb-8 will-change-transform"
+        className={`rounded-lg bg-white dark:bg-[#141414] border border-[#E4E4E7] dark:border-[#2A2A2A] p-5 sm:p-6 transition-all ${
+          isInView ? 'duration-700' : 'duration-300'
+        } ease-out hover:border-[#E11D2E]/40 hover:bg-[#FAFAFA] dark:hover:bg-[#181818] hover:-translate-y-1 shadow-xs hover:shadow-md dark:hover:shadow-black/50 mb-8 will-change-transform`}
         style={{
           opacity: isInView ? 1 : 0,
           transform: isInView ? 'translateY(0)' : 'translateY(44px)',
-          transitionDelay: `${delay + 60}ms`,
+          transitionDelay: isInView ? `${delay + 60}ms` : '0ms',
         }}
       >
         {/* Header Metadata with Logo & Link */}

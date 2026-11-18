@@ -27,7 +27,7 @@ export default function SkillBentoCard({
       style={{
         opacity: isInView ? 1 : 0,
         transform: isInView ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.96)',
-        transitionDelay: `${delay}ms`,
+        transitionDelay: isInView ? `${delay}ms` : '0ms',
       }}
       className={`group relative flex sm:flex-col items-center sm:items-start justify-start p-2 sm:p-3.5 rounded-xl border transition-all duration-300 sm:duration-500 ease-out text-left select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E11D2E]/50 overflow-hidden hover:-translate-y-0.5 sm:hover:-translate-y-1 active:scale-[0.98] will-change-transform gap-2 sm:gap-0 ${
         isSelected

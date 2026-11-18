@@ -1,7 +1,6 @@
 import React from 'react';
 import SectionTitle from '../components/SectionTitle';
 import EducationItem from '../components/EducationItem';
-import AnimatedSection from '../components/AnimatedSection';
 import { portfolioData } from '../data/portfolioData';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -27,9 +26,7 @@ export default function Education() {
         {/* Academic Credentials */}
         <div className="space-y-6">
           {education.map((edu, index) => (
-            <AnimatedSection key={index} delay={index * 150}>
-              <EducationItem edu={edu} />
-            </AnimatedSection>
+            <EducationItem key={index} edu={edu} delay={index * 150} />
           ))}
         </div>
 

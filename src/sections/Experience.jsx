@@ -47,6 +47,7 @@ export default function Experience() {
     };
 
     const ctx = gsap.context(() => {
+      gsap.set(laser, { scaleY: 0, force3D: true });
       gsap.fromTo(
         laser,
         { scaleY: 0 },
@@ -55,10 +56,9 @@ export default function Experience() {
           ease: 'none',
           scrollTrigger: {
             trigger: container,
-            start: 'top 65%',
+            start: 'top 78%',
             end: 'bottom 45%',
-            scrub: 0.35,
-            invalidateOnRefresh: true,
+            scrub: true,
             onUpdate: checkNodes,
             onRefresh: checkNodes,
             onLeaveBack: () => {
@@ -161,6 +161,7 @@ export default function Experience() {
           {/* 2. GSAP ScrollTrigger Stage Laser Beam (Laser Core + Traveling Head Spark) */}
           <div 
             ref={timelineLaserRef}
+            style={{ transform: 'scaleY(0)' }}
             className="absolute left-[11px] sm:left-[15px] top-4 bottom-10 w-[2px] origin-top pointer-events-none z-0 will-change-transform" 
             aria-hidden="true" 
           >

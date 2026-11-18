@@ -42,8 +42,10 @@ function BentoCluster({
       style={{
         opacity: isInView ? 1 : 0,
         transform: isInView ? 'translateY(0)' : 'translateY(36px)',
-        transition: 'opacity 700ms ease-out, transform 700ms ease-out',
-        transitionDelay: `${catIdx * 100}ms`,
+        transition: isInView
+          ? 'opacity 700ms ease-out, transform 700ms ease-out'
+          : 'opacity 300ms ease-out, transform 300ms ease-out',
+        transitionDelay: isInView ? `${catIdx * 100}ms` : '0ms',
       }}
       className="group/cluster relative flex flex-col justify-start p-3 sm:p-5 rounded-2xl bg-white/70 dark:bg-[#0E0E0E]/90 border border-[#E4E4E7] dark:border-[#242424] shadow-xs hover:border-[#E11D2E]/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden will-change-transform"
     >

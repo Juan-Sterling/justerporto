@@ -14,10 +14,12 @@ import gsap from 'gsap';
  * - 0.86s -> 1.04s : Title & rule exit cleanly.
  * - 0.92s -> 1.24s : Main panel exits upward first.
  * - 0.97s -> 1.29s : Crimson layer trails upward, leaving a crimson trailing edge.
+ * - 1.04s          : onOpenStart fires so target section/Hero entrance reveals cleanly as curtain lifts.
  */
 export default function SectionCurtainTransition({
   transitionRequest,
   onMidpoint,
+  onOpenStart,
   onComplete,
 }) {
   const containerRef = useRef(null);
@@ -27,10 +29,12 @@ export default function SectionCurtainTransition({
   const ruleRef = useRef(null);
 
   const onMidpointRef = useRef(onMidpoint);
+  const onOpenStartRef = useRef(onOpenStart);
   const onCompleteRef = useRef(onComplete);
 
   useLayoutEffect(() => {
     onMidpointRef.current = onMidpoint;
+    onOpenStartRef.current = onOpenStart;
     onCompleteRef.current = onComplete;
   });
 
@@ -43,6 +47,7 @@ export default function SectionCurtainTransition({
 
     if (prefersReducedMotion) {
       if (onMidpointRef.current) onMidpointRef.current(transitionRequest);
+      if (onOpenStartRef.current) onOpenStartRef.current(transitionRequest);
       if (onCompleteRef.current) onCompleteRef.current();
       return;
     }
@@ -52,119 +57,129 @@ export default function SectionCurtainTransition({
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
-    const ctx = gsap.context(() => {
-      gsap.set([accentLayerRef.current, mainLayerRef.current], {
-        yPercent: 102,
-        force3D: true,
-      });
-      gsap.set(titleRef.current, {
-        yPercent: 105,
-        opacity: 0,
-        force3D: true,
-      });
-      gsap.set(ruleRef.current, {
-        scaleX: 0,
-        opacity: 0,
-        transformOrigin: 'center center',
-        force3D: true,
-      });
+    const accentLayer = accentLayerRef.current;
+    const mainLayer = mainLayerRef.current;
+    const titleEl = titleRef.current;
+    const ruleEl = ruleRef.current;
 
-      const tl = gsap.timeline({
-        onComplete: () => {
-          document.body.style.overflow = prevBodyOverflow;
-          document.documentElement.style.overflow = prevHtmlOverflow;
-          if (onCompleteRef.current) onCompleteRef.current();
-        },
-      });
+    gsap.set([accentLayer, mainLayer], {
+      yPercent: 102,
+      force3D: true,
+    });
+    gsap.set(titleEl, {
+      yPercent: 105,
+      opacity: 0,
+      force3D: true,
+    });
+    gsap.set(ruleEl, {
+      scaleX: 0,
+      opacity: 0,
+      transformOrigin: 'center center',
+      force3D: true,
+    });
 
-      // 1. Enter sweep (bottom -> center): Crimson leads, main stage panel follows
-      tl.to(
-        accentLayerRef.current,
+    // Build timeline outside gsap.context so callbacks (onMidpoint/onOpenStart) that trigger
+    // ScrollTrigger.refresh() or Hero entrance timelines are never captured and reverted on unmount.
+    const tl = gsap.timeline({
+      onComplete: () => {
+        document.body.style.overflow = prevBodyOverflow;
+        document.documentElement.style.overflow = prevHtmlOverflow;
+        if (onCompleteRef.current) onCompleteRef.current();
+      },
+    });
+
+    // 1. Enter sweep (bottom -> center): Crimson leads, main stage panel follows
+    tl.to(
+      accentLayer,
+      {
+        yPercent: 0,
+        duration: 0.32,
+        ease: 'power4.inOut',
+      },
+      0
+    )
+      .to(
+        mainLayer,
         {
           yPercent: 0,
           duration: 0.32,
           ease: 'power4.inOut',
         },
-        0
+        0.05
       )
-        .to(
-          mainLayerRef.current,
-          {
-            yPercent: 0,
-            duration: 0.32,
-            ease: 'power4.inOut',
-          },
-          0.05
-        )
-        // 2. Editorial center title reveal (longer dwell so text is clearly readable)
-        .to(
-          titleRef.current,
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.28,
-            ease: 'power3.out',
-          },
-          0.22
-        )
-        .to(
-          ruleRef.current,
-          {
-            scaleX: 1,
-            opacity: 1,
-            duration: 0.28,
-            ease: 'power3.out',
-          },
-          0.26
-        )
-        // 3. Midpoint: screen is 100% covered, jump scroll cleanly behind curtain
-        .add(() => {
-          if (onMidpointRef.current) onMidpointRef.current(transitionRequest);
-        }, 0.38)
-        // 4. Exit typography cleanly after readable dwell pause
-        .to(
-          titleRef.current,
-          {
-            y: -14,
-            opacity: 0,
-            duration: 0.18,
-            ease: 'power2.in',
-          },
-          0.86
-        )
-        .to(
-          ruleRef.current,
-          {
-            scaleX: 0,
-            opacity: 0,
-            duration: 0.16,
-            ease: 'power2.in',
-          },
-          0.86
-        )
-        // 5. Exit sweep (center -> top): Main panel leaves first, crimson trails
-        .to(
-          mainLayerRef.current,
-          {
-            yPercent: -102,
-            duration: 0.32,
-            ease: 'power4.inOut',
-          },
-          0.92
-        )
-        .to(
-          accentLayerRef.current,
-          {
-            yPercent: -102,
-            duration: 0.32,
-            ease: 'power4.inOut',
-          },
-          0.97
-        );
-    }, containerRef);
+      // 2. Editorial center title reveal (longer dwell so text is clearly readable)
+      .to(
+        titleEl,
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.28,
+          ease: 'power3.out',
+        },
+        0.22
+      )
+      .to(
+        ruleEl,
+        {
+          scaleX: 1,
+          opacity: 1,
+          duration: 0.28,
+          ease: 'power3.out',
+        },
+        0.26
+      )
+      // 3. Midpoint: screen is 100% covered, jump scroll cleanly behind curtain
+      .add(() => {
+        if (onMidpointRef.current) onMidpointRef.current(transitionRequest);
+      }, 0.38)
+      // 4. Exit typography cleanly after readable dwell pause
+      .to(
+        titleEl,
+        {
+          y: -14,
+          opacity: 0,
+          duration: 0.18,
+          ease: 'power2.in',
+        },
+        0.86
+      )
+      .to(
+        ruleEl,
+        {
+          scaleX: 0,
+          opacity: 0,
+          duration: 0.16,
+          ease: 'power2.in',
+        },
+        0.86
+      )
+      // 5. Exit sweep (center -> top): Main panel leaves first, crimson trails
+      .to(
+        mainLayer,
+        {
+          yPercent: -102,
+          duration: 0.32,
+          ease: 'power4.inOut',
+        },
+        0.92
+      )
+      .to(
+        accentLayer,
+        {
+          yPercent: -102,
+          duration: 0.32,
+          ease: 'power4.inOut',
+        },
+        0.97
+      )
+      // 6. Trigger destination section/Hero entrance as curtain lifts away
+      .add(() => {
+        if (onOpenStartRef.current) onOpenStartRef.current(transitionRequest);
+      }, 1.04);
 
     return () => {
-      ctx.revert();
+      tl.kill();
+      gsap.killTweensOf([accentLayer, mainLayer, titleEl, ruleEl]);
       document.body.style.overflow = prevBodyOverflow;
       document.documentElement.style.overflow = prevHtmlOverflow;
     };
