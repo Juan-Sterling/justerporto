@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Compass, ArrowRight } from 'lucide-react';
 import BehindTheDesignModal from './BehindTheDesignModal';
-
-const ROLES = [
-  "Full Stack Developer",
-  "Software Developer",
-];
+import MonsterCrewWordmark from './MonsterCrewWordmark';
 
 const TAGLINES = [
   '“Baby, I’m a Developer”',
@@ -18,26 +14,10 @@ const TAGLINES = [
 ];
 
 export default function Footer({ onNavigateToSideProfile }) {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
-
   const [taglineIndex, setTaglineIndex] = useState(0);
   const [isTaglineFading, setIsTaglineFading] = useState(false);
 
   const [isDesignModalOpen, setIsDesignModalOpen] = useState(false);
-
-  // Role rotator
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsFading(true);
-      setTimeout(() => {
-        setRoleIndex((prev) => (prev + 1) % ROLES.length);
-        setIsFading(false);
-      }, 300);
-    }, 2800);
-
-    return () => clearInterval(interval);
-  }, []);
 
   // BABYMONSTER tagline rotator
   useEffect(() => {
@@ -55,53 +35,37 @@ export default function Footer({ onNavigateToSideProfile }) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative z-10 rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-[#E4E4E7] dark:border-[#1F1F23] bg-[#FFFFFF] dark:bg-[#07080B] shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] pt-8 sm:pt-10 pb-8 px-4 sm:px-6 lg:px-8 transition-colors duration-300 overflow-hidden">
+    <footer className="relative z-10 rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-[#E4E4E7] dark:border-[#1F1F23] bg-[#FFFFFF] dark:bg-[#07080B] shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.5)] pt-6 sm:pt-8 pb-8 px-4 sm:px-6 lg:px-8 transition-colors duration-300 overflow-hidden">
       {/* Top Laser Accent Horizon Line */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 max-w-2xl h-[1px] bg-gradient-to-r from-transparent via-[#E11D2E]/40 to-transparent pointer-events-none" />
       <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-96 h-28 bg-[#E11D2E]/5 dark:bg-[#E11D2E]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10">
-        {/* Balanced Row — Left: Identity & Taglines, Right: Tactical Side Profile Card */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 py-2">
-          {/* Left Column: Identity, Rotating Role & Rotating Tagline */}
-          <div className="space-y-1.5 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
-              <span className="font-display text-sm font-bold text-[#09090B] dark:text-white">
-                Juan Sterling
-              </span>
-              <span className="text-[#A1A1AA] dark:text-[#52525B]">•</span>
-              <div className="inline-flex items-center overflow-hidden h-5">
-                <span
-                  className={`font-mono text-xs font-semibold transition-all duration-300 transform ${
-                    isFading ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0 text-[#E11D2E]'
-                  }`}
-                >
-                  {ROLES[roleIndex]}
-                </span>
-              </div>
-            </div>
+        {/* Interactive Giant "JUSTER" Wordmark & Little Monster Crew */}
+        <MonsterCrewWordmark />
 
-            {/* Rotating BABYMONSTER Tagline */}
-            <div className="min-h-[1.25rem] flex items-center justify-center md:justify-start overflow-hidden">
-              <p
-                className={`text-xs text-[#52525B] dark:text-[#A1A1AA] font-mono transition-all duration-300 transform ${
-                  isTaglineFading ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
-                }`}
-              >
-                {TAGLINES[taglineIndex]}
-              </p>
-            </div>
+        {/* Centered Tagline & Side Profile Portal Finale */}
+        <div className="mt-4 sm:mt-6 flex flex-col items-center text-center gap-5 sm:gap-6">
+          {/* Larger Rotating BABYMONSTER Tagline */}
+          <div className="min-h-[1.75rem] sm:min-h-[2.25rem] flex items-center justify-center overflow-hidden px-2">
+            <p
+              className={`text-sm sm:text-base md:text-lg font-medium text-[#27272A] dark:text-[#E4E4E7] font-mono tracking-tight transition-all duration-300 transform ${
+                isTaglineFading ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
+              }`}
+            >
+              {TAGLINES[taglineIndex]}
+            </p>
           </div>
 
-          {/* Right Column: Tactical Side Profile Portal Entry Button */}
+          {/* Centered Tactical Side Profile Portal Entry Button */}
           {onNavigateToSideProfile && (
-            <div className="flex justify-center md:justify-end shrink-0">
+            <div className="flex justify-center">
               <button
                 onClick={onNavigateToSideProfile}
                 type="button"
                 id="footer-sideprofile-trigger"
                 aria-label="Access Side Profile: There's Another Side That You Don't Know"
-                className="group relative inline-flex items-center gap-3 px-3.5 py-2 rounded-xl bg-[#f0fdf4] dark:bg-[#090d0b] border border-[#10b981]/30 dark:border-[#00f59b]/35 hover:border-[#059669] dark:hover:border-[#00f59b] shadow-2xs hover:shadow-[0_0_15px_rgba(0,245,155,0.2)] transition-all duration-300 cursor-pointer overflow-hidden text-left"
+                className="group relative inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#f0fdf4] dark:bg-[#090d0b] border border-[#10b981]/30 dark:border-[#00f59b]/35 hover:border-[#059669] dark:hover:border-[#00f59b] shadow-2xs hover:shadow-[0_0_15px_rgba(0,245,155,0.2)] transition-all duration-300 cursor-pointer overflow-hidden text-left"
               >
                 {/* Tactical diagonal hazard lines background */}
                 <div
@@ -137,7 +101,7 @@ export default function Footer({ onNavigateToSideProfile }) {
         </div>
 
         {/* Bottom Sub-Footer Bar */}
-        <div className="pt-6 mt-4 border-t border-[#E4E4E7]/70 dark:border-[#1F1F23]/70 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#71717A] text-center sm:text-left">
+        <div className="pt-6 mt-7 sm:mt-8 border-t border-[#E4E4E7]/70 dark:border-[#1F1F23]/70 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[#71717A] text-center sm:text-left">
           {/* Copyright notice */}
           <div>
             &copy; {currentYear} Juan Sterling. All rights reserved.

@@ -265,6 +265,63 @@ textarea:focus-visible {
   -webkit-backface-visibility: hidden;
 }
 
+/* Monster Crew Footer Interactive Keyframes */
+@keyframes monsterCrewHop {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1, 1);
+  }
+  20% {
+    transform: translate3d(0, 3px, 0) scale(1.06, 0.92);
+  }
+  50% {
+    transform: translate3d(0, -16px, 0) scale(0.95, 1.06);
+  }
+  75% {
+    transform: translate3d(0, 2px, 0) scale(1.03, 0.97);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1, 1);
+  }
+}
+
+@keyframes monsterBubbleIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes letterCrewPop {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  35% {
+    transform: translate3d(0, -10px, 0) scale(1.06);
+  }
+  70% {
+    transform: translate3d(0, 2px, 0) scale(0.98);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.animate-monster-hop {
+  animation: monsterCrewHop 0.48s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-monster-bubble {
+  animation: monsterBubbleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-letter-pop {
+  animation: letterCrewPop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
 
 /* Smooth motion respect */
 @media (prefers-reduced-motion: reduce) {
