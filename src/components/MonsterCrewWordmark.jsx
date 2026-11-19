@@ -143,7 +143,7 @@ export default function MonsterCrewWordmark() {
     };
   }, []);
 
-  // Zero-re-render, viewport-gated cursor eye tracking
+  // Zero-re-render, viewport-gated idle animations & cursor eye tracking
   useEffect(() => {
     const container = containerRef.current;
     const svg = svgRef.current;
@@ -157,8 +157,6 @@ export default function MonsterCrewWordmark() {
       typeof window !== 'undefined' &&
       window.matchMedia &&
       window.matchMedia('(pointer: fine)').matches;
-
-    if (prefersReducedMotion || !hasFinePointer) return;
 
     let isVisible = false;
     let rafId = null;
@@ -205,16 +203,23 @@ export default function MonsterCrewWordmark() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
+        container.classList.toggle('monster-crew-paused', !isVisible || prefersReducedMotion);
       },
       { rootMargin: '120px 0px' }
     );
 
     observer.observe(container);
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+
+    const enablePointerTracking = !prefersReducedMotion && hasFinePointer;
+    if (enablePointerTracking) {
+      window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    }
 
     return () => {
       observer.disconnect();
-      window.removeEventListener('pointermove', handlePointerMove);
+      if (enablePointerTracking) {
+        window.removeEventListener('pointermove', handlePointerMove);
+      }
       if (rafId !== null) {
         window.cancelAnimationFrame(rafId);
       }
@@ -262,7 +267,7 @@ export default function MonsterCrewWordmark() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full mt-3 sm:mt-5 mb-2 select-none"
+      className="monster-crew-paused relative w-full mt-3 sm:mt-5 mb-2 select-none"
     >
       {/* Tight SVG Stage Container so speech bubble bottom% aligns precisely above each monster */}
       <div className="relative w-full">
@@ -313,24 +318,28 @@ export default function MonsterCrewWordmark() {
           {/* 4-point sparkle near J */}
           <path
             d="M 42 108 L 46 120 L 58 124 L 46 128 L 42 140 L 38 128 L 26 124 L 38 120 Z"
-            className="fill-[#E11D2E]/60 dark:fill-[#E11D2E]/80"
+            style={{ transformOrigin: '42px 124px', animationDelay: '0s' }}
+            className="fill-[#E11D2E]/60 dark:fill-[#E11D2E]/80 animate-doodle-idle"
           />
           {/* Tiny floating horn emblem above U */}
           <path
             d="M 288 112 C 285 100 290 92 296 90 C 294 99 297 104 302 106 C 307 104 310 99 308 90 C 314 92 319 100 316 112 C 312 117 292 117 288 112 Z"
-            className="fill-[#E11D2E]/40 dark:fill-[#E11D2E]/55"
+            style={{ transformOrigin: '302px 104px', animationDelay: '0.7s' }}
+            className="fill-[#E11D2E]/40 dark:fill-[#E11D2E]/55 animate-doodle-idle"
           />
           {/* Small diagonal ink sparks above E */}
           <path
             d="M 818 112 L 826 94 M 834 118 L 848 106 M 804 118 L 792 105"
             strokeWidth="3.5"
             strokeLinecap="round"
-            className="stroke-zinc-400 dark:stroke-zinc-600"
+            style={{ transformOrigin: '820px 106px', animationDelay: '1.3s' }}
+            className="stroke-zinc-400 dark:stroke-zinc-600 animate-doodle-idle"
           />
           {/* 4-point sparkle right of R */}
           <path
             d="M 1088 122 L 1091 131 L 1100 134 L 1091 137 L 1088 146 L 1085 137 L 1076 134 L 1085 131 Z"
-            className="fill-[#10b981]/60 dark:fill-[#00f59b]/70"
+            style={{ transformOrigin: '1088px 134px', animationDelay: '1.9s' }}
+            className="fill-[#10b981]/60 dark:fill-[#00f59b]/70 animate-doodle-idle"
           />
           {/* Subtle hand-drawn ground baseline tick marks */}
           <path
@@ -368,24 +377,32 @@ export default function MonsterCrewWordmark() {
               style={{ transformOrigin: '122px 308px' }}
               className={poppedLetter === 'J' ? 'animate-letter-pop' : ''}
             >
-              {/* Letter J */}
-              <g aria-hidden="true">
-                <path
-                  d="M 68 152 L 194 148 L 190 182 L 166 183 L 166 248 C 166 289 140 310 100 310 C 68 310 50 292 48 263 L 85 256 C 87 272 95 278 106 278 C 122 278 128 266 128 246 L 128 184 L 64 186 Z"
-                  className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
-                />
-                <path
-                  d="M 45 254 L 64 251 L 61 264 L 44 266 Z"
-                  className="fill-[#E11D2E] group-hover:fill-[#09090B] dark:group-hover:fill-[#FAFAFA] transition-colors duration-200"
-                />
-              </g>
-
-              {/* Perched Monster: Crimson Imp */}
               <g
-                key={hoppingId === 'imp' ? `imp-${hopSeq}` : 'imp-idle'}
-                style={{ transformOrigin: '148px 152px' }}
-                className={hoppingId === 'imp' ? 'animate-monster-hop' : ''}
+                style={{ transformOrigin: '122px 308px', animationDelay: '0s' }}
+                className="animate-letter-idle-a"
               >
+                {/* Letter J */}
+                <g aria-hidden="true">
+                  <path
+                    d="M 68 152 L 194 148 L 190 182 L 166 183 L 166 248 C 166 289 140 310 100 310 C 68 310 50 292 48 263 L 85 256 C 87 272 95 278 106 278 C 122 278 128 266 128 246 L 128 184 L 64 186 Z"
+                    className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
+                  />
+                  <path
+                    d="M 45 254 L 64 251 L 61 264 L 44 266 Z"
+                    className="fill-[#E11D2E] group-hover:fill-[#09090B] dark:group-hover:fill-[#FAFAFA] transition-colors duration-200"
+                  />
+                </g>
+
+                {/* Perched Monster: Crimson Imp */}
+                <g
+                  style={{ transformOrigin: '148px 152px', animationDelay: '0.15s', animationDuration: '2.3s' }}
+                  className="animate-monster-idle"
+                >
+                  <g
+                    key={hoppingId === 'imp' ? `imp-${hopSeq}` : 'imp-idle'}
+                    style={{ transformOrigin: '148px 152px' }}
+                    className={hoppingId === 'imp' ? 'animate-monster-hop' : ''}
+                  >
                 {/* Spiked tail */}
                 <path
                   d="M 122 132 C 104 130 98 115 105 106"
@@ -441,13 +458,15 @@ export default function MonsterCrewWordmark() {
                 <circle cx="160" cy="96" r="8.5" fill="#FFFFFF" />
 
                 {/* Tracking Pupils */}
-                <g ref={setPupilRef('imp-left')}>
-                  <circle cx="136" cy="96" r="4" fill="#09090B" />
-                  <circle cx="137.5" cy="94.5" r="1.4" fill="#FFFFFF" />
-                </g>
-                <g ref={setPupilRef('imp-right')}>
-                  <circle cx="160" cy="96" r="4" fill="#09090B" />
-                  <circle cx="161.5" cy="94.5" r="1.4" fill="#FFFFFF" />
+                <g className="animate-pupil-idle" style={{ animationDelay: '0s' }}>
+                  <g ref={setPupilRef('imp-left')}>
+                    <circle cx="136" cy="96" r="4" fill="#09090B" />
+                    <circle cx="137.5" cy="94.5" r="1.4" fill="#FFFFFF" />
+                  </g>
+                  <g ref={setPupilRef('imp-right')}>
+                    <circle cx="160" cy="96" r="4" fill="#09090B" />
+                    <circle cx="161.5" cy="94.5" r="1.4" fill="#FFFFFF" />
+                  </g>
                 </g>
 
                 {/* Cheeky grin + tiny fang */}
@@ -459,6 +478,8 @@ export default function MonsterCrewWordmark() {
                   strokeLinecap="round"
                 />
                 <path d="M 141 117 L 144 123 L 147 118 Z" fill="#E11D2E" />
+                  </g>
+                </g>
               </g>
             </g>
           </g>
@@ -501,14 +522,19 @@ export default function MonsterCrewWordmark() {
               className={poppedLetter === 'U' ? 'animate-letter-pop' : ''}
               aria-hidden="true"
             >
-              <path
-                d="M 226 152 L 266 150 L 266 244 C 266 266 279 278 300 278 C 321 278 334 266 334 244 L 334 150 L 374 152 L 374 246 C 374 289 345 312 300 312 C 255 312 226 289 226 246 Z"
-                className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
-              />
-              <path
-                d="M 226 152 L 236 136 L 250 151 Z M 350 151 L 364 136 L 374 152 Z"
-                className="fill-[#E11D2E] group-hover:fill-[#09090B] dark:group-hover:fill-[#FAFAFA] transition-colors duration-200"
-              />
+              <g
+                style={{ transformOrigin: '300px 310px', animationDelay: '0.38s' }}
+                className="animate-letter-idle-b"
+              >
+                <path
+                  d="M 226 152 L 266 150 L 266 244 C 266 266 279 278 300 278 C 321 278 334 266 334 244 L 334 150 L 374 152 L 374 246 C 374 289 345 312 300 312 C 255 312 226 289 226 246 Z"
+                  className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
+                />
+                <path
+                  d="M 226 152 L 236 136 L 250 151 Z M 350 151 L 364 136 L 374 152 Z"
+                  className="fill-[#E11D2E] group-hover:fill-[#09090B] dark:group-hover:fill-[#FAFAFA] transition-colors duration-200"
+                />
+              </g>
             </g>
           </g>
         </g>
@@ -534,20 +560,28 @@ export default function MonsterCrewWordmark() {
               style={{ transformOrigin: '478px 310px' }}
               className={poppedLetter === 'S' ? 'animate-letter-pop' : ''}
             >
-              {/* Letter S */}
-              <g aria-hidden="true">
-                <path
-                  d="M 544 182 L 508 192 C 503 180 492 175 478 175 C 461 175 450 183 450 194 C 450 206 462 211 490 217 C 528 225 552 240 552 267 C 552 296 524 312 480 312 C 436 312 408 294 402 264 L 440 255 C 444 272 458 281 481 281 C 501 281 513 274 513 263 C 513 251 501 246 472 240 C 436 232 412 218 412 191 C 412 162 440 146 480 146 C 517 146 539 160 544 182 Z"
-                  className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
-                />
-              </g>
-
-              {/* Perched Monster: Horned Alley Cat */}
               <g
-                key={hoppingId === 'cat' ? `cat-${hopSeq}` : 'cat-idle'}
-                style={{ transformOrigin: '480px 148px' }}
-                className={hoppingId === 'cat' ? 'animate-monster-hop' : ''}
+                style={{ transformOrigin: '478px 310px', animationDelay: '0.76s' }}
+                className="animate-letter-idle-a"
               >
+                {/* Letter S */}
+                <g aria-hidden="true">
+                  <path
+                    d="M 544 182 L 508 192 C 503 180 492 175 478 175 C 461 175 450 183 450 194 C 450 206 462 211 490 217 C 528 225 552 240 552 267 C 552 296 524 312 480 312 C 436 312 408 294 402 264 L 440 255 C 444 272 458 281 481 281 C 501 281 513 274 513 263 C 513 251 501 246 472 240 C 436 232 412 218 412 191 C 412 162 440 146 480 146 C 517 146 539 160 544 182 Z"
+                    className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
+                  />
+                </g>
+
+                {/* Perched Monster: Horned Alley Cat */}
+                <g
+                  style={{ transformOrigin: '480px 148px', animationDelay: '0.6s', animationDuration: '2.7s' }}
+                  className="animate-monster-idle"
+                >
+                  <g
+                    key={hoppingId === 'cat' ? `cat-${hopSeq}` : 'cat-idle'}
+                    style={{ transformOrigin: '480px 148px' }}
+                    className={hoppingId === 'cat' ? 'animate-monster-hop' : ''}
+                  >
                 {/* Wavy cat tail */}
                 <path
                   d="M 505 138 C 524 134 528 112 518 102"
@@ -612,13 +646,15 @@ export default function MonsterCrewWordmark() {
                 <circle cx="492" cy="96" r="8" fill="#FFFFFF" stroke="#09090B" strokeWidth="2.2" />
 
                 {/* Tracking cat pupils */}
-                <g ref={setPupilRef('cat-left')}>
-                  <ellipse cx="468" cy="96" rx="3" ry="4.8" fill="#09090B" />
-                  <circle cx="469.2" cy="94" r="1.2" fill="#E11D2E" />
-                </g>
-                <g ref={setPupilRef('cat-right')}>
-                  <ellipse cx="492" cy="96" rx="3" ry="4.8" fill="#09090B" />
-                  <circle cx="493.2" cy="94" r="1.2" fill="#E11D2E" />
+                <g className="animate-pupil-idle" style={{ animationDelay: '1.4s' }}>
+                  <g ref={setPupilRef('cat-left')}>
+                    <ellipse cx="468" cy="96" rx="3" ry="4.8" fill="#09090B" />
+                    <circle cx="469.2" cy="94" r="1.2" fill="#E11D2E" />
+                  </g>
+                  <g ref={setPupilRef('cat-right')}>
+                    <ellipse cx="492" cy="96" rx="3" ry="4.8" fill="#09090B" />
+                    <circle cx="493.2" cy="94" r="1.2" fill="#E11D2E" />
+                  </g>
                 </g>
 
                 {/* Nose + :3 mouth */}
@@ -634,6 +670,8 @@ export default function MonsterCrewWordmark() {
                 {/* Paws */}
                 <circle cx="464" cy="146" r="6" className="fill-[#FAFAFA] dark:fill-[#E4E4E7] stroke-[#09090B]" strokeWidth="2.6" />
                 <circle cx="496" cy="146" r="6" className="fill-[#FAFAFA] dark:fill-[#E4E4E7] stroke-[#09090B]" strokeWidth="2.6" />
+                  </g>
+                </g>
               </g>
             </g>
           </g>
@@ -675,20 +713,28 @@ export default function MonsterCrewWordmark() {
               style={{ transformOrigin: '656px 308px' }}
               className={poppedLetter === 'T' ? 'animate-letter-pop' : ''}
             >
-              {/* Letter T */}
-              <g aria-hidden="true">
-                <path
-                  d="M 578 152 L 736 149 L 732 184 L 676 185 L 676 308 L 636 308 L 636 186 L 574 187 Z"
-                  className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
-                />
-              </g>
-
-              {/* Perched Monster: Portal Cyclops */}
               <g
-                key={hoppingId === 'cyclops' ? `cyclops-${hopSeq}` : 'cyclops-idle'}
-                style={{ transformOrigin: '656px 151px' }}
-                className={hoppingId === 'cyclops' ? 'animate-monster-hop' : ''}
+                style={{ transformOrigin: '656px 308px', animationDelay: '1.14s' }}
+                className="animate-letter-idle-b"
               >
+                {/* Letter T */}
+                <g aria-hidden="true">
+                  <path
+                    d="M 578 152 L 736 149 L 732 184 L 676 185 L 676 308 L 636 308 L 636 186 L 574 187 Z"
+                    className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
+                  />
+                </g>
+
+                {/* Perched Monster: Portal Cyclops */}
+                <g
+                  style={{ transformOrigin: '656px 151px', animationDelay: '0.9s', animationDuration: '2.2s' }}
+                  className="animate-monster-idle"
+                >
+                  <g
+                    key={hoppingId === 'cyclops' ? `cyclops-${hopSeq}` : 'cyclops-idle'}
+                    style={{ transformOrigin: '656px 151px' }}
+                    className={hoppingId === 'cyclops' ? 'animate-monster-hop' : ''}
+                  >
                 {/* Dangling little legs over T crossbar */}
                 <path
                   d="M 642 136 L 640 151 M 670 136 L 672 151"
@@ -742,10 +788,12 @@ export default function MonsterCrewWordmark() {
                 />
 
                 {/* Tracking Pupil */}
-                <g ref={setPupilRef('cyclops-center')}>
-                  <circle cx="656" cy="97" r="8.5" fill="#09090B" />
-                  <circle cx="656" cy="97" r="4" fill="#E11D2E" />
-                  <circle cx="659.5" cy="93.5" r="2.6" fill="#FFFFFF" />
+                <g className="animate-pupil-idle" style={{ animationDelay: '2.6s' }}>
+                  <g ref={setPupilRef('cyclops-center')}>
+                    <circle cx="656" cy="97" r="8.5" fill="#09090B" />
+                    <circle cx="656" cy="97" r="4" fill="#E11D2E" />
+                    <circle cx="659.5" cy="93.5" r="2.6" fill="#FFFFFF" />
+                  </g>
                 </g>
 
                 {/* Little stubby wave arms */}
@@ -756,6 +804,8 @@ export default function MonsterCrewWordmark() {
                   strokeLinecap="round"
                   className="stroke-[#09090B] dark:stroke-[#FAFAFA]"
                 />
+                  </g>
+                </g>
               </g>
             </g>
           </g>
@@ -798,14 +848,19 @@ export default function MonsterCrewWordmark() {
               className={poppedLetter === 'E' ? 'animate-letter-pop' : ''}
               aria-hidden="true"
             >
-              <path
-                d="M 762 152 L 898 150 L 894 184 L 802 185 L 802 275 L 898 274 L 902 308 L 762 308 Z"
-                className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
-              />
-              <path
-                d="M 796 214 L 880 211 L 875 244 L 796 245 Z"
-                className="fill-[#E11D2E] group-hover:fill-[#09090B] dark:group-hover:fill-[#FAFAFA] transition-colors duration-200"
-              />
+              <g
+                style={{ transformOrigin: '832px 308px', animationDelay: '1.52s' }}
+                className="animate-letter-idle-a"
+              >
+                <path
+                  d="M 762 152 L 898 150 L 894 184 L 802 185 L 802 275 L 898 274 L 902 308 L 762 308 Z"
+                  className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
+                />
+                <path
+                  d="M 796 214 L 880 211 L 875 244 L 796 245 Z"
+                  className="fill-[#E11D2E] group-hover:fill-[#09090B] dark:group-hover:fill-[#FAFAFA] transition-colors duration-200"
+                />
+              </g>
             </g>
           </g>
         </g>
@@ -831,21 +886,29 @@ export default function MonsterCrewWordmark() {
               style={{ transformOrigin: '1006px 308px' }}
               className={poppedLetter === 'R' ? 'animate-letter-pop' : ''}
             >
-              {/* Letter R */}
-              <g aria-hidden="true">
-                <path
-                  fillRule="evenodd"
-                  d="M 930 152 L 1018 152 C 1054 152 1076 171 1076 201 C 1076 225 1061 241 1039 247 L 1082 308 L 1036 308 L 998 252 L 970 252 L 970 308 L 930 308 Z M 970 183 L 970 221 L 1014 221 C 1029 221 1037 214 1037 202 C 1037 190 1029 183 1014 183 Z"
-                  className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
-                />
-              </g>
-
-              {/* Perched Monster: Toxic Glitch Ghost */}
               <g
-                key={hoppingId === 'ghost' ? `ghost-${hopSeq}` : 'ghost-idle'}
-                style={{ transformOrigin: '996px 152px' }}
-                className={hoppingId === 'ghost' ? 'animate-monster-hop' : ''}
+                style={{ transformOrigin: '1006px 308px', animationDelay: '1.9s' }}
+                className="animate-letter-idle-b"
               >
+                {/* Letter R */}
+                <g aria-hidden="true">
+                  <path
+                    fillRule="evenodd"
+                    d="M 930 152 L 1018 152 C 1054 152 1076 171 1076 201 C 1076 225 1061 241 1039 247 L 1082 308 L 1036 308 L 998 252 L 970 252 L 970 308 L 930 308 Z M 970 183 L 970 221 L 1014 221 C 1029 221 1037 214 1037 202 C 1037 190 1029 183 1014 183 Z"
+                    className="fill-[#09090B] dark:fill-[#FAFAFA] group-hover:fill-[#E11D2E] transition-colors duration-200"
+                  />
+                </g>
+
+                {/* Perched Monster: Toxic Glitch Ghost */}
+                <g
+                  style={{ transformOrigin: '996px 152px', animationDelay: '0.4s', animationDuration: '2.9s' }}
+                  className="animate-monster-idle"
+                >
+                  <g
+                    key={hoppingId === 'ghost' ? `ghost-${hopSeq}` : 'ghost-idle'}
+                    style={{ transformOrigin: '996px 152px' }}
+                    className={hoppingId === 'ghost' ? 'animate-monster-hop' : ''}
+                  >
                 {/* Mini radar/horn */}
                 <path
                   d="M 996 68 L 996 54"
@@ -885,13 +948,15 @@ export default function MonsterCrewWordmark() {
                 <circle cx="1008" cy="96" r="7" fill="#FFFFFF" />
 
                 {/* Tracking Pupils */}
-                <g ref={setPupilRef('ghost-left')}>
-                  <circle cx="984" cy="96" r="3.4" className="fill-[#059669] dark:fill-[#00f59b]" />
-                  <circle cx="984" cy="96" r="1.6" fill="#09090B" />
-                </g>
-                <g ref={setPupilRef('ghost-right')}>
-                  <circle cx="1008" cy="96" r="3.4" className="fill-[#059669] dark:fill-[#00f59b]" />
-                  <circle cx="1008" cy="96" r="1.6" fill="#09090B" />
+                <g className="animate-pupil-idle" style={{ animationDelay: '3.7s' }}>
+                  <g ref={setPupilRef('ghost-left')}>
+                    <circle cx="984" cy="96" r="3.4" className="fill-[#059669] dark:fill-[#00f59b]" />
+                    <circle cx="984" cy="96" r="1.6" fill="#09090B" />
+                  </g>
+                  <g ref={setPupilRef('ghost-right')}>
+                    <circle cx="1008" cy="96" r="3.4" className="fill-[#059669] dark:fill-[#00f59b]" />
+                    <circle cx="1008" cy="96" r="1.6" fill="#09090B" />
+                  </g>
                 </g>
 
                 {/* Little pixel grin */}
@@ -903,6 +968,8 @@ export default function MonsterCrewWordmark() {
                   strokeLinejoin="round"
                   className="stroke-[#059669] dark:stroke-[#00f59b]"
                 />
+                  </g>
+                </g>
               </g>
             </g>
           </g>

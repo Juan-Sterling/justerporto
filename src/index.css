@@ -322,6 +322,89 @@ textarea:focus-visible {
   animation: letterCrewPop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+/* Idle Living Stage Animations (GPU-only transform/opacity, paused when offscreen) */
+@keyframes letterIdleFloatA {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0) rotate(0.9deg);
+  }
+}
+
+@keyframes letterIdleFloatB {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0) rotate(-0.9deg);
+  }
+}
+
+@keyframes monsterIdleBob {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1, 1);
+  }
+  50% {
+    transform: translate3d(0, -3.5px, 0) scale(1.02, 0.98);
+  }
+}
+
+@keyframes doodleIdlePulse {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate3d(0, -4px, 0) scale(1.12);
+    opacity: 1;
+  }
+}
+
+@keyframes pupilIdleGlance {
+  0%, 40%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50%, 60% {
+    transform: translate3d(1.6px, -0.6px, 0);
+  }
+  75%, 85% {
+    transform: translate3d(-1.6px, -0.4px, 0);
+  }
+}
+
+.animate-letter-idle-a {
+  animation: letterIdleFloatA 3.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-letter-idle-b {
+  animation: letterIdleFloatB 3.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-monster-idle {
+  animation: monsterIdleBob 2.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-doodle-idle {
+  animation: doodleIdlePulse 3s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-pupil-idle {
+  animation: pupilIdleGlance 5.5s ease-in-out infinite;
+}
+
+.monster-crew-paused .animate-letter-idle-a,
+.monster-crew-paused .animate-letter-idle-b,
+.monster-crew-paused .animate-monster-idle,
+.monster-crew-paused .animate-doodle-idle,
+.monster-crew-paused .animate-pupil-idle {
+  animation-play-state: paused;
+}
+
 
 /* Smooth motion respect */
 @media (prefers-reduced-motion: reduce) {
